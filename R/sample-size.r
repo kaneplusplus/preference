@@ -3,7 +3,6 @@
 #############################################
 
 # TODO: Fix the order of the parameters (ones with defaults go last.
-#       Rdefine alpha
 
 #' Stratified Selection Effect
 #'
@@ -12,18 +11,18 @@
 #' @param zalpha Fill this in.
 #' @param zbeta Fill this in.
 #' @param theta Fill this in.
-#' @param alpha Fill this in.
+#' @param phi Fill this in.
 #' @param sigma2 Fill this in.
 #' @param delta_pi Fill this in.
 #' @param delta_nu Fill this in.
-#' @param phi Fill this in.
+#' @param xi Fill this in.
 #' @param nstrata Fill this in.
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-strat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha, sigma2, delta_pi, delta_nu,  phi=c(0.5,0.5), nstrata=2) {
-  terms=sapply(1:nstrata, function(x) (phi[x]/(alpha[x]^2*(1-alpha[x])^2))*(sigma2[x]+alpha[x]*(1-alpha[x])*((2*alpha[x]-1)*delta_nu+delta_pi)^2+2*(theta/(1-theta))*sigma2[x]*(alpha[x]^2+(1-alpha[x])^2)))
+strat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, phi, sigma2, delta_pi, delta_nu,  xi=c(0.5,0.5), nstrata=2) {
+  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))*(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2+2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
   sum_total=sum(terms)
   N=(zalpha+zbeta)^2/(4*theta*delta_nu^2)*sum_total
   return(N)
@@ -36,20 +35,20 @@ strat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha, sigma2, 
 #' @param zalpha  Fill this in.
 #' @param zbeta Fill this in.
 #' @param theta Fill this in.
-#' @param alpha Fill this in.
+#' @param phi Fill this in.
 #' @param sigma2 Fill this in.
 #' @param delta_pi Fill this in.
 #' @param delta_nu Fill this in.
-#' @param phi Fill this in.
+#' @param xi Fill this in.
 #' @param nstrata Fill this in.
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-strat_preference<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha, 
-                           sigma2, delta_pi, delta_nu, phi=c(0.5,0.5), 
+strat_preference<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, phi, 
+                           sigma2, delta_pi, delta_nu, xi=c(0.5,0.5), 
                            nstrata=2) {
-  terms=sapply(1:nstrata, function(x) (phi[x]/(alpha[x]^2*(1-alpha[x])^2))*(sigma2[x]+alpha[x]*(1-alpha[x])*((2*alpha[x]-1)*delta_pi+delta_nu)^2+2*(theta/(1-theta))*sigma2[x]*(alpha[x]^2+(1-alpha[x])^2)))
+  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))*(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_pi+delta_nu)^2+2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
   sum_total=sum(terms)
   N=(zalpha+zbeta)^2/(4*theta*delta_pi^2)*sum_total
   return(N)
@@ -62,18 +61,18 @@ strat_preference<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha,
 #' @param zalpha  Fill this in.
 #' @param zbeta Fill this in.
 #' @param theta Fill this in.
-#' @param alpha Fill this in.
+#' @param phi Fill this in.
 #' @param sigma2 Fill this in.
 #' @param delta_tau Fill this in.
-#' @param phi Fill this in.
+#' @param xi Fill this in.
 #' @param nstrata Fill this in.
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-strat_treatment<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha, 
-                          sigma2, delta_tau, phi=c(0.5,0.5), nstrata=2) {
-  terms=sapply(1:nstrata, function(x) phi[x]*sigma2[x])
+strat_treatment<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, phi, 
+                          sigma2, delta_tau, xi=c(0.5,0.5), nstrata=2) {
+  terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
   sum_total=sum(terms)
   N=4*(zalpha+zbeta)^2/((1-theta)*delta_tau^2)*sum_total
   return(N)
@@ -86,7 +85,7 @@ strat_treatment<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha,
 #' @param zalpha Fill this in. 
 #' @param zbeta Fill this in.
 #' @param theta Fill this in.
-#' @param alpha Fill this in.
+#' @param phi Fill this in.
 #' @param sigma2 Fill this in.
 #' @param delta_pi Fill this in.
 #' @param delta_nu Fill this in.
@@ -94,10 +93,10 @@ strat_treatment<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha,
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-unstrat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha, 
+unstrat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, phi, 
                             sigma2=1, delta_pi, delta_nu) {
-  longterm=sigma2+alpha*(1-alpha)*((2*alpha-1)*delta_nu+delta_pi)^2+2*(theta/(1-theta))*(alpha^2+(1-alpha)^2)*sigma2
-  N=(zalpha+zbeta)^2/(4*theta*delta_nu^2*alpha^2*(1-alpha)^2)*longterm
+  longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2+2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
+  N=(zalpha+zbeta)^2/(4*theta*delta_nu^2*phi^2*(1-phi)^2)*longterm
   return(N)
 }
 
@@ -108,7 +107,7 @@ unstrat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha,
 #' @param zalpha Fill this in. 
 #' @param zbeta Fill this in.
 #' @param theta Fill this in.
-#' @param alpha Fill this in.
+#' @param phi Fill this in.
 #' @param sigma2 Fill this in.
 #' @param delta_pi Fill this in.
 #' @param delta_nu Fill this in.
@@ -116,10 +115,10 @@ unstrat_selection<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha,
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-unstrat_preference<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha, 
+unstrat_preference<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, phi, 
                              sigma2=1, delta_pi, delta_nu) {
-  longterm=sigma2+alpha*(1-alpha)*((2*alpha-1)*delta_pi+delta_nu)^2+2*(theta/(1-theta))*(alpha^2+(1-alpha)^2)*sigma2
-  N=(zalpha+zbeta)^2/(4*theta*delta_pi^2*alpha^2*(1-alpha)^2)*longterm
+  longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2+2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
+  N=(zalpha+zbeta)^2/(4*theta*delta_pi^2*phi^2*(1-phi)^2)*longterm
   return(N)
 }
 
@@ -130,7 +129,7 @@ unstrat_preference<-function(zalpha=qnorm(0.975), zbeta, theta=0.5, alpha,
 #' @param zalpha Fill this in. 
 #' @param zbeta Fill this in.
 #' @param theta Fill this in.
-#' @param alpha Fill this in.
+#' @param phi Fill this in.
 #' @param sigma2 Fill this in.
 #' @param delta_tau Fill this in.
 #' @examples
