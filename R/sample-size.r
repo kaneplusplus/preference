@@ -81,6 +81,37 @@ strat_treatment<-function(zbeta, phi, sigma2, delta_tau, zalpha=qnorm(0.975),
   return(N)
 }
 
+#' Stratified Overall Sample Size
+#'
+#' Calculates the sample size required to detect a given set of effects 
+#' in a stratified two-stage randomized clinical trial
+#'
+#' @param zbeta power Z value.
+#' @param phi vector of preference rate of treatment 1 in each stratum.
+#' @param sigma2 vector of within-stratum variances.
+#' @param delta_pi preference effect.
+#' @param delta_nu selection effect.
+#' @param delta_tau treatment effect.
+#' @param zalpha type I error Z value.
+#' @param theta proportion of patients assigned to choice arm (default=0.5).
+#' @param xi a numeric vector of proportion of patients in each stratum.
+#' @param nstrata number of strata (default=2).
+#' @examples
+#' # Put example code here.
+#' rnorm(10)
+#' @export
+strat_overall<-function(zbeta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                           zalpha=qnorm(0.975), theta=0.5, xi=c(0.5,0.5), 
+                           nstrata=2) {
+  pref=strat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
+                        theta, xi, nstrata)
+  sel=strat_selection(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
+                      theta, xi, nstrata)
+  treat=strat_treatment(zbeta, phi, sigma2, delta_tau, zalpha, 
+                        theta, xi, nstrata)
+  return(max(pref,sel,treat))
+}
+
 #' Unstratified Selection Effect Sample Size
 #'
 #' Calculates the sample size required to detect a given selection effect 
@@ -90,7 +121,7 @@ strat_treatment<-function(zbeta, phi, sigma2, delta_tau, zalpha=qnorm(0.975),
 #' @param phi preference rate of treatment 1.
 #' @param sigma2 variance.
 #' @param delta_pi preference effect.
-#' @param delta_nu treatment effect.
+#' @param delta_nu selection effect.
 #' @param zalpha type I error Z value. 
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @examples
@@ -114,7 +145,7 @@ unstrat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' @param phi preference rate of treatment 1.
 #' @param sigma2 variance.
 #' @param delta_pi preference effect.
-#' @param delta_nu treatment effect.
+#' @param delta_nu selection effect.
 #' @param zalpha type I error Z value.
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @examples
@@ -148,6 +179,32 @@ unstrat_treatment<-function(zbeta, sigma2=1, delta_tau, zalpha=qnorm(0.0975),
                             theta=0.5){
   N=(4*sigma2*(zbeta+zalpha)^2)/((1-theta)*delta_tau^2)
   return(N)
+}
+
+#' Unstratified Overall Sample Size
+#'
+#' Calculates the sample size required to detect a set of effects 
+#' in an unstratified two-stage randomized clinical trial
+#'
+#' @param zbeta power Z value.
+#' @param phi preference rate of treatment 1.
+#' @param sigma2 variance.
+#' @param delta_pi preference effect.
+#' @param delta_nu selection effect.
+#' @param delta_tau treatment effect.
+#' @param zalpha type I error Z value. 
+#' @param theta proportion of patients assigned to choice arm (default=0.5).
+#' @examples
+#' # Put example code here.
+#' rnorm(10)
+#' @export
+unstrat_overall<-function(zbeta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                            zalpha=qnorm(0.975), theta=0.5) {
+  sel=unstrat_selection(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, theta)
+  pref=unstrat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
+                          theta)
+  treat=unstrat_treatment(zbeta, phi, sigma2, delta_tau, zalpha, theta)
+  return(max(sel, pref, treat))
 }
 
 ###################
