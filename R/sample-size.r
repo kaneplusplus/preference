@@ -207,6 +207,38 @@ unstrat_overall<-function(zbeta, phi, sigma2, delta_pi, delta_nu, delta_tau,
   return(max(sel, pref, treat))
 }
 
+#' Unstratified Optimized Theta
+#'
+#' Calculates the optimal proportion of patients assigned to the choice arm
+#' in a two-stage randomized trial
+#'
+#' @param w_sel weight assigned to selection effect.
+#' @param w_pref weight assigned to preference effect.
+#' @param w_treat weight assigned to treatment effect.
+#' @param sigma2 variance.
+#' @param phi preference rate of treatment 1.
+#' @param delta_pi preference effect.
+#' @param delta_nu selection effect. 
+#' @examples
+#' # Put example code here.
+#' rnorm(10)
+#' @export
+theta_optim<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
+  if (w_sel+w_pref+w_treat!=1) stop('weights do not sum to 1')
+  # Based on Equation 16 in Walter paper
+  num<-w_sel+w_pref+phi*(1-phi)*((w_sel*((2*phi-1)*delta_nu+delta_pi)^2
+                                  +w_pref*((2*phi-1)*delta_pi+delta_nu)^2)/sigma2)
+  denom<-16*w_treat*phi^2*(1-phi)^2+2*(w_sel+w_pref)*(phi^2+(1-phi)^2)
+  
+  return(uniroot(f,c(0,1),value=(num/denom))$root)
+}
+
+# Function used in theta optimization function
+f<-function(theta,value) {
+  (theta/(1-theta))^2-value
+}  
+
+
 ###################
 # Extra functions #
 ###################
