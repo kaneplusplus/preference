@@ -2,35 +2,35 @@
 % Please edit documentation in R/sample-size.r
 \name{strat_preference}
 \alias{strat_preference}
-\title{Stratified Preference Effect}
+\title{Stratified Preference Effect Sample Size}
 \usage{
-strat_preference(zalpha = qnorm(0.975), zbeta, theta = 0.5, alpha, sigma2,
-  delta_pi, delta_nu, phi = c(0.5, 0.5), nstrata = 2)
+strat_preference(zbeta, phi, sigma2, delta_pi, delta_nu,
+  zalpha = qnorm(0.975), theta = 0.5, xi = c(0.5, 0.5), nstrata = 2)
 }
 \arguments{
-\item{zalpha}{Fill this in.}
+\item{zbeta}{power Z value.}
 
-\item{zbeta}{Fill this in.}
+\item{phi}{vector of preference rate of treatment 1 in each stratum.}
 
-\item{theta}{Fill this in.}
+\item{sigma2}{vector of within-stratum variances.}
 
-\item{alpha}{Fill this in.}
+\item{delta_pi}{preference effect.}
 
-\item{sigma2}{Fill this in.}
+\item{delta_nu}{selection effect.}
 
-\item{delta_pi}{Fill this in.}
+\item{zalpha}{type I error Z value.}
 
-\item{delta_nu}{Fill this in.}
+\item{theta}{proportion of patients assigned to choice arm (default=0.5).}
 
-\item{phi}{Fill this in.}
+\item{xi}{a numeric vector of proportion of patients in each stratum.}
 
-\item{nstrata}{Fill this in.}
+\item{nstrata}{number of strata (default=2).}
 }
 \description{
-Put a longer description of what the function does here.
+Calculates the sample size required to detect a given preference effect 
+in a stratified two-stage randomized clinical trial
 }
 \examples{
-# Put example code here.
-rnorm(10)
+strat_preference(1.282, c(0.5, 0.5), c(1, 1), c(1, 1), c(0, 0))
 }
 

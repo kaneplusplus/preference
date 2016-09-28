@@ -2,28 +2,29 @@
 % Please edit documentation in R/sample-size.r
 \name{unstrat_selection}
 \alias{unstrat_selection}
-\title{Stratified Preference Effect}
+\title{Unstratified Selection Effect Sample Size}
 \usage{
-unstrat_selection(zalpha = qnorm(0.975), zbeta, theta = 0.5, alpha,
-  sigma2 = 1, delta_pi, delta_nu)
+unstrat_selection(zbeta, phi, sigma2, delta_pi, delta_nu,
+  zalpha = qnorm(0.975), theta = 0.5)
 }
 \arguments{
-\item{zalpha}{Fill this in.}
+\item{zbeta}{power Z value.}
 
-\item{zbeta}{Fill this in.}
+\item{phi}{preference rate of treatment 1.}
 
-\item{theta}{Fill this in.}
+\item{sigma2}{variance.}
 
-\item{alpha}{Fill this in.}
+\item{delta_pi}{preference effect.}
 
-\item{sigma2}{Fill this in.}
+\item{delta_nu}{selection effect.}
 
-\item{delta_pi}{Fill this in.}
+\item{zalpha}{type I error Z value.}
 
-\item{delta_nu}{Fill this in.}
+\item{theta}{proportion of patients assigned to choice arm (default=0.5).}
 }
 \description{
-Put a longer description of what the function does here.
+Calculates the sample size required to detect a given selection effect 
+in an unstratified two-stage randomized clinical trial
 }
 \examples{
 # Put example code here.

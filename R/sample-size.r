@@ -42,8 +42,8 @@ strat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' @param xi a numeric vector of proportion of patients in each stratum.
 #' @param nstrata number of strata (default=2).
 #' @examples
-#' # Put example code here.
-#' rnorm(10)
+ strat_preference(zbeta=1.282, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+  delta_nu=0)
 #' @export
 strat_preference<-function(zbeta, phi, sigma2, delta_pi, delta_nu, 
                            zalpha=qnorm(0.975), theta=0.5, xi=c(0.5,0.5), 
