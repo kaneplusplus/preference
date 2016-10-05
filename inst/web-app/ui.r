@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyBS)
+library(rbokeh)
 
 # Define UI for application that draws a histogram
 ui <- shinyUI(pageWithSidebar(
@@ -41,7 +42,7 @@ ui <- shinyUI(pageWithSidebar(
   # Show a plot of the generated distribution
   mainPanel(
     tableOutput("sample_size"),
-    uiOutput("update_tooltip")
+    rbokehOutput("line_graph")
   )
 
 ))

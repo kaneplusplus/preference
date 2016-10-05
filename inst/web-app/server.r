@@ -1,4 +1,5 @@
 library(shiny)
+library(rbokeh)
 source('sample-size.r')
 
 parse_sequence_text = function(x) {
@@ -28,19 +29,32 @@ parse_sequence_text = function(x) {
 # Define server logic required to draw a histogram
 server <- shinyServer(function(input, output, session) {
 
-  get_strat_selection = reactive({
+  get_inputs = reactive({
     delta_pi = parse_sequence_text(input$delta_pi)
     delta_nu = parse_sequence_text(input$delta_nu)
     # Turn the text inputs into vectors of numeric values.
     phi = as.numeric(gsub(" ", "", unlist(strsplit(input$phi, ","))))
     sigma2 = as.numeric(gsub(" ", "", unlist(strsplit(input$sigma2, ","))))
     xi = as.numeric(gsub(" ", "", unlist(strsplit(input$xi, ","))))
-    strat_selection(input$zbeta, phi, sigma2, delta_pi, delta_nu,
-                    input$zalpha, input$theta, xi)
+    list(zbeta=input$zbeta, phi=phi, sigma2=sigma2, delta_pi=delta_pi,
+         delta_nu=delta_nu, zalpha=input$zalpha, theta=input$theta,
+         xi=xi)
+  })
+
+  get_strat_selection = reactive({ 
+    params = get_inputs()
+    strat_selection(params$zbeta, params$phi, params$sigma2, params$delta_pi, 
+                    params$delta_nu, params$zalpha, params$theta, params$xi)
   })
 
   output$sample_size = renderTable({
     get_strat_selection()
+  })
+
+  output$line_graph = renderRbokeh({
+    params = get_inputs()
+    ss = get_strat_selection()
+    figure() %>% ly_lines(lowess(cars), color = "red", width = 2)
   })
 
 })
