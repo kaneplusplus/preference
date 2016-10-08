@@ -4,13 +4,19 @@
 #' in a stratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi vector of preference rate of treatment 1 in each stratum.
-#' @param sigma2 vector of within-stratum variances.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
 #' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
-#' @param xi a numeric vector of proportion of patients in each stratum.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
@@ -35,13 +41,19 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' in a stratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi vector of preference rate of treatment 1 in each stratum.
-#' @param sigma2 vector of within-stratum variances.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
 #' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
-#' @param xi a numeric vector of proportion of patients in each stratum.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' strat_preference(zbeta=1.282, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
@@ -66,12 +78,18 @@ strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' in a stratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi vector of preference rate of treatment 1 in each stratum.
-#' @param sigma2 vector of within-stratum variances.
-#' @param delta_tau treatment effect.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study.
+#' @param delta_tau overall study treatment effect.
 #' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
-#' @param xi a numeric vector of proportion of patients in each stratum.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
@@ -93,14 +111,20 @@ strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
 #' in a stratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi vector of preference rate of treatment 1 in each stratum.
-#' @param sigma2 vector of within-stratum variances.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect.
-#' @param delta_tau treatment effect.
-#' @param alpha desired type I error rate..
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
-#' @param xi a numeric vector of proportion of patients in each stratum.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param delta_tau overall study treatment effect.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
@@ -126,12 +150,13 @@ strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' in an unstratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi preference rate of treatment 1.
-#' @param sigma2 variance.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect.
+#' @param phi proportion of patients preferring treatment 1.
+#' @param sigma2 variance estimate.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
 #' @param alpha desired type I error rate. 
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
@@ -152,12 +177,13 @@ unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' in an unstratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power
-#' @param phi preference rate of treatment 1.
-#' @param sigma2 variance.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect.
+#' @param phi proportion of patients preferring treatment 1.
+#' @param sigma2 variance estimate.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
 #' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
@@ -178,11 +204,12 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' in an unstratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi preference rate of treatment 1.
-#' @param sigma2 variance.
-#' @param delta_tau treatment effect.
-#' @param alpha desired type I error rate.. 
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
+#' @param phi proportion of patients preferring treatment 1.
+#' @param sigma2 variance estimate.
+#' @param delta_tau overall study treatment effect.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
@@ -201,13 +228,14 @@ unstrat_treatment<-function(beta, sigma2=1, delta_tau, alpha=0.05,
 #' in an unstratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power.
-#' @param phi preference rate of treatment 1.
-#' @param sigma2 variance.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect.
-#' @param delta_tau treatment effect.
+#' @param phi proportion of patients preferring treatment 1.
+#' @param sigma2 variance estimate.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param delta_tau overall study treatment effect.
 #' @param alpha desired type I error rate.. 
-#' @param theta proportion of patients assigned to choice arm (default=0.5).
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
@@ -228,13 +256,16 @@ unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' Calculates the optimal proportion of patients assigned to the choice arm
 #' in a two-stage randomized trial
 #'
-#' @param w_sel weight assigned to selection effect.
-#' @param w_pref weight assigned to preference effect.
-#' @param w_treat weight assigned to treatment effect.
-#' @param sigma2 variance.
-#' @param phi preference rate of treatment 1.
-#' @param delta_pi preference effect.
-#' @param delta_nu selection effect. 
+#' @param w_sel weight assigned to the estimation of the selection effect. Sum 
+#'              of thre weights should be 1.
+#' @param w_pref weight assigned to the estimation of the preference effect. Sum 
+#'               of thre weights should be 1.
+#' @param w_treat weight assigned to estimation of the treatment effect. Sum 
+#'                of thre weights should be 1.
+#' @param sigma2 variance estimate.
+#' @param phi proportion of patients preferring treatment 1.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect. 
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
