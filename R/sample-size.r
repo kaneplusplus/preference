@@ -3,12 +3,12 @@
 #' Calculates the sample size required to detect a given selection effect 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi vector of preference rate of treatment 1 in each stratum.
 #' @param sigma2 vector of within-stratum variances.
 #' @param delta_pi preference effect.
 #' @param delta_nu selection effect.
-#' @param zalpha type I error Z value.
+#' @param alpha desired type I error rate.
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @param xi a numeric vector of proportion of patients in each stratum.
 #' @param nstrata number of strata (default=2).
@@ -16,9 +16,11 @@
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-strat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu, 
-                          zalpha=qnorm(0.975), theta=0.5, xi=c(0.5,0.5), 
+strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+                          alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                           nstrata=2) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2
               +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
@@ -32,12 +34,12 @@ strat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given preference effect 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi vector of preference rate of treatment 1 in each stratum.
 #' @param sigma2 vector of within-stratum variances.
 #' @param delta_pi preference effect.
 #' @param delta_nu selection effect.
-#' @param zalpha type I error Z value.
+#' @param alpha desired type I error rate.
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @param xi a numeric vector of proportion of patients in each stratum.
 #' @param nstrata number of strata (default=2).
@@ -45,9 +47,11 @@ strat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' strat_preference(zbeta=1.282, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0)
 #' @export
-strat_preference<-function(zbeta, phi, sigma2, delta_pi, delta_nu, 
-                           zalpha=qnorm(0.975), theta=0.5, xi=c(0.5,0.5), 
+strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+                           alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                            nstrata=2) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_pi+delta_nu)^2
               +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
@@ -61,11 +65,11 @@ strat_preference<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given treatment effect 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi vector of preference rate of treatment 1 in each stratum.
 #' @param sigma2 vector of within-stratum variances.
 #' @param delta_tau treatment effect.
-#' @param zalpha  type I error Z value.
+#' @param alpha desired type I error rate.
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @param xi a numeric vector of proportion of patients in each stratum.
 #' @param nstrata number of strata (default=2).
@@ -73,8 +77,10 @@ strat_preference<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-strat_treatment<-function(zbeta, phi, sigma2, delta_tau, zalpha=qnorm(0.975),
+strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
                           theta=0.5, xi=c(0.5,0.5), nstrata=2) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
   sum_total=sum(terms)
   N=4*(zalpha+zbeta)^2/((1-theta)*delta_tau^2)*sum_total
@@ -86,13 +92,13 @@ strat_treatment<-function(zbeta, phi, sigma2, delta_tau, zalpha=qnorm(0.975),
 #' Calculates the sample size required to detect a given set of effects 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi vector of preference rate of treatment 1 in each stratum.
 #' @param sigma2 vector of within-stratum variances.
 #' @param delta_pi preference effect.
 #' @param delta_nu selection effect.
 #' @param delta_tau treatment effect.
-#' @param zalpha type I error Z value.
+#' @param alpha desired type I error rate..
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @param xi a numeric vector of proportion of patients in each stratum.
 #' @param nstrata number of strata (default=2).
@@ -100,9 +106,11 @@ strat_treatment<-function(zbeta, phi, sigma2, delta_tau, zalpha=qnorm(0.975),
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-strat_overall<-function(zbeta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
-                           zalpha=qnorm(0.975), theta=0.5, xi=c(0.5,0.5), 
+strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                           alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                            nstrata=2) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   pref=strat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
                         theta, xi, nstrata)
   sel=strat_selection(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
@@ -117,19 +125,21 @@ strat_overall<-function(zbeta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' Calculates the sample size required to detect a given selection effect 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi preference rate of treatment 1.
 #' @param sigma2 variance.
 #' @param delta_pi preference effect.
 #' @param delta_nu selection effect.
-#' @param zalpha type I error Z value. 
+#' @param alpha desired type I error rate. 
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-unstrat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu, 
-                            zalpha=qnorm(0.975), theta=0.5) {
+unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+                            alpha=0.05, theta=0.5) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2
           +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
   N=(zalpha+zbeta)^2/(4*theta*delta_nu^2*phi^2*(1-phi)^2)*longterm
@@ -141,19 +151,21 @@ unstrat_selection<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given preference effect 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power
 #' @param phi preference rate of treatment 1.
 #' @param sigma2 variance.
 #' @param delta_pi preference effect.
 #' @param delta_nu selection effect.
-#' @param zalpha type I error Z value.
+#' @param alpha desired type I error rate.
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-unstrat_preference<-function(zbeta, phi, sigma2, delta_pi, delta_nu, 
-                             zalpha=qnorm(0.975), theta=0.5) {
+unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+                             alpha=0.05, theta=0.5) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2
           +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
   N=(zalpha+zbeta)^2/(4*theta*delta_pi^2*phi^2*(1-phi)^2)*longterm
@@ -165,18 +177,20 @@ unstrat_preference<-function(zbeta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given treatment effect 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi preference rate of treatment 1.
 #' @param sigma2 variance.
 #' @param delta_tau treatment effect.
-#' @param zalpha type I error Z value. 
+#' @param alpha desired type I error rate.. 
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-unstrat_treatment<-function(zbeta, sigma2=1, delta_tau, zalpha=qnorm(0.0975), 
+unstrat_treatment<-function(beta, sigma2=1, delta_tau, alpha=0.05, 
                             theta=0.5){
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   N=(4*sigma2*(zbeta+zalpha)^2)/((1-theta)*delta_tau^2)
   return(N)
 }
@@ -186,20 +200,22 @@ unstrat_treatment<-function(zbeta, sigma2=1, delta_tau, zalpha=qnorm(0.0975),
 #' Calculates the sample size required to detect a set of effects 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param zbeta power Z value.
+#' @param beta desired study power.
 #' @param phi preference rate of treatment 1.
 #' @param sigma2 variance.
 #' @param delta_pi preference effect.
 #' @param delta_nu selection effect.
 #' @param delta_tau treatment effect.
-#' @param zalpha type I error Z value. 
+#' @param alpha desired type I error rate.. 
 #' @param theta proportion of patients assigned to choice arm (default=0.5).
 #' @examples
 #' # Put example code here.
 #' rnorm(10)
 #' @export
-unstrat_overall<-function(zbeta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
-                            zalpha=qnorm(0.975), theta=0.5) {
+unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                            alpha=0.05, theta=0.5) {
+  zbeta<-qnorm(beta)
+  zalpha<-qnorm(1-(alpha/2))
   sel=unstrat_selection(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, theta)
   pref=unstrat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
                           theta)
