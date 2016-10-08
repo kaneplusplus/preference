@@ -25,6 +25,33 @@
 strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                           alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                           nstrata=2) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
@@ -62,6 +89,33 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                            alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                            nstrata=2) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
@@ -97,6 +151,33 @@ strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' @export
 strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
                           theta=0.5, xi=c(0.5,0.5), nstrata=2) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  #Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
@@ -133,6 +214,33 @@ strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
 strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                            alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                            nstrata=2) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   pref=strat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
@@ -163,6 +271,21 @@ strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' @export
 unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                             alpha=0.05, theta=0.5) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2
@@ -190,6 +313,21 @@ unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' @export
 unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                              alpha=0.05, theta=0.5) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2
@@ -216,6 +354,21 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' @export
 unstrat_treatment<-function(beta, sigma2=1, delta_tau, alpha=0.05, 
                             theta=0.5){
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   N=(4*sigma2*(zbeta+zalpha)^2)/((1-theta)*delta_tau^2)
@@ -242,6 +395,21 @@ unstrat_treatment<-function(beta, sigma2=1, delta_tau, alpha=0.05,
 #' @export
 unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                             alpha=0.05, theta=0.5) {
+  # Error messages
+  if(beta<0 | beta>1 | !is.numeric(beta)) 
+    stop('Power must be numeric in [0,1]')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate sample size
   zbeta<-qnorm(beta)
   zalpha<-qnorm(1-(alpha/2))
   sel=unstrat_selection(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, theta)
@@ -271,7 +439,17 @@ unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' rnorm(10)
 #' @export
 theta_optim<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
-  if (w_sel+w_pref+w_treat!=1) stop('weights do not sum to 1')
+  if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
+     any(!is.numeric(c(w_sel,w_pref,w_treat))))
+    stop('Weights must be numeric value in [0,1]')
+  if (w_sel+w_pref+w_treat!=1) 
+    stop('weights do not sum to 1')
+  if(sigma2<=0 | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(phi<0 | phi>1 | !is.numeric(phi)) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
   # Based on Equation 16 in Walter paper
   num<-w_sel+w_pref+phi*(1-phi)*((w_sel*((2*phi-1)*delta_nu+delta_pi)^2
                                   +w_pref*((2*phi-1)*delta_pi+delta_nu)^2)/sigma2)
