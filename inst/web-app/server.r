@@ -1,6 +1,6 @@
 library(shiny)
 library(rbokeh)
-source('sample-size.r')
+library(ct2stage)
 
 parse_sequence_text = function(x) {
   ret = as.numeric(x)
@@ -36,15 +36,15 @@ server <- shinyServer(function(input, output, session) {
     phi = as.numeric(gsub(" ", "", unlist(strsplit(input$phi, ","))))
     sigma2 = as.numeric(gsub(" ", "", unlist(strsplit(input$sigma2, ","))))
     xi = as.numeric(gsub(" ", "", unlist(strsplit(input$xi, ","))))
-    list(zbeta=input$zbeta, phi=phi, sigma2=sigma2, delta_pi=delta_pi,
-         delta_nu=delta_nu, zalpha=input$zalpha, theta=input$theta,
+    list(beta=input$beta, phi=phi, sigma2=sigma2, delta_pi=delta_pi,
+         delta_nu=delta_nu, alpha=input$alpha, theta=input$theta,
          xi=xi)
   })
 
   get_strat_selection = reactive({ 
     params = get_inputs()
-    strat_selection(params$zbeta, params$phi, params$sigma2, params$delta_pi, 
-                    params$delta_nu, params$zalpha, params$theta, params$xi)
+    strat_selection(params$beta, params$phi, params$sigma2, params$delta_pi, 
+                    params$delta_nu, params$alpha, params$theta, params$xi)
   })
 
   output$sample_size = renderTable({
