@@ -463,6 +463,92 @@ f<-function(theta,value) {
   (theta/(1-theta))^2-value
 }  
 
+#' Calculate Effect Sizes from Means
+#'
+#' Calculates the preference, selection and treatment effects given the means
+#' of each treatment group in the choice and random arms for the 2-stage 
+#' randomized study.
+#'
+#' @param mu1 mean response of the patients receiving treatment 1 in the 
+#'            random arm. For unstratified design, should be numeric value.
+#'            For the stratified design, should be vector of length equal to
+#'            number of strata with each entry corresponding to stratum-
+#'            specific mean.
+#' @param mu2 mean response of the patients receiving treatment 2 in the 
+#'            random arm. For unstratified design, should be numeric value.
+#'            For the stratified design, should be vector of length equal to
+#'            number of strata with each entry corresponding to stratum-
+#'            specific mean.
+#' @param mu11 mean response of the patients choosing treatment 1 in the choice
+#'             arm. For unstratified design, should be numeric value.
+#'            For the stratified design, should be vector of length equal to
+#'            number of strata with each entry corresponding to stratum-
+#'            specific mean.
+#' @param mu22 mean response of the patients choosing treatment 2 in the choice
+#'             arm. For unstratified design, should be numeric value.
+#'            For the stratified design, should be vector of length equal to
+#'            number of strata with each entry corresponding to stratum-
+#'            specific mean.
+#' @param phi proportion of patients preferring treatment 1. For unstratified 
+#'            design, should be numeric value. For the stratified design, 
+#'            should be vector of length equal to number of strata with each 
+#'            entry corresponding to stratum-specific preference rate.
+#' @param nstrata number of strata. Default is 1 (unstratified design).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. Should only be specified for stratified
+#'          design.
+#' @examples
+#' # Put example code here.
+#' rnorm(10)
+#' @export
+calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
+  # Error messages
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  if (nstrata>1 & is.null(xi))
+    stop('Must define xi for stratified design')
+  if (length(phi)!=nstrata | length(mu1)!=nstrata | length(mu2)!=nstrata
+      | length(mu11)!=nstrata |length(mu22)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(!is.numeric(mu1) | !is.numeric(mu2) | !is.numeric(mu11) | !is.numeric(mu22))
+    stop('Mean must be numeric value')
+  if((any(xi<0) | any(xi>1) | any(!is.numeric(xi))) & !is.null(xi))
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata & nstrata!=1) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1 & !is.null(xi)) 
+    stop('Stratum proportions do not sum to 1')
+  
+  
+  # Calculate unobserved means
+  mu12<-(mu1-phi*mu11)/(1-phi)
+  mu21<-(mu2-(1-phi)*mu22)/phi
+  
+  # Calculate effect sizes
+  delta_tau<-mu1-mu2
+  delta_nu<-(mu11+mu21-mu12-mu22)/2
+  delta_pi<-(mu11-mu21-mu12+mu22)/2
+  
+  if (nstrata==1) { 
+    # Unstratified case
+    effects<-list("delta_tau"=delta_tau,"delta_nu"=delta_nu,
+                  "delta_pi"=delta_pi)
+  } else {
+    # Stratified case
+    effects<-list("delta_tau"=sum(sapply(1:nstrata, function(x) 
+                              phi[x]*delta_tau[x])),
+                  "delta_nu"=sum(sapply(1:nstrata, function(x) 
+                              phi[x]*delta_nu[x])),
+                  "delta_pi"=sum(sapply(1:nstrata,function(x) 
+                              phi[x]*delta_pi[x])))
+  }
+
+  return(effects)
+}
+
 
 ###################
 # Extra functions #
