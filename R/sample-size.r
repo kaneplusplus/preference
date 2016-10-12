@@ -26,7 +26,7 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
                           alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                           nstrata=2) {
   # Error messages
-  if(!is.numeric(beta) || beta <= 0 || beta => 1)
+  if(!is.numeric(beta) || beta <= 0 || beta >= 1)
     stop('Power must be numeric in [0,1]')
   if (length(phi) != nstrata) 
     stop('Length vector does not match number of strata')
@@ -34,7 +34,7 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
     stop('Preference rate must be numeric value in [0,1]')
   if(length(sigma2) != nstrata)
     stop('Length of variance vector does not match number of strata')
-  if(any(!is.numeric(sigma2) || any(sigma2 <= 0))
+  if(any(!is.numeric(sigma2) || any(sigma2 <= 0)))
     stop('Variance estimate must be numeric value greater than 0')
   if(!is.numeric(delta_pi) || !is.numeric(delta_nu))
     stop('Effect size must be numeric value')
@@ -42,7 +42,7 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
     stop('Type I error rate must be numeric in [0,1]')
   if(!is.numeric(theta) || theta <= 0 || theta >= 1)
     stop('Theta must be numeric in [0,1]')
-  if(any(!is.numeric(xi) || any(xi <= 0) || any(xi >= 1))
+  if(any(!is.numeric(xi) || any(xi <= 0) || any(xi >= 1)))
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi) != nstrata) 
     stop('Length of vector does not match number of strata')
