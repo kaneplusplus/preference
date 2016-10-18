@@ -24,7 +24,8 @@
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' strat_selection(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#'  delta_nu=0.5)
 #' @export
 strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                           alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
@@ -91,8 +92,8 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #'          values between 0 and 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
-#' strat_preference(zbeta=1.282, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
-#'  delta_nu=0)
+#' strat_preference(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#'  delta_nu=0.5)
 #' @export
 strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                            alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
@@ -159,7 +160,7 @@ strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' strat_treatment(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_tau=1)
 #' @export
 strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
                           theta=0.5, xi=c(0.5,0.5), nstrata=2) {
@@ -225,7 +226,8 @@ strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' strat_overall(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#'  delta_nu=0.5, delta_tau=0.5)
 #' @export
 strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                            alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
@@ -285,7 +287,7 @@ strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' unstrat_selection(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' @export
 unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                             alpha=0.05, theta=0.5) {
@@ -329,7 +331,7 @@ unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' unstrat_preference(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' @export
 unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
                              alpha=0.05, theta=0.5) {
@@ -362,8 +364,6 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' in an unstratified two-stage randomized clinical trial
 #'
 #' @param beta desired study power. Should be numeric value between 0 and 1.
-#' @param phi proportion of patients preferring treatment 1. Should be numeric
-#'            value between 0 and 1.
 #' @param sigma2 variance estimate. Should be a positive numeric value.
 #' @param delta_tau overall study treatment effect.
 #' @param alpha desired type I error rate.
@@ -372,15 +372,13 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' unstrat_treatment(beta=0.8, sigma2=1, delta_tau=0.5)
 #' @export
-unstrat_treatment<-function(beta, sigma2=1, delta_tau, alpha=0.05, 
+unstrat_treatment<-function(beta, sigma2, delta_tau, alpha=0.05, 
                             theta=0.5){
   # Error messages
   if(beta<0 | beta>1 | !is.numeric(beta)) 
     stop('Power must be numeric in [0,1]')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
-    stop('Preference rate must be numeric value in [0,1]')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
   if(!is.numeric(delta_tau))
@@ -415,7 +413,8 @@ unstrat_treatment<-function(beta, sigma2=1, delta_tau, alpha=0.05,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' unstrat_overall(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
+#' delta_tau=0.5)
 #' @export
 unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                             alpha=0.05, theta=0.5) {
@@ -464,7 +463,8 @@ unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' @param delta_nu overall study selection effect. 
 #' @examples
 #' # Put example code here.
-#' rnorm(10)
+#' theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
+#' delta_pi=1, delta_nu=0.5)
 #' @export
 theta_optim<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
   if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
@@ -528,7 +528,7 @@ f<-function(theta,value) {
 #'          sum of vector should be 1. Should only be specified for stratified
 #'          design.
 #' @examples
-#' # Put example code here.
+#' calc_effects(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
 #' rnorm(10)
 #' @export
 calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
