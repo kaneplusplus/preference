@@ -620,7 +620,7 @@ unstrat_analysis<-function(x1,x2,y1,y2) {
   
   # Compute test statistics (from Rucker paper)
   pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
-  sel_test<-(z1-z2)/sqrt(var1-var2-2*cov) # Selection effect
+  sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
   
   # Compute p-values (Assume test stats approximately normally distributed)
   pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
@@ -634,7 +634,6 @@ unstrat_analysis<-function(x1,x2,y1,y2) {
   
   return(results)
 }
-
 
 
 ###################
