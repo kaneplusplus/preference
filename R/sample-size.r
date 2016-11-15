@@ -529,7 +529,6 @@ f<-function(theta,value) {
 #'          design.
 #' @examples
 #' calc_effects(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
-#' rnorm(10)
 #' @export
 calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   # Error messages
@@ -577,6 +576,65 @@ calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
 
   return(effects)
 }
+
+#' Unstratified Analysis Function
+#'
+#' Computes the test statistic and p-value for the preference, selection, and 
+#' treatment effects for the unstratified two-stage randomized trial
+#'
+#' @param x1 vector of responses for patients choosing treatment 1
+#' @param x2 vector of responses for patients choosing treatment 2
+#' @param y1 vector of responses for patients randomized to treatment 1
+#' @param y2 vector of responses for patients randomized to treatment 2
+#' @examples
+#' x1<-c(10,9,5,12,14)
+#' x2<-c(16,12,14,10,8,9,11)
+#' y1<-c(10,6,5,14,8)
+#' y2<-c(12,10,15,11,11)
+#' unstat_analysis(x1,x2,y1,y2)
+#' @export
+unstrat_analysis<-function(x1,x2,y1,y2) {
+  # Error messages
+  if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
+    stop("Arguments must be numeric vectors")
+    
+  # Define sample sizes
+  m1<-length(x1)
+  m2<-length(x2)
+  n1<-length(y1)
+  n2<-length(y2)
+  m<-m1+m2
+  n<-n1+n2
+  N<-m+n
+  
+  # Calculate z statistic
+  z1<-sum(x1)-m1*mean(y1)
+  z2<-sum(x2)-m2*mean(y2)
+  
+  # Calculate variances (formulas from Rucker paper)
+  var1<-m1*var(x1)+(1+((m-1)/m)*m1)*m1*(var(y1)/n1)+
+        (m1*m2/m)*(mean(x1)-mean(y1))^2
+  var2<-m2*var(x2)+(1+((m-1)/m)*m2)*m2*(var(y2)/n2)+
+        (m1*m2/m)*(mean(x2)-mean(y2))^2
+  cov<--(m1*m2/m)*(mean(x1)-mean(y1))*(mean(x2)-mean(y2))
+  
+  # Compute test statistics (from Rucker paper)
+  pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
+  sel_test<-(z1-z2)/sqrt(var1-var2-2*cov) # Selection effect
+  
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
+  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  
+  # Compute treatment effect t-test from random arm
+  treat_test<-t.test(y1,y2)$statistic
+  treat_pval<-t.test(y1,y2)$p.value
+  
+  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  
+  return(results)
+}
+
 
 
 ###################
