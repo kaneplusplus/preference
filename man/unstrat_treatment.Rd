@@ -4,21 +4,20 @@
 \alias{unstrat_treatment}
 \title{Unstratified Treatment Effect Sample Size}
 \usage{
-unstrat_treatment(zbeta, sigma2 = 1, delta_tau, zalpha = qnorm(0.0975),
-  theta = 0.5)
+unstrat_treatment(beta, sigma2, delta_tau, alpha = 0.05, theta = 0.5)
 }
 \arguments{
-\item{zbeta}{power Z value.}
+\item{beta}{desired study power. Should be numeric value between 0 and 1.}
 
-\item{sigma2}{variance.}
+\item{sigma2}{variance estimate. Should be a positive numeric value.}
 
-\item{delta_tau}{treatment effect.}
+\item{delta_tau}{overall study treatment effect.}
 
-\item{zalpha}{type I error Z value.}
+\item{alpha}{desired type I error rate.}
 
-\item{theta}{proportion of patients assigned to choice arm (default=0.5).}
-
-\item{phi}{preference rate of treatment 1.}
+\item{theta}{proportion of patients assigned to choice arm in the initial
+randomization. Should be numeric value between
+0 and 1 (default=0.5).}
 }
 \description{
 Calculates the sample size required to detect a given treatment effect 
@@ -26,6 +25,6 @@ in an unstratified two-stage randomized clinical trial
 }
 \examples{
 # Put example code here.
-rnorm(10)
+unstrat_treatment(beta=0.8, sigma2=1, delta_tau=0.5)
 }
 

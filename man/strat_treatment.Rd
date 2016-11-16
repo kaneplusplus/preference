@@ -4,23 +4,33 @@
 \alias{strat_treatment}
 \title{Stratified Treatment Effect Sample Size}
 \usage{
-strat_treatment(zbeta, phi, sigma2, delta_tau, zalpha = qnorm(0.975),
-  theta = 0.5, xi = c(0.5, 0.5), nstrata = 2)
+strat_treatment(beta, phi, sigma2, delta_tau, alpha = 0.05, theta = 0.5,
+  xi = c(0.5, 0.5), nstrata = 2)
 }
 \arguments{
-\item{zbeta}{power Z value.}
+\item{beta}{desired study power. Should be numeric value between 0 and 1.}
 
-\item{phi}{vector of preference rate of treatment 1 in each stratum.}
+\item{phi}{vector of the proportion of patients preferring treatment 1 within
+each stratum. Length of vector should equal number of strata 
+in the study. Vector elements should be numeric values between 0
+and 1.}
 
-\item{sigma2}{vector of within-stratum variances.}
+\item{sigma2}{vector of within-stratum variances. Length of vector should 
+equal number of strata in the study. Vector elements should be
+positive numeric values.}
 
-\item{delta_tau}{treatment effect.}
+\item{delta_tau}{overall study treatment effect.}
 
-\item{zalpha}{type I error Z value.}
+\item{alpha}{desired type I error rate.}
 
-\item{theta}{proportion of patients assigned to choice arm (default=0.5).}
+\item{theta}{proportion of patients assigned to choice arm in the initial
+randomization. Should be numeric value between
+0 and 1 (default=0.5).}
 
-\item{xi}{a numeric vector of proportion of patients in each stratum.}
+\item{xi}{a numeric vector of the proportion of patients in each stratum. 
+Length of vector should equal the number of strata in the study and 
+sum of vector should be 1. All vector elements should be numeric 
+values between 0 and 1.}
 
 \item{nstrata}{number of strata (default=2).}
 }
@@ -30,6 +40,6 @@ in a stratified two-stage randomized clinical trial
 }
 \examples{
 # Put example code here.
-rnorm(10)
+strat_treatment(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_tau=1)
 }
 

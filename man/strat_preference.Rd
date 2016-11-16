@@ -4,25 +4,35 @@
 \alias{strat_preference}
 \title{Stratified Preference Effect Sample Size}
 \usage{
-strat_preference(zbeta, phi, sigma2, delta_pi, delta_nu,
-  zalpha = qnorm(0.975), theta = 0.5, xi = c(0.5, 0.5), nstrata = 2)
+strat_preference(beta, phi, sigma2, delta_pi, delta_nu, alpha = 0.05,
+  theta = 0.5, xi = c(0.5, 0.5), nstrata = 2)
 }
 \arguments{
-\item{zbeta}{power Z value.}
+\item{beta}{desired study power. Should be numeric value between 0 and 1.}
 
-\item{phi}{vector of preference rate of treatment 1 in each stratum.}
+\item{phi}{vector of the proportion of patients preferring treatment 1 within
+each stratum. Length of vector should equal number of strata 
+in the study. Vector elements should be numeric values between 0
+and 1.}
 
-\item{sigma2}{vector of within-stratum variances.}
+\item{sigma2}{vector of within-stratum variances. Length of vector should 
+equal number of strata in the study. Vector elements should be
+positive numeric values.}
 
-\item{delta_pi}{preference effect.}
+\item{delta_pi}{overall study preference effect.}
 
-\item{delta_nu}{selection effect.}
+\item{delta_nu}{overall study selection effect.}
 
-\item{zalpha}{type I error Z value.}
+\item{alpha}{desired type I error rate.}
 
-\item{theta}{proportion of patients assigned to choice arm (default=0.5).}
+\item{theta}{proportion of patients assigned to choice arm in the initial
+randomization. Should be numeric value between
+0 and 1 (default=0.5).}
 
-\item{xi}{a numeric vector of proportion of patients in each stratum.}
+\item{xi}{a numeric vector of the proportion of patients in each stratum. 
+Length of vector should equal the number of strata in the study and 
+sum of vector should be 1. All vector elements should be numeric 
+values between 0 and 1.}
 
 \item{nstrata}{number of strata (default=2).}
 }
@@ -31,6 +41,7 @@ Calculates the sample size required to detect a given preference effect
 in a stratified two-stage randomized clinical trial
 }
 \examples{
-strat_preference(1.282, c(0.5, 0.5), c(1, 1), c(1, 1), c(0, 0))
+strat_preference(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+ delta_nu=0.5)
 }
 
