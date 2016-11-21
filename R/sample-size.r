@@ -274,6 +274,267 @@ strat_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
   return(max(pref,sel,treat))
 }
 
+#' Stratified Treatment Effect Power Calculation
+#'
+#' Calculates the study power to detect the treatment effect given a particular 
+#' sample size in an stratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study. Vector elements should be
+#'               positive numeric values.
+#' @param delta_tau overall study treatment effect.
+#' @param alpha desired type I error rate.. 
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2).
+#' @examples
+#' strat_trt_pwr(N=300, sigma2=c(1,1), delta_tau=0.5)
+#' @export
+strat_trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, 
+                        theta=0.5, xi=c(0.5,0.5), nstrata=2) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate study power
+  zalpha<-qnorm(1-(alpha/2))
+  power=pnorm(sqrt((((1-theta)*delta_tau^2*N)/4)*
+              sum(sapply(1:nstrata, function(i) xi[i]*sigma2[i])))-zalpha)
+  
+  return(power)
+}
+
+#' Stratified Preference Effect Power Calculation
+#'
+#' Calculates the study power to detect the preference effect given a particular 
+#' sample size in an stratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study. Vector elements should be numeric values between 0
+#'            and 1.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study. Vector elements should be
+#'               positive numeric values.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2).
+#' @examples
+#' strat_pref_pwr(N=300, phi=c(0.5,0.6), sigma2=c(1,1), delta_pi=0.5, 
+#'                delta_nu=0.5)
+#' @export
+strat_pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
+                         theta=0.5, xi=c(0.5,0.5), nstrata=2) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate study power
+  zalpha<-qnorm(1-(alpha/2))
+  
+  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
+               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_pi+delta_nu)^2
+                 +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
+  sum_total=sum(terms)
+  power=pnorm(sqrt((4*theta*delta_pi^2*N)/(sum_total))-zalpha)
+  
+  return(power)
+}
+
+#' Stratified Selection Effect Power Calculation
+#'
+#' Calculates the study power to detect the selection effect given a particular 
+#' sample size in an stratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study. Vector elements should be numeric values between 0
+#'            and 1.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study. Vector elements should be
+#'               positive numeric values.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2).
+#' @examples
+#' strat_sel_pwr(N=300, phi=c(0.5,0.6), sigma2=c(1,1), delta_pi=0.5, 
+#'                delta_nu=0.5)
+#' @export
+strat_sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
+                         theta=0.5, xi=c(0.5,0.5), nstrata=2) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate study power
+  zalpha<-qnorm(1-(alpha/2))
+  
+  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
+               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2
+                 +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
+  sum_total=sum(terms)
+  power=pnorm(sqrt((4*theta*delta_nu^2*N)/(sum_total))-zalpha)
+  
+  return(power)
+}
+
+#' Stratified Power Calculation from Sample Size
+#'
+#' Calculates the study power to detect a set of effects given a particular 
+#' sample size in an stratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param phi vector of the proportion of patients preferring treatment 1 within
+#'            each stratum. Length of vector should equal number of strata 
+#'            in the study. Vector elements should be numeric values between 0
+#'            and 1.
+#' @param sigma2 vector of within-stratum variances. Length of vector should 
+#'               equal number of strata in the study. Vector elements should be
+#'               positive numeric values.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param delta_tau overall study treatment effect.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2).
+#' @examples
+#' strat_power(N=300, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
+#' delta_tau=0.5)
+#' @export
+strat_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                        alpha=0.05, theta=0.5, xi=c(0.5,0.5), nstrata=2) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if (length(phi)!=nstrata) 
+    stop('Length vector does not match number of strata')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  
+  # Calculate study power
+  trt_pwr<-strat_trt_pwr(N=N,sigma2=sigma2,delta_tau=delta_tau,alpha=alpha,
+                         theta=theta,xi=xi,nstrata=nstrata)
+  pref_pwr<-strat_pref_pwr(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
+                           delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
+                           nstrata=nstrata)
+  sel_pwr<-strat_sel_pwr(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
+                         delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
+                         nstrata=nstrata)
+  
+  return(data.frame(trt_pwr=trt_pwr,pref_pwr=pref_pwr,sel_pwr=sel_pwr))  
+}
+
 ################################
 #### UNSTRATIFIED FUNCTIONS ####
 ################################
@@ -338,7 +599,6 @@ unstrat_selection<-function(power, phi, sigma2, delta_pi, delta_nu,
 #'              randomization. Should be numeric value between
 #'              0 and 1 (default=0.5).
 #' @examples
-#' # Put example code here.
 #' unstrat_preference(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' @export
 unstrat_preference<-function(power, phi, sigma2, delta_pi, delta_nu, 
