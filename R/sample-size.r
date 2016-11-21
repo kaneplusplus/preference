@@ -1,9 +1,13 @@
+##############################
+#### STRATIFIED FUNCTIONS ####
+##############################
+
 #' Stratified Selection Effect Sample Size
 #'
 #' Calculates the sample size required to detect a given selection effect 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi vector of the proportion of patients preferring treatment 1 within
 #'            each stratum. Length of vector should equal number of strata 
 #'            in the study. Vector elements should be numeric values between 0
@@ -24,14 +28,14 @@
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
-#' strat_selection(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#' strat_selection(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5)
 #' @export
-strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+strat_selection<-function(power, phi, sigma2, delta_pi, delta_nu, 
                           alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                           nstrata=2) {
   # Error messages
-  if(!is.numeric(beta) || beta <= 0 || beta >= 1)
+  if(!is.numeric(power) || power <= 0 || power >= 1)
     stop('Power must be numeric in [0,1]')
   if (length(phi) != nstrata) 
     stop('Length vector does not match number of strata')
@@ -57,7 +61,7 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2
@@ -72,7 +76,7 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given preference effect 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi vector of the proportion of patients preferring treatment 1 within
 #'            each stratum. Length of vector should equal number of strata 
 #'            in the study. Vector elements should be numeric values between 0
@@ -92,14 +96,14 @@ strat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #'          values between 0 and 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
-#' strat_preference(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#' strat_preference(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5)
 #' @export
-strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+strat_preference<-function(power, phi, sigma2, delta_pi, delta_nu, 
                            alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                            nstrata=2) {
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
@@ -125,7 +129,7 @@ strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_pi+delta_nu)^2
@@ -140,7 +144,7 @@ strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given treatment effect 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi vector of the proportion of patients preferring treatment 1 within
 #'            each stratum. Length of vector should equal number of strata 
 #'            in the study. Vector elements should be numeric values between 0
@@ -160,12 +164,12 @@ strat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
-#' strat_treatment(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_tau=1)
+#' strat_treatment(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_tau=1)
 #' @export
-strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
+strat_treatment<-function(power, phi, sigma2, delta_tau, alpha=0.05,
                           theta=0.5, xi=c(0.5,0.5), nstrata=2) {
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
@@ -191,7 +195,7 @@ strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
     stop('Number of strata must be numeric greater than 0')
   
   #Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
   sum_total=sum(terms)
@@ -204,7 +208,7 @@ strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
 #' Calculates the sample size required to detect a given set of effects 
 #' in a stratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi vector of the proportion of patients preferring treatment 1 within
 #'            each stratum. Length of vector should equal number of strata 
 #'            in the study. Vector elements should be numeric values between 0
@@ -226,14 +230,14 @@ strat_treatment<-function(beta, phi, sigma2, delta_tau, alpha=0.05,
 #' @param nstrata number of strata (default=2).
 #' @examples
 #' # Put example code here.
-#' strat_overall(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#' strat_overall(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5, delta_tau=0.5)
 #' @export
-strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+strat_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                            alpha=0.05, theta=0.5, xi=c(0.5,0.5), 
                            nstrata=2) {
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
@@ -259,7 +263,7 @@ strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   pref=strat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
                         theta, xi, nstrata)
@@ -270,12 +274,16 @@ strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
   return(max(pref,sel,treat))
 }
 
+################################
+#### UNSTRATIFIED FUNCTIONS ####
+################################
+
 #' Unstratified Selection Effect Sample Size
 #'
 #' Calculates the sample size required to detect a given selection effect 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi proportion of patients preferring treatment 1. Should be numeric
 #'            value between 0 and 1.
 #' @param sigma2 variance estimate. Should be a positive numeric value.
@@ -287,12 +295,12 @@ strat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' unstrat_selection(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
+#' unstrat_selection(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' @export
-unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+unstrat_selection<-function(power, phi, sigma2, delta_pi, delta_nu, 
                             alpha=0.05, theta=0.5) {
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
     stop('Preference rate must be numeric value in [0,1]')
@@ -306,7 +314,7 @@ unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
     stop('Theta must be numeric in [0,1]')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2
           +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
@@ -319,7 +327,7 @@ unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given preference effect 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi proportion of patients preferring treatment 1. Should be numeric
 #'            value between 0 and 1.
 #' @param sigma2 variance estimate. Should be a positive numeric value.
@@ -331,12 +339,12 @@ unstrat_selection<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' unstrat_preference(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
+#' unstrat_preference(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' @export
-unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu, 
+unstrat_preference<-function(power, phi, sigma2, delta_pi, delta_nu, 
                              alpha=0.05, theta=0.5) {
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
     stop('Preference rate must be numeric value in [0,1]')
@@ -350,7 +358,7 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
     stop('Theta must be numeric in [0,1]')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2
           +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
@@ -363,7 +371,7 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #' Calculates the sample size required to detect a given treatment effect 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param sigma2 variance estimate. Should be a positive numeric value.
 #' @param delta_tau overall study treatment effect.
 #' @param alpha desired type I error rate.
@@ -372,12 +380,12 @@ unstrat_preference<-function(beta, phi, sigma2, delta_pi, delta_nu,
 #'              0 and 1 (default=0.5).
 #' @examples
 #' # Put example code here.
-#' unstrat_treatment(beta=0.8, sigma2=1, delta_tau=0.5)
+#' unstrat_treatment(power=0.8, sigma2=1, delta_tau=0.5)
 #' @export
-unstrat_treatment<-function(beta, sigma2, delta_tau, alpha=0.05, 
+unstrat_treatment<-function(power, sigma2, delta_tau, alpha=0.05, 
                             theta=0.5){
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
@@ -389,7 +397,7 @@ unstrat_treatment<-function(beta, sigma2, delta_tau, alpha=0.05,
     stop('Theta must be numeric in [0,1]')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
   N=(4*sigma2*(zbeta+zalpha)^2)/((1-theta)*delta_tau^2)
   return(N)
@@ -400,7 +408,7 @@ unstrat_treatment<-function(beta, sigma2, delta_tau, alpha=0.05,
 #' Calculates the sample size required to detect a set of effects 
 #' in an unstratified two-stage randomized clinical trial
 #'
-#' @param beta desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi proportion of patients preferring treatment 1. Should be numeric
 #'            value between 0 and 1.
 #' @param sigma2 variance estimate. Should be a positive numeric value.
@@ -412,14 +420,13 @@ unstrat_treatment<-function(beta, sigma2, delta_tau, alpha=0.05,
 #'              randomization. Should be numeric value between
 #'              0 and 1 (default=0.5).
 #' @examples
-#' # Put example code here.
-#' unstrat_overall(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
+#' unstrat_overall(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
 #' delta_tau=0.5)
 #' @export
-unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+unstrat_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                             alpha=0.05, theta=0.5) {
   # Error messages
-  if(beta<0 | beta>1 | !is.numeric(beta)) 
+  if(power<0 | power>1 | !is.numeric(power)) 
     stop('Power must be numeric in [0,1]')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
     stop('Preference rate must be numeric value in [0,1]')
@@ -433,14 +440,182 @@ unstrat_overall<-function(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
     stop('Theta must be numeric in [0,1]')
   
   # Calculate sample size
-  zbeta<-qnorm(beta)
+  zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
-  sel=unstrat_selection(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, theta)
-  pref=unstrat_preference(zbeta, phi, sigma2, delta_pi, delta_nu, zalpha, 
+  sel=unstrat_selection(power, phi, sigma2, delta_pi, delta_nu, alpha, theta)
+  pref=unstrat_preference(power, phi, sigma2, delta_pi, delta_nu, alpha, 
                           theta)
-  treat=unstrat_treatment(zbeta, phi, sigma2, delta_tau, zalpha, theta)
+  treat=unstrat_treatment(power, sigma2, delta_tau, alpha, theta)
   return(max(sel, pref, treat))
 }
+
+#' Unstratified Treatment Effect Power Calculation
+#'
+#' Calculates the study power to detect the treatment effect given a particular 
+#' sample size in an unstratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param sigma2 variance estimate. Should be a positive numeric value.
+#' @param delta_tau overall study treatment effect.
+#' @param alpha desired type I error rate.. 
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @examples
+#' unstrat_trt_pwr(N=300, sigma2=1, delta_tau=0.5)
+#' @export
+unstrat_trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate study power
+  zalpha<-qnorm(1-(alpha/2))
+  power=pnorm(sqrt(((1-theta)*delta_tau^2*N)/(4*sigma2))-zalpha)
+
+  return(power)
+}
+
+#' Unstratified Preference Effect Power Calculation
+#'
+#' Calculates the study power to detect the preference effect given a particular 
+#' sample size in an unstratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param phi proportion of patients preferring treatment 1. Should be numeric
+#'            value between 0 and 1.
+#' @param sigma2 variance estimate. Should be a positive numeric value.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param alpha desired type I error rate. 
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @examples
+#' unstrat_pref_pwr(N=300, phi=0.5, sigma2=1, delta_pi=0.5, delta_nu=0.5)
+#' @export
+unstrat_pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, 
+                          alpha=0.05, theta=0.5) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate study power
+  zalpha<-qnorm(1-(alpha/2))
+  numerator=4*theta*phi^2*(1-phi)^2*delta_pi^2*N
+  denominator=sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2+2*
+    (theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
+  power=pnorm(sqrt(numerator/denominator)-zalpha)
+  
+  return(power)
+}
+
+#' Unstratified Selection Effect Power Calculation
+#'
+#' Calculates the study power to detect the selection effect given a particular 
+#' sample size in an unstratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param phi proportion of patients preferring treatment 1. Should be numeric
+#'            value between 0 and 1.
+#' @param sigma2 variance estimate. Should be a positive numeric value.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param alpha desired type I error rate. 
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @examples
+#' unstrat_sel_pwr(N=300, phi=0.5, sigma2=1, delta_pi=0.5, delta_nu=0.5)
+#' @export
+unstrat_sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, 
+                           alpha=0.05, theta=0.5) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate study power
+  zalpha<-qnorm(1-(alpha/2))
+  numerator=4*theta*phi^2*(1-phi)^2*delta_nu^2*N
+  denominator=sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2+2*
+    (theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
+  power=pnorm(sqrt(numerator/denominator)-zalpha)
+  
+  return(power)
+}
+
+#' Unstratified Power Calculation from Sample Size
+#'
+#' Calculates the study power to detect a set of effects given a particular 
+#' sample size in an unstratified two-stage randomized clinical trial
+#'
+#' @param N overall study sample size.
+#' @param phi proportion of patients preferring treatment 1. Should be numeric
+#'            value between 0 and 1.
+#' @param sigma2 variance estimate. Should be a positive numeric value.
+#' @param delta_pi overall study preference effect.
+#' @param delta_nu overall study selection effect.
+#' @param delta_tau overall study treatment effect.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @examples
+#' unstrat_power(N=300, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
+#' delta_tau=0.5)
+#' @export
+unstrat_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                          alpha=0.05, theta=0.5) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau))
+    stop('Effect size must be numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate study power
+  trt_pwr<-unstrat_trt_pwr(N,sigma2,delta_tau,alpha,theta)
+  pref_pwr<-unstrat_pref_pwr(N,phi,sigma2,delta_pi,delta_nu,alpha,theta)
+  sel_pwr<-unstrat_sel_pwr(N,phi,sigma2,delta_pi,delta_nu,alpha,theta)
+
+  return(data.frame(trt_pwr=trt_pwr,pref_pwr=pref_pwr,sel_pwr=sel_pwr))  
+}
+
 
 #' Unstratified Optimized Theta
 #'
@@ -490,6 +665,68 @@ theta_optim<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
 f<-function(theta,value) {
   (theta/(1-theta))^2-value
 }  
+
+#' Unstratified Analysis Function
+#'
+#' Computes the test statistic and p-value for the preference, selection, and 
+#' treatment effects for the unstratified two-stage randomized trial
+#'
+#' @param x1 vector of responses for patients choosing treatment 1
+#' @param x2 vector of responses for patients choosing treatment 2
+#' @param y1 vector of responses for patients randomized to treatment 1
+#' @param y2 vector of responses for patients randomized to treatment 2
+#' @examples
+#' x1<-c(10,9,5,12,14)
+#' x2<-c(16,12,14,10,8,9,11)
+#' y1<-c(10,6,5,14,8)
+#' y2<-c(12,10,15,11,11)
+#' unstat_analysis(x1,x2,y1,y2)
+#' @export
+unstrat_analysis<-function(x1,x2,y1,y2) {
+  # Error messages
+  if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
+    stop("Arguments must be numeric vectors")
+  
+  # Define sample sizes
+  m1<-length(x1)
+  m2<-length(x2)
+  n1<-length(y1)
+  n2<-length(y2)
+  m<-m1+m2
+  n<-n1+n2
+  N<-m+n
+  
+  # Calculate z statistic
+  z1<-sum(x1)-m1*mean(y1)
+  z2<-sum(x2)-m2*mean(y2)
+  
+  # Calculate variances (formulas from Rucker paper)
+  var1<-m1*var(x1)+(1+((m-1)/m)*m1)*m1*(var(y1)/n1)+
+    (m1*m2/m)*(mean(x1)-mean(y1))^2
+  var2<-m2*var(x2)+(1+((m-1)/m)*m2)*m2*(var(y2)/n2)+
+    (m1*m2/m)*(mean(x2)-mean(y2))^2
+  cov<--(m1*m2/m)*(mean(x1)-mean(y1))*(mean(x2)-mean(y2))
+  
+  # Compute test statistics (from Rucker paper)
+  pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
+  sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
+  
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
+  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  
+  # Compute treatment effect t-test from random arm
+  treat_test<-t.test(y1,y2)$statistic
+  treat_pval<-t.test(y1,y2)$p.value
+  
+  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  
+  return(results)
+}
+
+#########################
+#### OTHER FUNCTIONS ####
+#########################
 
 #' Calculate Effect Sizes from Means
 #'
@@ -575,64 +812,6 @@ calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   }
 
   return(effects)
-}
-
-#' Unstratified Analysis Function
-#'
-#' Computes the test statistic and p-value for the preference, selection, and 
-#' treatment effects for the unstratified two-stage randomized trial
-#'
-#' @param x1 vector of responses for patients choosing treatment 1
-#' @param x2 vector of responses for patients choosing treatment 2
-#' @param y1 vector of responses for patients randomized to treatment 1
-#' @param y2 vector of responses for patients randomized to treatment 2
-#' @examples
-#' x1<-c(10,9,5,12,14)
-#' x2<-c(16,12,14,10,8,9,11)
-#' y1<-c(10,6,5,14,8)
-#' y2<-c(12,10,15,11,11)
-#' unstat_analysis(x1,x2,y1,y2)
-#' @export
-unstrat_analysis<-function(x1,x2,y1,y2) {
-  # Error messages
-  if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
-    stop("Arguments must be numeric vectors")
-    
-  # Define sample sizes
-  m1<-length(x1)
-  m2<-length(x2)
-  n1<-length(y1)
-  n2<-length(y2)
-  m<-m1+m2
-  n<-n1+n2
-  N<-m+n
-  
-  # Calculate z statistic
-  z1<-sum(x1)-m1*mean(y1)
-  z2<-sum(x2)-m2*mean(y2)
-  
-  # Calculate variances (formulas from Rucker paper)
-  var1<-m1*var(x1)+(1+((m-1)/m)*m1)*m1*(var(y1)/n1)+
-        (m1*m2/m)*(mean(x1)-mean(y1))^2
-  var2<-m2*var(x2)+(1+((m-1)/m)*m2)*m2*(var(y2)/n2)+
-        (m1*m2/m)*(mean(x2)-mean(y2))^2
-  cov<--(m1*m2/m)*(mean(x1)-mean(y1))*(mean(x2)-mean(y2))
-  
-  # Compute test statistics (from Rucker paper)
-  pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
-  sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
-  
-  # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
-  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
-  
-  # Compute treatment effect t-test from random arm
-  treat_test<-t.test(y1,y2)$statistic
-  treat_pval<-t.test(y1,y2)$p.value
-  
-  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
-  
-  return(results)
 }
 
 
