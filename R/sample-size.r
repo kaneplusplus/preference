@@ -535,6 +535,60 @@ strat_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
   return(data.frame(trt_pwr=trt_pwr,pref_pwr=pref_pwr,sel_pwr=sel_pwr))  
 }
 
+#' Stratified Treatment Effect Back Calculation
+#' 
+#' Calculates the treatment effect that can be detected given a desired study 
+#' power and overall study sample size for the stratified two-stage 
+#' randomized design
+#' 
+#' @param N overall study sample size.
+#' @param power desired study power. Should be numeric value between 0 and 1.
+#' @param sigma2 variance estimate. Should be a positive numeric value.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2).
+#' @examples
+#' strat_trt_effect(N=300,power=0.9,sigma2=c(1,0.8))
+#' @export
+strat_trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, 
+                           xi=c(0.5,0.5), nstrata=2) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(power<0 | power>1 | !is.numeric(power)) 
+    stop('Power must be numeric in [0,1]')
+  if(length(sigma2)!=nstrata)
+    stop('Length of variance vector does not match number of strata')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+    stop('Proportion of patients in strata must be numeric value in [0,1]')
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  # Calculate effect size
+  zbeta=qnorm(power)
+  zalpha<-qnorm(1-(alpha/2))
+  effect=sqrt(((4*(zbeta+zalpha)^2)/((1-theta)*N))*
+                sum(sapply(1:nstrata, function(i) xi[i]*sigma2[i])))
+  
+  return(effect)
+}
+
 ################################
 #### UNSTRATIFIED FUNCTIONS ####
 ################################
@@ -876,6 +930,44 @@ unstrat_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
   return(data.frame(trt_pwr=trt_pwr,pref_pwr=pref_pwr,sel_pwr=sel_pwr))  
 }
 
+#' Unstratified Treatment Effect Back Calculation
+#' 
+#' Calculates the treatment effect that can be detected given a desired study 
+#' power and overall study sample size for the unstratified two-stage 
+#' randomized design
+#' 
+#' @param N overall study sample size.
+#' @param power desired study power. Should be numeric value between 0 and 1.
+#' @param sigma2 variance estimate. Should be a positive numeric value.
+#' @param alpha desired type I error rate.
+#' @param theta proportion of patients assigned to choice arm in the initial
+#'              randomization. Should be numeric value between
+#'              0 and 1 (default=0.5).
+#' @examples
+#' unstrat_trt_effect(N=300,power=0.9,sigma2=1)
+#' @export
+unstrat_trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5) {
+  # Error messages
+  if(N<0 | !is.numeric(N)) 
+    stop('N must be a positive numeric value')
+  if(power<0 | power>1 | !is.numeric(power)) 
+    stop('Power must be numeric in [0,1]')
+  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+    stop('Preference rate must be numeric value in [0,1]')
+  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+    stop('Variance estimate must be numeric value greater than 0')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha))
+    stop('Type I error rate must be numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta)) 
+    stop('Theta must be numeric in [0,1]')
+  
+  # Calculate effect size
+  zbeta=qnorm(power)
+  zalpha<-qnorm(1-(alpha/2))
+  effect=sqrt((4*sigma2*(zbeta+zalpha)^2)/((1-theta)*N))
+  
+  return(effect)
+}
 
 #' Unstratified Optimized Theta
 #'
@@ -897,7 +989,6 @@ unstrat_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' @param delta_pi overall study preference effect.
 #' @param delta_nu overall study selection effect. 
 #' @examples
-#' # Put example code here.
 #' theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
 #' delta_pi=1, delta_nu=0.5)
 #' @export
