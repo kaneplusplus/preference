@@ -589,6 +589,92 @@ strat_trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5,
   return(effect)
 }
 
+
+#' Stratified Analysis Function
+#' 
+#' Computes the test statistic and p-value for the preference, selection, and 
+#' treatment effects for the stratified two-stage randomized trial
+#' 
+#' @param x1 vector of responses for patients choosing treatment 1
+#' @param s11 vector of stratum membership for patients choosing treatment 1. 
+#'            Should be a vector of the same length as x1 with the number of
+#'            unique values equal to the number of strata.
+#' @param x2 vector of responses for patients choosing treatment 2
+#' @param s22 vector of stratum membership for patients choosing treatment 2. 
+#'            Should be a vector of the same length as x2 with the number of
+#'            unique values equal to the number of strata.
+#' @param y1 vector of responses for patients randomized to treatment 1
+#' @param s1 vector of stratum membership for patients randomized to treatment 1. 
+#'            Should be a vector of the same length as y1 with the number of
+#'            unique values equal to the number of strata.
+#' @param y2 vector of responses for patients randomized to treatment 2.
+#' @param s2 vector of stratum membership for patients randomized to treatment 2. 
+#'            Should be a vector of the same length as y2 with the number of
+#'            unique values equal to the number of strata.
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2)
+#' @examples
+#' x1<-c(10,8,6,10,5)
+#' s11<-c(1,1,2,2,2)
+#' x2<-c(8,7,6,10,12,11,6,8)
+#' s22<-c(1,1,1,1,2,2,2)
+#' y1<-c(10,5,7,9,12,6)
+#' s1<-c(1,1,1,2,2,2)
+#' y2<-c(8,9,10,7,8,11)
+#' s2<-c(1,1,1,2,2,2)
+#' @export
+strat_analysis<-function(x1,s11,x2,s22,y1,s1,y2,s2,xi=c(0.5,0.5),nstrata=2){
+  # Error messages
+  if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
+    stop("Arguments must be numeric vectors")
+  if(length(s11)!=length(x1))
+    stop("Length of s11, x1 must match")
+  if(length(s22)!=length(x2))
+    stop("Length of s22, x2 must match")
+  if(length(s1)!=length(y1))
+    stop("Length of s1, y1 must match")
+  if(length(s2)!=length(y2))
+    stop("Length of s2, y2 must match")
+  if(length(unique(s11))!=nstrata | length(unique(s22))!=nstrata | 
+     length(unique(s11))!=nstrata | length(unique(s11))!=nstrata)
+    stop("Number of unique elements in strata membership not equal to nstrata")
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+  
+  unstrat_stats<-matrix(NA,nrow=nstrata,ncol=3)
+  
+  # Compute unstratified test statistics
+  for(i in 1:nstrata){
+    x1i<-x1[as.factor(s11)==levels(as.factor(s11))[i]]
+    x2i<-x2[as.factor(s22)==levels(as.factor(s22))[i]]
+    y1i<-y1[as.factor(s1)==levels(as.factor(s1))[i]]
+    y2i<-y2[as.factor(s2)==levels(as.factor(s2))[i]]
+    
+    unstrat_stats[i,]<-unlist(unstrat_analysis(x1i,x2i,y1i,y2i)[c(1,3,5)])
+  }
+  
+  # Compute stratified test statistics and p-values
+  pref_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,1]))
+  sel_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,2]))
+  treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,3]))
+  
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
+  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  treat_pval<-(1-pnorm(abs(treat_test)))*2
+  
+  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  
+  return(results)
+}
+
 ################################
 #### UNSTRATIFIED FUNCTIONS ####
 ################################
@@ -1029,9 +1115,9 @@ f<-function(theta,value) {
 #' @examples
 #' x1<-c(10,9,5,12,14)
 #' x2<-c(16,12,14,10,8,9,11)
-#' y1<-c(10,6,5,14,8)
-#' y2<-c(12,10,15,11,11)
-#' unstat_analysis(x1,x2,y1,y2)
+#' y1<-c(10,6,5,14,8,10)
+#' y2<-c(12,10,15,11,11,13)
+#' unstrat_analysis(x1,x2,y1,y2)
 #' @export
 unstrat_analysis<-function(x1,x2,y1,y2) {
   # Error messages
