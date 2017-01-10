@@ -1,12 +1,12 @@
 library(shiny)
 library(shinyBS)
-library(rbokeh)
+library(ggplot2)
 
 # Define UI for application that draws a histogram
 ui <- shinyUI(pageWithSidebar(
   
   # Application title
-  headerPanel("Stratified Sample-Size Calculator"),
+  headerPanel("Stratified Selection Sample-Size Calculator"),
 
   # Need to add tooltips for descriptions of inputs.
 
@@ -15,12 +15,13 @@ ui <- shinyUI(pageWithSidebar(
   # Sidebar with a slider input for number of bins 
   sidebarPanel(
     sliderInput("num_strata", "Number of Strata:", min=1, max=10, value=2),
-    sliderInput("beta", "Power:", min=0, max=3, value=1.282),
+    sliderInput("power", "Power:", min=0.1, max=0.99, value=0.8),
     textInput("phi", "Preference Rate:", value="0.5, 0.5"),
     textInput("sigma2", "Within-Stratum Variances:", value="1, 1"),
-    textInput("delta_pi", "Preference Effect:", value="1"),
-    textInput("delta_nu", "Selection Effect:", value="1"),
-    sliderInput("alpha", "Type-1 Error Rate:", min=0, max=3, value=1.96),
+    textInput("delta_pi", "Preference Effect (may be a range):", 
+      value="1 to 10"),
+    textInput("delta_nu", "Selection Effect (may be a range):", value="1"),
+    sliderInput("alpha", "Type-1 Error Rate:", min=0.01, max=0.5, value=0.05),
     sliderInput("theta", "Choice-arm Proportion:", min=0, max=1, value=0.5),
     textInput("xi", "Proporion of Patients in Each Stratum:", value="0.5, 0.5"),
 #    bsTooltip("num_strata", "The number of Strata", "top", 
@@ -41,8 +42,8 @@ ui <- shinyUI(pageWithSidebar(
       
   # Show a plot of the generated distribution
   mainPanel(
-    tableOutput("sample_size"),
-    rbokehOutput("line_graph")
+    plotOutput("line_graph"),
+    dataTableOutput("sample_size")
   )
 
 ))
