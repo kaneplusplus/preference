@@ -27,7 +27,6 @@
 #'          values between 0 and 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
-#' # Put example code here.
 #' strat_selection(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5)
 #' @export
@@ -163,7 +162,6 @@ strat_preference<-function(power, phi, sigma2, delta_pi, delta_nu,
 #'          values between 0 and 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
-#' # Put example code here.
 #' strat_treatment(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_tau=1)
 #' @export
 strat_treatment<-function(power, phi, sigma2, delta_tau, alpha=0.05,
@@ -206,7 +204,9 @@ strat_treatment<-function(power, phi, sigma2, delta_tau, alpha=0.05,
 #' Stratified Overall Sample Size
 #'
 #' Calculates the sample size required to detect a given set of effects 
-#' in a stratified two-stage randomized clinical trial
+#' in a stratified two-stage randomized clinical trial. Returns the largest
+#' of the required sample sizes for a given set of treatment, selection, and 
+#' preference effects.
 #'
 #' @param power desired study power. Should be numeric value between 0 and 1.
 #' @param phi vector of the proportion of patients preferring treatment 1 within
@@ -229,7 +229,6 @@ strat_treatment<-function(power, phi, sigma2, delta_tau, alpha=0.05,
 #'          values between 0 and 1.
 #' @param nstrata number of strata (default=2).
 #' @examples
-#' # Put example code here.
 #' strat_overall(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5, delta_tau=0.5)
 #' @export
@@ -695,7 +694,6 @@ strat_analysis<-function(x1,s11,x2,s22,y1,s1,y2,s2,xi=c(0.5,0.5),nstrata=2){
 #'              randomization. Should be numeric value between
 #'              0 and 1 (default=0.5).
 #' @examples
-#' # Put example code here.
 #' unstrat_selection(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' @export
 unstrat_selection<-function(power, phi, sigma2, delta_pi, delta_nu, 
@@ -779,7 +777,6 @@ unstrat_preference<-function(power, phi, sigma2, delta_pi, delta_nu,
 #'              randomization. Should be numeric value between
 #'              0 and 1 (default=0.5).
 #' @examples
-#' # Put example code here.
 #' unstrat_treatment(power=0.8, sigma2=1, delta_tau=0.5)
 #' @export
 unstrat_treatment<-function(power, sigma2, delta_tau, alpha=0.05, 
