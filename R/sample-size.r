@@ -589,10 +589,11 @@ strat_trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5,
 }
 
 
-#' Stratified Analysis Function
+#' Stratified Analysis Function: Raw Data
 #' 
 #' Computes the test statistic and p-value for the preference, selection, and 
-#' treatment effects for the stratified two-stage randomized trial
+#' treatment effects for the stratified two-stage randomized trial using
+#' provided raw data
 #' 
 #' @param x1 vector of responses for patients choosing treatment 1
 #' @param s11 vector of stratum membership for patients choosing treatment 1. 
@@ -619,13 +620,13 @@ strat_trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5,
 #' x1<-c(10,8,6,10,5)
 #' s11<-c(1,1,2,2,2)
 #' x2<-c(8,7,6,10,12,11,6,8)
-#' s22<-c(1,1,1,1,2,2,2)
+#' s22<-c(1,1,1,1,2,2,2,2)
 #' y1<-c(10,5,7,9,12,6)
 #' s1<-c(1,1,1,2,2,2)
 #' y2<-c(8,9,10,7,8,11)
 #' s2<-c(1,1,1,2,2,2)
 #' @export
-strat_analysis<-function(x1,s11,x2,s22,y1,s1,y2,s2,xi=c(0.5,0.5),nstrata=2){
+strat_analysis_raw<-function(x1,s11,x2,s22,y1,s1,y2,s2,xi=c(0.5,0.5),nstrata=2){
   # Error messages
   if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
     stop("Arguments must be numeric vectors")
@@ -647,7 +648,7 @@ strat_analysis<-function(x1,s11,x2,s22,y1,s1,y2,s2,xi=c(0.5,0.5),nstrata=2){
   if(nstrata<=0 | !is.numeric(nstrata))
     stop('Number of strata must be numeric greater than 0')
   
-  unstrat_stats<-matrix(NA,nrow=nstrata,ncol=3)
+  unstrat_stats<-matrix(NA,nrow=nstrata,ncol=6)
   
   # Compute unstratified test statistics
   for(i in 1:nstrata){
@@ -656,13 +657,108 @@ strat_analysis<-function(x1,s11,x2,s22,y1,s1,y2,s2,xi=c(0.5,0.5),nstrata=2){
     y1i<-y1[as.factor(s1)==levels(as.factor(s1))[i]]
     y2i<-y2[as.factor(s2)==levels(as.factor(s2))[i]]
     
-    unstrat_stats[i,]<-unlist(unstrat_analysis(x1i,x2i,y1i,y2i)[c(1,3,5)])
+    unstrat_stats[i,]<-unlist(unstrat_analysis_raw(x1i,x2i,y1i,y2i))
   }
   
   # Compute stratified test statistics and p-values
   pref_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,1]))
   sel_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,2]))
   treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,3]))
+  
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
+  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  treat_pval<-(1-pnorm(abs(treat_test)))*2
+  
+  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  
+  return(results)
+}
+
+#' Stratified Analysis Function: Summary Data
+#' 
+#' Computes the test statistic and p-value for the preference, selection, and 
+#' treatment effects for the stratified two-stage randomized trial using
+#' provided summary data
+#' 
+#' @param x1mean vector of mean of responses for patients choosing treatment 1.
+#'               Length of vector should be equal to number of strata.
+#' @param x1var vector of variance of responses for patients choosing 
+#'              treatment 1. Length of vector should be equal to number of 
+#'              strata.
+#' @param m1 vector of number of patients choosing treatment 1. Length of 
+#'           vector should be equal to number of strata.
+#' @param x2mean vector of mean of responses for patients choosing treatment 2.
+#'               Length of vector should be equal to number of strata.
+#' @param x2var vector of variance of responses for patients choosing 
+#'              treatment 2. Length of vector should be equal to number of
+#'              strata.
+#' @param m2 vector of number of patients choosing treatment 2. Length of 
+#'           vector should be equal to number of strata.
+#' @param y1mean vector of mean of responses for patients randomized to 
+#'               treatment 1. Length of vector should be equal to number of 
+#'               strata.
+#' @param y1var vector of variance of responses for patients randomized to 
+#'              treatment 1. Length of vector should be equal to number of 
+#'              strata.
+#' @param n1 vector of number of patients randomized to treatment 1. Length 
+#'           of vector should be equal to number of strata.
+#' @param y2mean vector of mean of responses for patients randomized to 
+#'               treatment 2. Length of vector should be equal to number of 
+#'               strata.
+#' @param y2var vector of variance of responses for patients randomized to 
+#'              treatment 2. Length of vector should be equal to number of 
+#'              strata.
+#' @param n2 vector of number of patients randomized to treatment 2. Length 
+#'           of vector should be equal to number of strata.
+#' @param xi a numeric vector of the proportion of patients in each stratum. 
+#'          Length of vector should equal the number of strata in the study and 
+#'          sum of vector should be 1. All vector elements should be numeric 
+#'          values between 0 and 1.
+#' @param nstrata number of strata (default=2)
+#' @examples
+#' x1<-c(10,8,6,10,5)
+#' s11<-c(1,1,2,2,2)
+#' x2<-c(8,7,6,10,12,11,6,8)
+#' s22<-c(1,1,1,1,2,2,2,2)
+#' y1<-c(10,5,7,9,12,6)
+#' s1<-c(1,1,1,2,2,2)
+#' y2<-c(8,9,10,7,8,11)
+#' s2<-c(1,1,1,2,2,2)
+#' @export
+strat_analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
+                                 n1,y2mean,y2var,n2,xi=c(0.5,0.5),nstrata=2){
+  # Error messages
+  if(!is.numeric(x1mean) | !is.numeric(x1var) | 
+     !is.numeric(x2mean) | !is.numeric(x2var) |
+     !is.numeric(y1mean) | !is.numeric(y1var) |
+     !is.numeric(y2mean) | !is.numeric(y2var) |
+     !is.numeric(m1) | !is.numeric(m2) | !is.numeric(n1) | !is.numeric(n2))
+    stop("Arguments must be numeric vectors")
+  if(length(x1mean)!=nstrata | length(x1var)!=nstrata | length(m1)!=nstrata)
+    stop("Length of vector must match number of strata")
+  if(length(x2mean)!=nstrata | length(x2var)!=nstrata | length(m2)!=nstrata)
+    stop("Length of vector must match number of strata")
+  if(length(y1mean)!=nstrata | length(y1var)!=nstrata | length(n1)!=nstrata)
+    stop("Length of vector must match number of strata")
+  if(length(y2mean)!=nstrata | length(y2var)!=nstrata | length(n2)!=nstrata)
+    stop("Length of vector must match number of strata")
+  if (length(xi)!=nstrata) 
+    stop('Length of vector does not match number of strata')
+  if (sum(xi)!=1) 
+    stop('Stratum proportions do not sum to 1')
+  if(nstrata<=0 | !is.numeric(nstrata))
+    stop('Number of strata must be numeric greater than 0')
+   
+  # Compute unstratified test statistics
+  unstrat_stats<-sapply(1:nstrata, function(i) unstrat_analysis_summary
+                 (x1mean[i],x1var[i],m1[i],x2mean[i],x2var[i],m2[i],y1mean[i],
+                 y1var[i],n1[i],y2mean[i],y2var[i],n2[i]))
+  
+  # Compute stratified test statistics and p-values
+  pref_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[1,i])))
+  sel_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[3,i])))
+  treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[5,i])))
   
   # Compute p-values (Assume test stats approximately normally distributed)
   pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
