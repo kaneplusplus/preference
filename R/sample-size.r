@@ -1100,10 +1100,11 @@ f<-function(theta,value) {
   (theta/(1-theta))^2-value
 }  
 
-#' Unstratified Analysis Function
+#' Unstratified Analysis Function: Raw Data
 #'
 #' Computes the test statistic and p-value for the preference, selection, and 
-#' treatment effects for the unstratified two-stage randomized trial
+#' treatment effects for the unstratified two-stage randomized trial from 
+#' given raw data
 #'
 #' @param x1 vector of responses for patients choosing treatment 1
 #' @param x2 vector of responses for patients choosing treatment 2
@@ -1116,7 +1117,7 @@ f<-function(theta,value) {
 #' y2<-c(12,10,15,11,11,13)
 #' unstrat_analysis(x1,x2,y1,y2)
 #' @export
-unstrat_analysis<-function(x1,x2,y1,y2) {
+unstrat_analysis_raw<-function(x1,x2,y1,y2) {
   # Error messages
   if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
     stop("Arguments must be numeric vectors")
@@ -1140,6 +1141,74 @@ unstrat_analysis<-function(x1,x2,y1,y2) {
   var2<-m2*var(x2)+(1+((m-1)/m)*m2)*m2*(var(y2)/n2)+
     (m1*m2/m)*(mean(x2)-mean(y2))^2
   cov<--(m1*m2/m)*(mean(x1)-mean(y1))*(mean(x2)-mean(y2))
+  
+  # Compute test statistics (from Rucker paper)
+  pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
+  sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
+  
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
+  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  
+  # Compute treatment effect t-test from random arm
+  treat_test<-t.test(y1,y2)$statistic
+  treat_pval<-t.test(y1,y2)$p.value
+  
+  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  
+  return(results)
+}
+
+#' Unstratified Analysis Function: Summary Data
+#'
+#' Computes the test statistic and p-value for the preference, selection, and 
+#' treatment effects for the unstratified two-stage randomized trial from 
+#' provided summary data
+#'
+#' @param x1mean mean of responses for patients choosing treatment 1
+#' @param x1var variance of responses for patients choosing treatment 1
+#' @param m1 number of patients choosing treatment 1
+#' @param x2mean mean of responses for patients choosing treatment 2
+#' @param x2var variance of responses for patients choosing treatment 2
+#' @param m2 number of patients choosing treatment 2
+#' @param y1mean mean of responses for patients randomized to treatment 1
+#' @param y1var variance of responses for patients randomized to treatment 1
+#' @param n1 number of patients randomized to treatment 1
+#' @param y2mean mean of responses for patients randomized to treatment 2
+#' @param y2var variance of responses for patients randomized to treatment 2
+#' @param n2 number of patients randomized to treatment 2
+#' @examples
+#' x1<-c(10,9,5,12,14)
+#' x2<-c(16,12,14,10,8,9,11)
+#' y1<-c(10,6,5,14,8,10)
+#' y2<-c(12,10,15,11,11,13)
+#' unstrat_analysis(x1,x2,y1,y2)
+#' @export
+unstrat_analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,n1,
+                           y2mean,y2var,n2) {
+  # Error messages
+  if(!is.numeric(x1mean) | !is.numeric(x1var) | 
+     !is.numeric(x2mean) | !is.numeric(x2var) |
+     !is.numeric(y1mean) | !is.numeric(y1var) |
+     !is.numeric(y2mean) | !is.numeric(y2var) |
+     !is.numeric(m1) | !is.numeric(m2) | !is.numeric(n1) | !is.numeric(n2))
+    stop("Arguments must be numeric vectors")
+  
+  # Define sample sizes
+  m<-m1+m2
+  n<-n1+n2
+  N<-m+n
+  
+  # Calculate z statistic
+  z1<-m1*x1mean-m1*y1mean
+  z2<-m2*x2mean-m2*y2mean
+  
+  # Calculate variances (formulas from Rucker paper)
+  var1<-m1*x1var+(1+((m-1)/m)*m1)*m1*(y1var/n1)+
+    (m1*m2/m)*(x1mean-y1mean)^2
+  var2<-m2*x2var+(1+((m-1)/m)*m2)*m2*(y2var/n2)+
+    (m1*m2/m)*(x2mean-y2mean)^2
+  cov<--(m1*m2/m)*(x1mean-y1mean)*(x2mean-y2mean)
   
   # Compute test statistics (from Rucker paper)
   pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
