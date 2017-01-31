@@ -4,11 +4,11 @@
 \alias{unstrat_overall}
 \title{Unstratified Overall Sample Size}
 \usage{
-unstrat_overall(beta, phi, sigma2, delta_pi, delta_nu, delta_tau,
+unstrat_overall(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
   alpha = 0.05, theta = 0.5)
 }
 \arguments{
-\item{beta}{desired study power. Should be numeric value between 0 and 1.}
+\item{power}{desired study power. Should be numeric value between 0 and 1.}
 
 \item{phi}{proportion of patients preferring treatment 1. Should be numeric
 value between 0 and 1.}
@@ -32,8 +32,7 @@ Calculates the sample size required to detect a set of effects
 in an unstratified two-stage randomized clinical trial
 }
 \examples{
-# Put example code here.
-unstrat_overall(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
+unstrat_overall(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5,
 delta_tau=0.5)
 }
 

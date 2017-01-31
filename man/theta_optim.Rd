@@ -33,7 +33,6 @@ Calculates the optimal proportion of patients assigned to the choice arm
 in a two-stage randomized trial
 }
 \examples{
-# Put example code here.
 theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
 delta_pi=1, delta_nu=0.5)
 }

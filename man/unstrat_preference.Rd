@@ -4,11 +4,11 @@
 \alias{unstrat_preference}
 \title{Unstratified Preference Effect Sample Size}
 \usage{
-unstrat_preference(beta, phi, sigma2, delta_pi, delta_nu, alpha = 0.05,
+unstrat_preference(power, phi, sigma2, delta_pi, delta_nu, alpha = 0.05,
   theta = 0.5)
 }
 \arguments{
-\item{beta}{desired study power. Should be numeric value between 0 and 1.}
+\item{power}{desired study power. Should be numeric value between 0 and 1.}
 
 \item{phi}{proportion of patients preferring treatment 1. Should be numeric
 value between 0 and 1.}
@@ -30,7 +30,6 @@ Calculates the sample size required to detect a given preference effect
 in an unstratified two-stage randomized clinical trial
 }
 \examples{
-# Put example code here.
-unstrat_preference(beta=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
+unstrat_preference(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5)
 }
 

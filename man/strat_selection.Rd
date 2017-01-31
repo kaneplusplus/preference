@@ -4,11 +4,11 @@
 \alias{strat_selection}
 \title{Stratified Selection Effect Sample Size}
 \usage{
-strat_selection(beta, phi, sigma2, delta_pi, delta_nu, alpha = 0.05,
+strat_selection(power, phi, sigma2, delta_pi, delta_nu, alpha = 0.05,
   theta = 0.5, xi = c(0.5, 0.5), nstrata = 2)
 }
 \arguments{
-\item{beta}{desired study power. Should be numeric value between 0 and 1.}
+\item{power}{desired study power. Should be numeric value between 0 and 1.}
 
 \item{phi}{vector of the proportion of patients preferring treatment 1 within
 each stratum. Length of vector should equal number of strata 
@@ -41,8 +41,7 @@ Calculates the sample size required to detect a given selection effect
 in a stratified two-stage randomized clinical trial
 }
 \examples{
-# Put example code here.
-strat_selection(beta=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+strat_selection(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
  delta_nu=0.5)
 }
 
