@@ -811,8 +811,8 @@ unstrat_selection<-function(power, phi, sigma2, delta_pi, delta_nu,
   # Calculate sample size
   zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
-  longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2
-          +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
+  longterm<-(sigma2+phi*(1-phi)*((2*phi-1)*delta_nu+delta_pi)^2
+            +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2)
   N=(zalpha+zbeta)^2/(4*theta*delta_nu^2*phi^2*(1-phi)^2)*longterm
   return(N)
 }
@@ -854,8 +854,8 @@ unstrat_preference<-function(power, phi, sigma2, delta_pi, delta_nu,
   # Calculate sample size
   zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
-  longterm=sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2
-          +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2
+  longterm=(sigma2+phi*(1-phi)*((2*phi-1)*delta_pi+delta_nu)^2
+          +2*(theta/(1-theta))*(phi^2+(1-phi)^2)*sigma2)
   N=(zalpha+zbeta)^2/(4*theta*delta_pi^2*phi^2*(1-phi)^2)*longterm
   return(N)
 }
