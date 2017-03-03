@@ -31,6 +31,7 @@
 #' # Stratified
 #' n_sel(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
+#' @references Turner et al. (2014) Medical Decision Making 34:711-719.
 #' @export
 n_sel<-function(power, phi, sigma2, delta_pi, delta_nu, 
                 alpha=0.05, theta=0.5, xi=1, 
@@ -324,8 +325,8 @@ trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
   
   # Calculate study power
   zalpha<-qnorm(1-(alpha/2))
-  power=pnorm(sqrt((((1-theta)*delta_tau^2*N)/4)*
-                     sum(sapply(1:nstrata, function(i) xi[i]*sigma2[i])))-zalpha)
+  power=pnorm(sqrt((((1-theta)*delta_tau^2*N)/(4*sum(sapply(1:nstrata, function(i)
+    xi[i]*sigma2[i])))))-zalpha)
   
   return(power)
 }
