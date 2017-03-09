@@ -50,7 +50,7 @@ server <- shinyServer(function(input, output, session) {
     ss = rep(NA, nrow(df))
     for (i in 1:nrow(df)) {
       ss[i] = 
-        ceiling(strat_selection(params$power, params$phi, params$sigma2, 
+        ceiling(n_sel(params$power, params$phi, params$sigma2, 
                                 df$delta_pi[i], df$delta_nu[i], params$alpha, 
                                 params$theta, params$xi))
     }
