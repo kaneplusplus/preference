@@ -30,7 +30,7 @@ value between 0 and 1.}
 }
 \description{
 Calculates the optimal proportion of patients assigned to the choice arm
-in a two-stage randomized trial
+in an unstratified two-stage randomized trial
 }
 \examples{
 theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
