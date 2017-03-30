@@ -972,6 +972,7 @@ imap$sd<-c(10.6162889,4.8686232,9.7385777,9.9744353)
 imap$n<-c(50,22,76,64)
 imap$trt<-as.factor(c("HPV","Pap","HPV","Pap"))
 imap$arm<-as.factor(c("C","C","R","R"))
+save(imap,file="imap.rda")
 
 # Stratified summary data (stratified by STAI score)
 imap_strat<-data.frame(matrix(NA,nrow=8,ncol=6))
@@ -982,6 +983,7 @@ imap_strat$n<-c(24,25,10,11,30,44,22,42)
 imap_strat$trt<-as.factor(c("HPV","HPV","Pap","Pap","HPV","HPV","Pap","Pap"))
 imap_strat$arm<-as.factor(c("C","C","C","C","R","R","R","R"))
 imap_strat$stratum<-as.factor(c(1,2,1,2,1,2,1,2))
+save(imap_strat,file="imap_strat.rda")
 
 
 ######################################
