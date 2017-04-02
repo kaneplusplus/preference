@@ -46,4 +46,14 @@ sel_pwr(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 sel_pwr(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 xi=c(0.5,0.5), nstrata=2)
 }
+\references{
+Turner RM, et al. (2014). "Sample Size and Power When Designing a 
+Randomized Trial for the Estimation of Treatment, Selection, and Preference
+Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+(\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
+
+Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
+Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+(\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
+}
 

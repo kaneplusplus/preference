@@ -36,4 +36,10 @@ in an unstratified two-stage randomized trial
 theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
 delta_pi=1, delta_nu=0.5)
 }
+\references{
+Walter et. al. (2011). "Optimal allocation of participants for the
+estimation of selection, preference and treatment effects in the two-stage 
+randomised trial design." \emph{Stat Med}, \strong{31}(13):1307-1322.
+(\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
+}
 
