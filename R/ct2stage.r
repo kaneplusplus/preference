@@ -9,8 +9,14 @@
 #' doubly randomized design was used to evaluate the role of patient preference. The
 #' data set provides mean, standard deviation and sample sizes of the SF36 outcome for
 #' each treatment in both the choice and random arms.
-#' @references McCaffery et al. (2010) BMJ 340:b4491.
+#' @references McCaffery et al. (2010) "Psychosocial outcomes of three triage methods
+#' for the management of borderline abnormal cervical smears: an open randomised trial."
+#' \emph{BMJ}, \strong{340}:b4491.
 #' (\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
+#' @references McCaffery et al. (2011) "Determining the Impact of Informed Choice: 
+#' Separating Treatment Effects from the Effects of Choice and Selection in 
+#' Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
+#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
 #' @keywords data
 NULL
 
@@ -26,10 +32,16 @@ NULL
 #' doubly randomized design was used to evaluate the role of patient preference. In
 #' this data set, patients are stratified by STAI score. Stratum 1 includes patients 
 #' with low STAI scores (<=10 on STAI averaged across whole study); stratum 2 includes
-#' patients wiht high STAI scores (>10). The data set provides mean, standard 
+#' patients with high STAI scores (>10). The data set provides mean, standard 
 #' deviation and sample sizes of the SF36 outcome for each treatment in both the 
 #' choice and random arms for both strata.
-#' @references McCaffery et al. (2010) BMJ 340:b4491.
+#' @references McCaffery et al. (2010) "Psychosocial outcomes of three triage methods
+#' for the management of borderline abnormal cervical smears: an open randomised trial."
+#' \emph{BMJ}, \strong{340}:b4491.
 #' (\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
+#' @references McCaffery et al. (2011) "Determining the Impact of Informed Choice: 
+#' Separating Treatment Effects from the Effects of Choice and Selection in 
+#' Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
+#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
 #' @keywords data
 NULL
