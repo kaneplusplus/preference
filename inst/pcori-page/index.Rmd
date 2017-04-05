@@ -4,9 +4,19 @@ runtime: shiny
 output: html_document
 ---
 
-## Sample Size and Power Calculations
+## Overview of Design
 
-- [Stratified Selection Effect](../stratified-sample-calculator): detect a given selection effect in a stratified two-stage randomized clinical trial
-- Stratified Preference Effect: detect a given preference effect in a stratified two-stage randomized clinical trial
-- Stratified Treatment Effect: detect a given treatment effect in a stratified two-stage randomized clinical trial
-- Stratified Overall: detect a given set of effects in a stratified two-stage randomized clinical trial
+## Stratified Power and Sample Size Calculations
+
+- Selection Effect
+    - Power 
+    - [Sample Size](../stratified-sample-calculator)
+- Preference Effect
+    - Power 
+    - Sample Size
+- Treatment Effect
+    - Power 
+    - Sample Size
+- All Three Effects Simultaneously
+    - Power 
+    - Sample Size
