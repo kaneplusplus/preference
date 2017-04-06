@@ -55,6 +55,7 @@ calc_effects(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
 \references{
 Rucker G (1989). "A two-stage trial design for testing treatment, 
 self-selection and treatment preference effects." \emph{Stat Med}, 
-\strong{8}(4):477-485. (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+\strong{8}(4):477-485. 
+(\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 }
 
