@@ -5,23 +5,24 @@
 \alias{imap}
 \title{Summary data for the IMAP study}
 \description{
-Data set is from the Improving Management of Abnormal Pap Smears study,
-which used a doubly randomized preference trial design to evaluate psychosocial 
-outcomes in women found to have atypical cells in a Pap Smear. Two systems for
-managing the atypical cells were tested (repeated Pap smears or HCV triage) and a 
-doubly randomized design was used to evaluate the role of patient preference. The
-data set provides mean, standard deviation and sample sizes of the SF36 outcome for
-each treatment in both the choice and random arms.
+Data set is from the Improving Management of Abnormal Pap Smears
+study, which used a doubly randomized preference trial design to evaluate 
+psychosocial outcomes in women found to have atypical cells in a Pap Smear. 
+Two systems for managing the atypical cells were tested (repeated Pap smears 
+or HCV triage) and a doubly randomized design was used to evaluate the role 
+of patient preference. The data set provides mean, standard deviation and 
+sample sizes of the SF36 outcome for each treatment in both the choice and 
+random arms.
 }
 \references{
-McCaffery et al. (2010) "Psychosocial outcomes of three triage methods
-for the management of borderline abnormal cervical smears: an open randomised trial."
-\emph{BMJ}, \strong{340}:b4491.
+McCaffery et al. (2010) "Psychosocial outcomes of three triage 
+methods for the management of borderline abnormal cervical smears: an open 
+randomised trial." \emph{BMJ}, \strong{340}:b4491.
 (\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
 
-McCaffery et al. (2011) "Determining the Impact of Informed Choice: 
-Separating Treatment Effects from the Effects of Choice and Selection in 
-Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
+McCaffery et al. (2011) "Determining the Impact of Informed 
+Choice: Separating Treatment Effects from the Effects of Choice and Selection
+in Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
 }
 \keyword{data}

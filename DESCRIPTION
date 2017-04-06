@@ -5,12 +5,13 @@ Version: 0.0.1
 Date: 2016-09-14
 Author: Briana Cameron
 Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: The ct2stage package is used to design and analyize two-stage randomized
-  trials with a continuous outcome measure. The package contains functions to compute
-  the required sample size needed to detect a given preference, treatment, and 
-  selection effect; alternatively, the package contains functions that can report the
-  study power given a fixed sample size. Finally, analysis functions are provided to
-  test each effect using either summary data (i.e. means, variances) or raw study data.
+Description: The ct2stage package is used to design and analyize two-stage 
+  randomized trials with a continuous outcome measure. The package contains 
+  functions to compute the required sample size needed to detect a given 
+  preference, treatment, and selection effect; alternatively, the package 
+  contains functions that can report the study power given a fixed sample size. 
+  Finally, analysis functions are provided to test each effect using either 
+  summary data (i.e. means, variances) or raw study data.
 License: LGPL-2
 RoxygenNote: 5.0.1
 LazyData: true
