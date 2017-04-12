@@ -14,9 +14,10 @@ n_sel(power, phi, sigma2, delta_pi, delta_nu, alpha = 0.05, theta = 0.5,
 numeric value between 0 and 1. If study is stratified, should be
 vector with length equal to the number of strata in the study.}
 
-\item{sigma2}{variance estimate. Should be positive numberic values. If study
-is stratified, should be vector of within-stratum variances 
-with length equal to the number of strata in the study.}
+\item{sigma2}{variance estimate. Should be positive numberic values. If 
+study is stratified, should be vector of within-stratum 
+variances with length equal to the number of strata in the 
+study.}
 
 \item{delta_pi}{overall study preference effect.}
 
@@ -43,16 +44,16 @@ in a two-stage randomized clinical trial
 # Unstratified
 n_sel(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 # Stratified
-n_sel(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+n_sel(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), delta_pi=1, 
  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
 }
 \references{
-Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-Randomized Trial for the Estimation of Treatment, Selection, and Preference
-Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+Turner RM, et al. (2014). "Sample Size and Power When Designing
+ a Randomized Trial for the Estimation of Treatment, Selection, and 
+ Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 
-Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+Cameron B, Esserman D (2016). "Sample Size and Power for a 
+Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }

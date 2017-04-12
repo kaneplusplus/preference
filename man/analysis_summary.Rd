@@ -85,11 +85,12 @@ analysis_summary(x1mean,x2var,m1,x2mean,x2var,m2,y1mean,y2var,n1,y2mean,
 y2var,n2)
 }
 \references{
-Rucker G (1989). "A two-stage trial design for testing treatment, 
+Rucker G (1989). "A two-stage trial design for testing treatment,
 self-selection and treatment preference effects." \emph{Stat Med}, 
-\strong{8}(4):477-485. (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+\strong{8}(4):477-485. 
+(\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 
-Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+Cameron B, Esserman D (2016). "Sample Size and Power for a 
+Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }

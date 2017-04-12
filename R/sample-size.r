@@ -11,9 +11,10 @@
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
-#'               is stratified, should be vector of within-stratum variances 
-#'               with length equal to the number of strata in the study. 
+#' @param sigma2 variance estimate. Should be positive numberic values. If 
+#'               study is stratified, should be vector of within-stratum 
+#'               variances with length equal to the number of strata in the 
+#'               study. 
 #' @param delta_pi overall study preference effect.
 #' @param delta_nu overall study selection effect.
 #' @param alpha desired type I error rate.
@@ -29,14 +30,14 @@
 #' # Unstratified
 #' n_sel(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' n_sel(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#' n_sel(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), delta_pi=1, 
 #'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 n_sel<-function(power, phi, sigma2, delta_pi, delta_nu, 
@@ -76,7 +77,7 @@ n_sel<-function(power, phi, sigma2, delta_pi, delta_nu,
                  +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
   sum_total=sum(terms)
   N=(zalpha+zbeta)^2/(4*theta*delta_nu^2)*sum_total
-  return(N)
+  return(ceiling(N))
 }
 
 #' Preference Effect Sample Size
@@ -108,12 +109,12 @@ n_sel<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' # Stratified
 #' n_pref(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 n_pref<-function(power, phi, sigma2, delta_pi, delta_nu, 
@@ -152,7 +153,7 @@ n_pref<-function(power, phi, sigma2, delta_pi, delta_nu,
                  +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
   sum_total=sum(terms)
   N=(zalpha+zbeta)^2/(4*theta*delta_pi^2)*sum_total
-  return(N)
+  return(ceiling(N))
 }
 
 #' Treatment Effect Sample Size
@@ -179,12 +180,12 @@ n_pref<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' n_trt(power=0.8, sigma2=1, delta_tau=1.5)
 #' # Stratified
 #' n_trt(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1, 
@@ -217,7 +218,7 @@ n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1,
   terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
   sum_total=sum(terms)
   N=4*(zalpha+zbeta)^2/((1-theta)*delta_tau^2)*sum_total
-  return(N)
+  return(ceiling(N))
 }
 
 #' Overall Sample Size
@@ -248,16 +249,17 @@ n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' n_overall(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, delta_tau=1.5)
+#' n_overall(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
+#' delta_tau=1.5)
 #' # Stratified
-#' n_overall(power=0.8, phi=0.5, sigma2=c(1, 1), delta_pi=1, delta_nu=0.5, delta_tau=1.5,
-#' xi=c(0.3,0.7),nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' n_overall(power=0.8, phi=0.5, sigma2=c(1, 1), delta_pi=1, delta_nu=0.5,
+#' delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 n_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
@@ -329,12 +331,12 @@ n_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' trt_pwr(N=300, sigma2=1, delta_tau=0.5)
 #' # Stratified
 #' trt_pwr(N=300, sigma2=c(1,1), delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1, 
@@ -398,12 +400,12 @@ trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #' # Stratified
 #' pref_pwr(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 #' xi=c(0.5,0.5), nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
@@ -475,12 +477,12 @@ pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' # Stratified
 #' sel_pwr(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 #' xi=c(0.5,0.5), nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
@@ -554,12 +556,12 @@ sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' # Stratified
 #' pwr_overall(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 #' delta_tau=1.5, xi=c(0.5,0.5), nstrata=2)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing a 
-#' Randomized Trial for the Estimation of Treatment, Selection, and Preference
-#' Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
+#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
+#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
+#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
@@ -658,9 +660,10 @@ pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' analysis_raw(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),nstrata=2)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
-#' \strong{8}(4):477-485. (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' \strong{8}(4):477-485. 
+#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 analysis_raw<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
@@ -782,11 +785,12 @@ analysis_raw<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
 #' n2<-25
 #' analysis_summary(x1mean,x2var,m1,x2mean,x2var,m2,y1mean,y2var,n1,y2mean,
 #' y2var,n2)
-#' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
+#' @references Rucker G (1989). "A two-stage trial design for testing treatment,
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
-#' \strong{8}(4):477-485. (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a Stratified 
-#' Doubly Randomized Preference Design."  \emph{Stat Methods Med Res}. 
+#' \strong{8}(4):477-485. 
+#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
@@ -901,9 +905,9 @@ trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' @param w_sel weight assigned to the estimation of the selection effect. Each 
 #'              weight should be a numeric value between 0 and 1 and sum of 
 #'              three weights should be 1.
-#' @param w_pref weight assigned to the estimation of the preference effect. Each 
-#'              weight should be a numeric value between 0 and 1 and sum of 
-#'              three weights should be 1.
+#' @param w_pref weight assigned to the estimation of the preference effect. 
+#'               Each weight should be a numeric value between 0 and 1 and 
+#'               sum of three weights should be 1.
 #' @param w_treat weight assigned to estimation of the treatment effect. Each 
 #'              weight should be a numeric value between 0 and 1 and sum of 
 #'              three weights should be 1.
@@ -915,9 +919,10 @@ trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' @examples
 #' theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
 #' delta_pi=1, delta_nu=0.5)
-#' @references Walter et. al. (2011). "Optimal allocation of participants for the
-#' estimation of selection, preference and treatment effects in the two-stage 
-#' randomised trial design." \emph{Stat Med}, \strong{31}(13):1307-1322.
+#' @references Walter et. al. (2011). "Optimal allocation of participants for
+#' the estimation of selection, preference and treatment effects in the 
+#' two-stage randomised trial design." \emph{Stat Med}, 
+#' \strong{31}(13):1307-1322.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
 #' @export
 theta_optim<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
@@ -985,7 +990,8 @@ f<-function(theta,value) {
 #' calc_effects(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
-#' \strong{8}(4):477-485. (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+#' \strong{8}(4):477-485. 
+#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 #' @export
 calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   # Error messages
