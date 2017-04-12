@@ -39,7 +39,7 @@ server <- shinyServer(function(input, output, session) {
 
     list(power=input$power, phi=phi, sigma2=sigma2, delta_pi=delta_pi,
          delta_nu=delta_nu, alpha=input$alpha, theta=input$theta,
-         xi=xi)
+         xi=xi, num_strata=input$num_strata)
   })
 
   get_strat_selection = reactive({ 
@@ -52,7 +52,7 @@ server <- shinyServer(function(input, output, session) {
       ss[i] = 
         ceiling(n_sel(params$power, params$phi, params$sigma2, 
                                 df$delta_pi[i], df$delta_nu[i], params$alpha, 
-                                params$theta, params$xi))
+                                params$theta, params$xi, params$num_strata))
     }
     df$sample_size = ss
     df
@@ -79,9 +79,12 @@ server <- shinyServer(function(input, output, session) {
     }
     else if (length(unique(df$delta_pi)) > 1 && 
              length(unique(df$delta_nu)) > 1) {
-      ret = ggplot(data=df, aes(x=delta_pi, y=delta_nu, fill=sample_size)) +
+      uss = length(unique(df$sample_size))
+      ret = ggplot(data=df, aes(x=delta_pi, y=delta_nu, fill=factor(sample_size))) +
         geom_tile() + xlab("Preference Effect") + ylab("Selection Effect") +
-        scale_fill_continuous(guide=guide_legend(title = "Sample Size"))
+        scale_fill_manual(values=rev(heat.colors(uss)), 
+          guide=guide_legend(title="Sample Size"))
+        #scale_fill_continuous(guide=guide_legend(title = "Sample Size")) 
     }
     ret
   })

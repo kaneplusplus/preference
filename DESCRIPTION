@@ -12,5 +12,5 @@ Description: The ct2stage package is used to design and analyize two-stage rando
   study power given a fixed sample size. Finally, analysis functions are provided to
   test each effect using either summary data (i.e. means, variances) or raw study data.
 License: LGPL-2
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 LazyData: true

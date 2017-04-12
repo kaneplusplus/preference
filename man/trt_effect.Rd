@@ -36,4 +36,3 @@ power and overall study sample size for the two-stage randomized design
 \examples{
 trt_effect(N=300,power=0.9,sigma2=c(1,0.8))
 }
-
