@@ -1,7 +1,7 @@
 #' @title Design and Analysis of Two-stage Randomized Clinical Trials
-#' @name ct2stage
+#' @name preference
 #' @docType package
-#' @description The \pkg{ct2stage} package is used for the design and analysis of
+#' @description The \pkg{preference} package is used for the design and analysis of
 #' two-stage randomized trials with a continuous outcome measure. In this study,
 #' patients are first randomized to either a random or choice arm. Patients 
 #' initially randomized to the choice arm are allowed to select their preferred
