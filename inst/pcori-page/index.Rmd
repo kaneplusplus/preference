@@ -37,6 +37,7 @@ Parameter | Description | Parameter Constraints
 ----------|-------------------------------- | ------------------
 $N$ | Total samples in the trial | Should be greater than 0 
 $s$ | Number of strata | $s > 0$
+$\xi_i$ | Proportion of individuals in strata $i$ | $\sum_{i=1}^s \xi_i = 1$
 $n$ | Individuals in the random arm | $n \leq N$
 $m$ | Individuals in the choice arm | $m + n = N$
 $\Theta$ | Proportion sample size distributed to the choice arm[4] | $\Theta N=m$, $(1-\Theta)N=n$
