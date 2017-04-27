@@ -10,7 +10,7 @@ output: html_document
 -->
 
 ```{r, echo=F}
-library(ct2stage)
+library(preference)
 ```
 
 
@@ -22,19 +22,20 @@ In this study, there are three effects that may be of interest. The treatment ef
 
 The schematic and notations of the stratified two-stage randomized design is shown below.
 
-![](/Users/bricameron/Dropbox/PhD/Research/Preference Effect Trials/Figures/strat-figure1.png)
+![](strat-figure1.png)
 
 Note, $N$ represents the total number of patients enrolled in the study and $\xi_l$ represents the proportion of patients in stratum $l$ ($l=1,...,s$) with $\sum_{l=1}^s \xi_l=1$ ($\xi_1=1$ for unstratified design). We also define $\theta$ to be the proportion of patients randomized to the choice arm with $m_l$ representing the sample size of the choice arm in stratum $l$ and $n_l$ representing the sample size of the random arm in stratum $l$. In the choice arm, we assume that $m_{ii}$ patients choose treatment $i$ and that the mean response of these patients is $\mu_{iil}$ (with standard deviation $\sigma_{iil}$). In the random arm, $n_{il}$ patients are randomized to treatment $i$; we use $\mu_{il}$ and $\sigma_{il}$ to represent the mean and standard deviation of the responses in this arm. Finally, we use $\phi_l$ to represent the propotion of patients preferring treatment A in stratum $l$.
 
 
 # Installing the package
 
+*Need to fill in this part*
 
 # Design a two-stage randomized trial
 
 To illustrate the use of the ```preference``` package, we will use the [IMAP study](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/) as an example. In this study, a two-stage randomized design was used to evaluate the role of patient preferences in the context of managing abnormal Pap smears in women. Two different approaches to the management of abnormal Pap smear findings were evaluated, (1) standard management. i.e. repeated Pap testing every 6 months to monitor for more serious abnormalities; and (2) use a human papilomavirus (HPV) triage approach, which tests for the presence of HPV types that are associated with an increased risk of cervical cancer. The investigators were interested in determining the imapct of informed choice on psychosocial outcomes, including health-related quality of life (HRQoL) and satisfaction. For this example, we assume that health-related quality of life, as measured by the mental component subscore (MCS) of the SF36, is the primary outcome of interest. 
 
-While the original study was not stratified, the design and analysis of a stratified two-stage randomized study can be illustrated by considering the six item abbreviated state trait anxiety inventory (STAI) (CITE) as a stratification factor. The STAI score is a measure of anxiety, with higher scores indicating higher levels of anxiety. Because the HPV triage approach is a generally speedier option, we may expect that a greater proportion of women with high levels of anxiety will prefer this approach. Women were classified as having high or low anxiety based on STAI score (with a cutoff value of 10).
+While the original study was not stratified, the design and analysis of a stratified two-stage randomized study can be illustrated by considering the six item abbreviated state trait anxiety inventory ([STAI](https://www.ncbi.nlm.nih.gov/pubmed/1393159#)) as a stratification factor. The STAI score is a measure of anxiety, with higher scores indicating higher levels of anxiety. Because the HPV triage approach is a generally speedier option, we may expect that a greater proportion of women with high levels of anxiety will prefer this approach. Women were classified as having high or low anxiety based on STAI score (with a cutoff value of 10).
 
 Note, summary data for the IMAP trial is contained in the ```imap``` object within the ```preference``` package (stratified summary data is available in the ```imap_strat``` object). 
 
