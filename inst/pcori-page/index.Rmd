@@ -54,7 +54,7 @@ $\sigma^2_{ji}$ | Random arm oucome variance for treatment $j$ in stratum $i$ |
 
 # An Example Trial
 
-This section presents an example trial with only two treatments for simplicity. 
+
 
 # Design Your Own Trial
 
@@ -70,7 +70,8 @@ This section presents an example trial with only two treatments for simplicity.
 - All Three Effects Simultaneously
     - Power 
     - Sample Size
-    
+- Effect Size Calculator
+
 # Definitions
 
 SELECTION EFFECT: The effect on outcomes from the self-selection of individuals into a particular treatment [[1,3](#section-references)].  This effect captures differences in outcomes between those preferring treatment A and those preferring treatment B.
