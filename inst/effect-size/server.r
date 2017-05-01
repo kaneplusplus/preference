@@ -1,6 +1,9 @@
 library(rbokeh)
 library(preference)
 library(ggplot2)
+library(foreach)
+library(tidyverse)
+library(trelliscopejs)
 
 parse_sequence_text = function(x) {
   suppressWarnings({ret = as.numeric(x)})
@@ -29,64 +32,53 @@ parse_sequence_text = function(x) {
 server <- shinyServer(function(input, output, session) {
 
   get_inputs = reactive({
-    delta_pi = parse_sequence_text(input$delta_pi)
-    delta_nu = parse_sequence_text(input$delta_nu)
-    # Turn the text inputs into vectors of numeric values.
-    phi = as.numeric(gsub(" ", "", unlist(strsplit(input$phi, ","))))
-    sigma2 = as.numeric(gsub(" ", "", unlist(strsplit(input$sigma2, ","))))
-    xi = as.numeric(gsub(" ", "", unlist(strsplit(input$xi, ","))))
-    nr = length(delta_pi) * length(delta_nu)
-
-    list(power=input$power, phi=phi, sigma2=sigma2, delta_pi=delta_pi,
-         delta_nu=delta_nu, alpha=input$alpha, theta=input$theta,
-         xi=xi, num_strata=input$num_strata)
+    mu1 = parse_sequence_text(input$mu1)
+    mu2 = parse_sequence_text(input$mu2)
+    mu11 = parse_sequence_text(input$mu11)
+    mu22 = parse_sequence_text(input$mu22)
+    phi = parse_sequence_text(input$phi)
+    vary_param = input$vary_param
+    list(mu1=mu1, mu2=mu2, mu11=mu11, mu22=mu22, phi=phi, vary_param=vary_param)
   })
 
-  get_strat_selection = reactive({ 
+  get_effects = reactive({ 
+    
     params = get_inputs()
-    df = data.frame(
-      list(delta_pi=rep(params$delta_pi, each=length(params$delta_nu)),
-           delta_nu=rep(params$delta_nu, times=length(params$delta_pi))))
-    ss = rep(NA, nrow(df))
-    for (i in 1:nrow(df)) {
-      ss[i] = 
-        ceiling(n_sel(params$power, params$phi, params$sigma2, 
-                                df$delta_pi[i], df$delta_nu[i], params$alpha, 
-                                params$theta, params$xi, params$num_strata))
-    }
-    df$sample_size = ss
-    df
+    ret = foreach(m1=params$mu1, .combine=rbind) %:% 
+      foreach(m2=params$mu2, .combine=rbind) %:%
+      foreach(m11=params$mu11, .combine=rbind) %:% 
+      foreach(m22=params$mu22, .combine=rbind) %:% 
+      foreach(p=params$phi, .combine=rbind) %do% {
+        effects = calc_effects(m1, m2, m11, m22, p)
+        c(m1, m2, m11, m22, p, effects$delta_tau, effects$delta_nu, 
+        effects$delta_pi)
+      }
+    ret = as.data.frame(ret)
+    colnames(ret) = c("mu1", "mu2", "mu11", "mu22", "phi", "delta_tau",
+      "delta_nu", "delta_pi")
+    ret
   })
 
   output$sample_size = renderDataTable({
-    x = get_strat_selection()
-    names(x) = c("Preference Effect", "Selection Effect", "Sample Size")
-    x
+    get_effects()
   })
 
-  output$line_graph = renderPlot({
-    params = get_inputs()
-    df = get_strat_selection()
-    ret = NULL
-    if (length(unique(df$delta_pi)) > 1 && length(unique(df$delta_nu)) == 1) {
-      ret = ggplot(data=df, aes(x=delta_pi, y=sample_size)) +
-        geom_line() + xlab("Preference Effect") + ylab("Sample Size")
+  output$effect_viz = renderTrelliscope({
+    my_viz = function(xs, symbol, removes) {
+      xs %>% gather(Effect, Value, delta_tau:delta_pi) %>% 
+        ggplot(aes_string(x=symbol, y="Value")) + 
+          geom_line() + facet_grid(Effect ~ .)
+
     }
-    else if (length(unique(df$delta_pi)) == 1 && 
-             length(unique(df$delta_nu)) > 1) {
-      ret = ggplot(data=df, aes(x=delta_nu, y=sample_size)) +
-        geom_line() + xlab("Selection Effect") + ylab("Sample Size")
-    }
-    else if (length(unique(df$delta_pi)) > 1 && 
-             length(unique(df$delta_nu)) > 1) {
-      uss = length(unique(df$sample_size))
-      ret = ggplot(data=df, aes(x=delta_pi, y=delta_nu, fill=factor(sample_size))) +
-        geom_tile() + xlab("Preference Effect") + ylab("Selection Effect") +
-        scale_fill_manual(values=rev(heat.colors(uss)), 
-          guide=guide_legend(title="Sample Size"))
-        #scale_fill_continuous(guide=guide_legend(title = "Sample Size")) 
-    }
-    ret
+    vary_param = get_inputs()$vary_param
+    x = get_effects()
+    
+    group_by_names = colnames(x)[(1:5)[-which(colnames(x) == vary_param)]]
+    group_by_symbols = lapply(group_by_names, as.symbol)
+    xn = x %>% group_by_(.dots=group_by_symbols) %>% nest %>% 
+      mutate(effect_viz= map(data, 
+        function(x) my_viz(x, vary_param, group_by_names))) %>%
+      trelliscope(name="Effect Sizes", nrow=1, ncol=2, panel_col="effect_viz")
   })
 
 })
