@@ -26,3 +26,4 @@ in Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
 }
 \keyword{data}
+

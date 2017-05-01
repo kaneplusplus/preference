@@ -43,8 +43,8 @@ $m$ | Individuals in the choice arm | $m + n = N$
 $\Theta$ | Proportion sample size distributed to the choice arm[4] | $\Theta N=m$, $(1-\Theta)N=n$
 $n_i$ | Individuals in the $i$th random-arm strata | $\sum_{i=1}^s n_i = n$
 $m_i$ | Individuals in the $i$th choice-arm strata | $\sum_{i=1}^s m_i = m$
-$\phi_i$ | The preference rate of treatment 1 in stratum $i$ | $m_i / n_i$ CHECK THIS!
-$m_{ij}$ | Choice arm individuals assigned treatment $j$ in stratum $i$ | $\sum_j m_{ij} = m_i$
+$\phi_i$ | The preference rate of treatment 1 in stratum $i$ | $m_i / m$ 
+$m_{ij}$ | Choice arm individuals receiving treatment $j$ in stratum $i$ | $\sum_j m_{ij} = m_i$
 $n_{ij}$ | Random arm individuals assinged treatment $j$ in stratum $i$ | $\sum_j n_{ij} = n_i$
 $\mu_{jji}$ | Choice arm mean outcome for treatment $j$ in stratum $i$ | 
 $\sigma^2_{jji}$ | Choice arm oucome variance for treatment $j$ in stratum $i$ | 
