@@ -1,19 +1,21 @@
 
 create_strat_selection_plot = function(params, df) {
   ret = NULL
-  if (length(unique(df$delta_pi)) > 1 && length(unique(df$delta_nu)) == 1) {
-    ret = ggplot(data=df, aes(x=delta_pi, y=sample_size)) +
+  if (length(unique(df$preference_effect)) > 1 && 
+      length(unique(df$selection_effect)) == 1) {
+    ret = ggplot(data=df, aes(x=preference_effect, y=sample_size)) +
       geom_line() + xlab("Preference Effect") + ylab("Sample Size")
   }
-  else if (length(unique(df$delta_pi)) == 1 &&
-           length(unique(df$delta_nu)) > 1) {
-    ret = ggplot(data=df, aes(x=delta_nu, y=sample_size)) +
+  else if (length(unique(df$preference_effect)) == 1 &&
+           length(unique(df$selection_effect)) > 1) {
+    ret = ggplot(data=df, aes(x=selection_effect, y=sample_size)) +
       geom_line() + xlab("Selection Effect") + ylab("Sample Size")
   }
-  else if (length(unique(df$delta_pi)) > 1 &&
-           length(unique(df$delta_nu)) > 1) {
+  else if (length(unique(df$preference_effect)) > 1 &&
+           length(unique(df$selection_effect)) > 1) {
     uss = length(unique(df$sample_size))
-    ret=ggplot(data=df, aes(x=delta_pi, y=delta_nu, fill=factor(sample_size)))+
+    ret=ggplot(data=df, aes(x=preference_effect, y=selection_effect, 
+      fill=factor(sample_size)))+
       geom_tile() + xlab("Preference Effect") + ylab("Selection Effect") +
       scale_fill_manual(values=rev(heat.colors(uss)),
         guide=guide_legend(title="Sample Size"))

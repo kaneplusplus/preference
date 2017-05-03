@@ -49,4 +49,3 @@ Cameron B, Esserman D (2016). "Sample Size and Power for a
 Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }
-
