@@ -252,7 +252,7 @@ n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1,
 #' n_overall(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
 #' delta_tau=1.5)
 #' # Stratified
-#' n_overall(power=0.8, phi=0.5, sigma2=c(1, 1), delta_pi=1, delta_nu=0.5,
+#' n_overall(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, delta_nu=0.5,
 #' delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -555,7 +555,7 @@ sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' delta_tau=1.5)
 #' # Stratified
 #' pwr_overall(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
-#' delta_tau=1.5, xi=c(0.5,0.5), nstrata=2)
+#' delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
