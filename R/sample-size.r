@@ -862,7 +862,7 @@ analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
-#' trt_effect(N=300,power=0.9,sigma2=c(1,0.8))
+#' trt_effect(N=300,power=0.9,sigma2=c(1,0.8), xi=c(0.3,0.7), nstrata=2)
 #' @export
 trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1, 
                      nstrata=1) {
@@ -917,7 +917,7 @@ trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' @param delta_pi overall study preference effect.
 #' @param delta_nu overall study selection effect. 
 #' @examples
-#' theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma1=1, phi=0.5,
+#' theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma2=1, phi=0.5,
 #' delta_pi=1, delta_nu=0.5)
 #' @references Walter et. al. (2011). "Optimal allocation of participants for
 #' the estimation of selection, preference and treatment effects in the 
