@@ -9,10 +9,6 @@ output: html_document
 %\VignetteIndexEntry{The preference Package Vignette}
 -->
 
-```{r, echo=F}
-library(preference)
-```
-
 
 # Introduction
 
@@ -29,7 +25,14 @@ Note, $N$ represents the total number of patients enrolled in the study and $\xi
 
 # Installing the package
 
-*Need to fill in this part*
+To install and load the package, run the following code:
+
+```{r,message=F,warning=F}
+if (!require(devtools)) install.packages("devtools", repos="https://cloud.r-project.org")
+library(devtools)
+install_github("kaneplusplus/preference")
+library(preference)
+```
 
 # Design a two-stage randomized trial
 

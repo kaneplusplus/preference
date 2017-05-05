@@ -11,7 +11,7 @@
 
 <meta name="author" content="Briana Cameron" />
 
-<meta name="date" content="2017-04-27" />
+<meta name="date" content="2017-05-04" />
 
 <title>The preference package vignette</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">The preference package vignette</h1>
 <h4 class="author"><em>Briana Cameron</em></h4>
-<h4 class="date"><em>2017-04-27</em></h4>
+<h4 class="date"><em>2017-05-04</em></h4>
 
 </div>
 
@@ -141,7 +141,11 @@ $(document).ready(function () {
 </div>
 <div id="installing-the-package" class="section level1">
 <h1>Installing the package</h1>
-<p><em>Need to fill in this part</em></p>
+<p>To install and load the package, run the following code:</p>
+<pre class="r"><code>if (!require(devtools)) install.packages(&quot;devtools&quot;, repos=&quot;https://cloud.r-project.org&quot;)
+library(devtools)
+install_github(&quot;kaneplusplus/preference&quot;)
+library(preference)</code></pre>
 </div>
 <div id="design-a-two-stage-randomized-trial" class="section level1">
 <h1>Design a two-stage randomized trial</h1>
