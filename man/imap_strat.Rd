@@ -6,7 +6,7 @@
 \title{Stratified summary data for the IMAP study}
 \description{
 Data set is from the Improving Management of Abnormal Pap Smears
-study, which used a doubly randomized preference trial design to evaluate 
+study, which used a two-stage randomized preference trial design to evaluate 
 psychosocial outcomes in women found to have atypical cells in a Pap Smear. 
 Two systems for managing the atypical cells were tested (repeated Pap smears
 or HCV triage) and a doubly randomized design was used to evaluate the role 
@@ -39,3 +39,4 @@ Inventory (STAI)." \emph{Br J Clin Psychol}, \strong{31}:301-306.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/1393159#}{PubMed})
 }
 \keyword{data}
+

@@ -26,51 +26,55 @@
 #' detect a particular selection, preference, and/or treatment effect. If the 
 #' sample size is fixed prior to the start of the study, functions are provided
 #' to calculate the study power to detect each effect. Finally, the 
-#' \code{theta_optim} function can be used to determine the optimal proportion
-#' of patients randomized to the choice arm in the initial randomization. 
+#' \code{optimal_proportion} function can be used to determine the optimal 
+#' proportion of patients randomized to the choice arm in the initial 
+#' randomization. 
 #' 
 #' To analyze the data from the two-stage randomized trial, two analysis
-#' functions are provided. The function \code{analysis_raw} computes the test
-#' statistic and p-value for each effect given provided raw study data. The
-#' function \code{analysis_summary} uses provided summary data (mean, variance,
-#' and sample size) of each study group to compute the test statistic and 
-#' p-value of each effect. 
+#' functions are provided. The function \code{analyze_raw_data} computes the 
+#' test statistic and p-value for each effect given provided raw study data. 
+#' The function \code{analyze_summary_data} uses provided summary data (mean, 
+#' variance, and sample size) of each study group to compute the test statistic
+#' and p-value of each effect. 
 #' 
 #' Sample Size Function calls
 #' \itemize{
-#' \item{n_sel: }{required sample size to detect a given selection effect}
-#' \item{n_pref: }{required sample size to detect a given preference effect}
-#' \item{n_trt: }{required sample size to detect a given treatment effect}
-#' \item{n_overall: }{required sample size to detect a given set of selection, 
-#' preference, and treatment effects}
+#' \item{selection_sample_size: }{required sample size to detect a given 
+#' selection effect}
+#' \item{preference_sample_size: }{required sample size to detect a given 
+#' preference effect}
+#' \item{treatment_sample_size: }{required sample size to detect a given 
+#' treatment effect}
+#' \item{overall_sample_size: }{required sample size to detect a given set 
+#' of selection, preference, and treatment effects}
 #' }
 #' 
 #' Power Function Calls
 #' \itemize{
-#' \item{sel_pwr: }{study power to detect a given selection effect}
-#' \item{pref_pwr: }{study power to detect a given preference effect}
-#' \item{trt_pwr: }{study power to detect a given treatment effect}
-#' \item{pwr_overall: }{study power to detect a given set of selection, 
+#' \item{selection_power: }{study power to detect a given selection effect}
+#' \item{preference_power: }{study power to detect a given preference effect}
+#' \item{treatment_power: }{study power to detect a given treatment effect}
+#' \item{overall_power: }{study power to detect a given set of selection, 
 #' preference, and treatment effects}
 #' }
 #' 
 #' Analysis Function Calls
 #' \itemize{
-#' \item{analysis_raw: }{computes test statistic and p-value for observed
+#' \item{analyze_raw_data: }{computes test statistic and p-value for observed
 #' selection, preference, and treatment effects using provided raw data}
-#' \item{analysis_summary: }{computes test statistic and p-value for observed
-#' selection, preference, and treatment effects using provided summary data 
-#' (mean, variance, sample size)}
+#' \item{analyze_summary_data: }{computes test statistic and p-value for 
+#' observed selection, preference, and treatment effects using provided 
+#' summary data (mean, variance, sample size)}
 #' }
 #' 
 #' Other Function Calls
 #' \itemize{
-#' \item{trt_effect: }{computes the treatment effect that can be detected given a
-#' specified sample size and power}
-#' \item{theta_optim: }{computes the optimal proportion randomized to choice arm
-#' (defined for unstratified design only)}
-#' \item{calc_effects: }{computes the treatment, selection, and preference effect
-#' sizes provided the study means in each treatment arm}
+#' \item{treatment_effect_size: }{computes the treatment effect that can be 
+#' detected given a specified sample size and power}
+#' \item{optimal_proportion: }{computes the optimal proportion randomized to 
+#' choice arm (defined for unstratified design only)}
+#' \item{effects_from_means: }{computes the treatment, selection, and 
+#' preference effect sizes provided the study means in each treatment arm}
 #' }
 #' 
 #' Data Sets
