@@ -32,8 +32,8 @@ create_strat_selection_df = function(params) {
   for (i in 1:nrow(df)) {
     ss[i] = 
       ceiling(n_sel(params$power, params$phi, params$sigma2, 
-                              df$delta_pi[i], df$delta_nu[i], params$alpha,
-                              params$theta, params$xi, params$num_strata))
+                    df$delta_pi[i], df$delta_nu[i], params$alpha,
+                    params$theta, params$xi, params$num_strata))
   }
   df$sample_size = ss
   names(df) = c("preference_effect", "selection_effect", "sample_size")
