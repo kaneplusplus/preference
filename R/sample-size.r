@@ -28,9 +28,9 @@
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' n_sel(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
+#' selection_sample_size(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' n_sel(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), delta_pi=1, 
+#' selection_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), delta_pi=1, 
 #'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -40,7 +40,7 @@
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-n_sel<-function(power, phi, sigma2, delta_pi, delta_nu, 
+selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
                 alpha=0.05, theta=0.5, xi=1, 
                 nstrata=1) {
   # Error messages
@@ -105,9 +105,9 @@ n_sel<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' n_pref(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
+#' preference_sample_size(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' n_pref(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
+#' preference_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
 #'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -117,7 +117,7 @@ n_sel<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-n_pref<-function(power, phi, sigma2, delta_pi, delta_nu, 
+preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
                  alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
   if(power<0 | power>1 | !is.numeric(power)) 
@@ -177,9 +177,9 @@ n_pref<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' n_trt(power=0.8, sigma2=1, delta_tau=1.5)
+#' treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
 #' # Stratified
-#' n_trt(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
+#' treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -188,7 +188,7 @@ n_pref<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1, 
+treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1, 
                 nstrata=1) {
   # Error messages
   if(power<0 | power>1 | !is.numeric(power)) 
@@ -249,10 +249,10 @@ n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' n_overall(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
+#' overall_sample_size(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
 #' delta_tau=1.5)
 #' # Stratified
-#' n_overall(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, delta_nu=0.5,
+#' overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, delta_nu=0.5,
 #' delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -262,7 +262,7 @@ n_trt<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-n_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                     alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
   if(power<0 | power>1 | !is.numeric(power)) 
@@ -293,9 +293,9 @@ n_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
   # Calculate sample size
   zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
-  pref=n_pref(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
-  sel=n_sel(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
-  treat=n_trt(power, sigma2, delta_tau, alpha, theta, xi, nstrata)
+  pref=preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
+  sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
+  treat=treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, nstrata)
   
   ss<-list("trt.ss"=treat,"sel.ss"=sel,"pref.ss"=pref)
   
@@ -328,9 +328,9 @@ n_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' trt_pwr(N=300, sigma2=1, delta_tau=0.5)
+#' treatment_power(N=300, sigma2=1, delta_tau=0.5)
 #' # Stratified
-#' trt_pwr(N=300, sigma2=c(1,1), delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
+#' treatment_power(N=300, sigma2=c(1,1), delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -339,7 +339,7 @@ n_overall<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1, 
+treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1, 
                   nstrata=1) {
   # Error messages
   if(N<0 | !is.numeric(N)) 
@@ -396,9 +396,9 @@ trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' pref_pwr(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
+#' preference_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' pref_pwr(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
+#' preference_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 #' xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -408,7 +408,7 @@ trt_pwr<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
+preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
                    theta=0.5, xi=1, nstrata=1) {
   # Error messages
   if(N<0 | !is.numeric(N)) 
@@ -473,9 +473,9 @@ pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' sel_pwr(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
+#' selection_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' sel_pwr(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
+#' selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 #' xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -485,7 +485,7 @@ pref_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
+selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
                   theta=0.5, xi=1, nstrata=1) {
   # Error messages
   if(N<0 | !is.numeric(N)) 
@@ -551,10 +551,10 @@ sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
 #' # Unstratified
-#' pwr_overall(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5, 
+#' overall_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5, 
 #' delta_tau=1.5)
 #' # Stratified
-#' pwr_overall(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
+#' overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
 #' delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -564,7 +564,7 @@ sel_pwr<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                       alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
   if(N<0 | !is.numeric(N)) 
@@ -594,12 +594,12 @@ pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
   
   
   # Calculate study power
-  trt_pwr<-trt_pwr(N=N,sigma2=sigma2,delta_tau=delta_tau,alpha=alpha,
+  trt_pwr<-treatment_power(N=N,sigma2=sigma2,delta_tau=delta_tau,alpha=alpha,
                    theta=theta,xi=xi,nstrata=nstrata)
-  pref_pwr<-pref_pwr(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
+  pref_pwr<-preference_power(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
                      delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
                      nstrata=nstrata)
-  sel_pwr<-sel_pwr(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
+  sel_pwr<-selection_power(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
                    delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
                    nstrata=nstrata)
   
@@ -647,7 +647,7 @@ pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' x2<-c(8,7,6,10,12,11,6,8)
 #' y1<-c(10,5,7,9,12,6)
 #' y2<-c(8,9,10,7,8,11)
-#' analysis_raw(x1,x2,y1,y2)
+#' analyze_raw_data(x1,x2,y1,y2)
 #' #Stratified
 #' x1<-c(10,8,6,10,5)
 #' s11<-c(1,1,2,2,2)
@@ -657,7 +657,7 @@ pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' s1<-c(1,1,1,2,2,2)
 #' y2<-c(8,9,10,7,8,11)
 #' s2<-c(1,1,1,2,2,2)
-#' analysis_raw(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),nstrata=2)
+#' analyze_raw_data(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),nstrata=2)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 
@@ -666,7 +666,7 @@ pwr_overall<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-analysis_raw<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
+analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
   # Check stratum assignments
   if(nstrata==1){
     s11=rep(1,length(x1))
@@ -705,7 +705,7 @@ analysis_raw<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
     y1i<-y1[as.factor(s1)==levels(as.factor(s1))[i]]
     y2i<-y2[as.factor(s2)==levels(as.factor(s2))[i]]
     
-    unstrat_stats[i,]<-unlist(unstrat_analysis_raw(x1i,x2i,y1i,y2i))
+    unstrat_stats[i,]<-unlist(unstrat_analyze_raw_data(x1i,x2i,y1i,y2i))
   }
   
   # Compute stratified test statistics and p-values
@@ -783,7 +783,7 @@ analysis_raw<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
 #' y2mean<-8
 #' y2var<-1.2
 #' n2<-25
-#' analysis_summary(x1mean,x2var,m1,x2mean,x2var,m2,y1mean,y2var,n1,y2mean,
+#' analyze_summary_data(x1mean,x2var,m1,x2mean,x2var,m2,y1mean,y2var,n1,y2mean,
 #' y2var,n2)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment,
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
@@ -793,7 +793,7 @@ analysis_raw<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
+analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
                            n1,y2mean,y2var,n2,xi=1,nstrata=1){
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
@@ -819,7 +819,7 @@ analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
   
   # Compute unstratified test statistics
   unstrat_stats<-sapply(1:nstrata, function(i) 
-    unstrat_analysis_summary(x1mean[i],x1var[i],m1[i],x2mean[i],x2var[i],
+    unstrat_analyze_summary_data(x1mean[i],x1var[i],m1[i],x2mean[i],x2var[i],
                              m2[i],y1mean[i],y1var[i],n1[i],y2mean[i],y2var[i],
                              n2[i]))
   
@@ -862,9 +862,9 @@ analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
-#' trt_effect(N=300,power=0.9,sigma2=c(1,0.8), xi=c(0.3,0.7), nstrata=2)
+#' treatment_effect_size(N=300,power=0.9,sigma2=c(1,0.8), xi=c(0.3,0.7), nstrata=2)
 #' @export
-trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1, 
+treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1, 
                      nstrata=1) {
   # Error messages
   if(N<0 | !is.numeric(N)) 
@@ -917,7 +917,7 @@ trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' @param delta_pi overall study preference effect.
 #' @param delta_nu overall study selection effect. 
 #' @examples
-#' theta_optim(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma2=1, phi=0.5,
+#' optimal_proportion(w_sel=0.2, w_pref=0.4, w_treat=0.4, sigma2=1, phi=0.5,
 #' delta_pi=1, delta_nu=0.5)
 #' @references Walter et. al. (2011). "Optimal allocation of participants for
 #' the estimation of selection, preference and treatment effects in the 
@@ -925,7 +925,7 @@ trt_effect<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' \strong{31}(13):1307-1322.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
 #' @export
-theta_optim<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
+optimal_proportion<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
   if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
      any(!is.numeric(c(w_sel,w_pref,w_treat))))
     stop('Weights must be numeric value in [0,1]')
@@ -987,13 +987,13 @@ f<-function(theta,value) {
 #'          sum of vector should be 1. Should only be specified for stratified
 #'          design.
 #' @examples
-#' calc_effects(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
+#' effects_from_means(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 #' @export
-calc_effects<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
+effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   # Error messages
   if(nstrata<=0 | !is.numeric(nstrata))
     stop('Number of strata must be numeric greater than 0')
@@ -1077,7 +1077,7 @@ means_stratum<-function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
 }
 
 #### Analaysis Function (Raw Data)
-unstrat_analysis_raw<-function(x1,x2,y1,y2) {
+unstrat_analyze_raw_data<-function(x1,x2,y1,y2) {
   # Error messages
   if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
     stop("Arguments must be numeric vectors")
@@ -1121,7 +1121,7 @@ unstrat_analysis_raw<-function(x1,x2,y1,y2) {
 
 
 ### Analysis Function (Summary Data)
-unstrat_analysis_summary<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,n1,
+unstrat_analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,n1,
                                    y2mean,y2var,n2) {
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
