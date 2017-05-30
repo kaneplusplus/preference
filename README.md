@@ -2,7 +2,7 @@ preference: A R client for Clinical Trials using Preference Design
 ===
 
 **Authors:** Briana Cameron<br/>
-**License:** [LGPL](https://opensource.org/licenses/LGPL-2.1)
+**License:** [LGPL-2](https://opensource.org/licenses/LGPL-2.1)
 
 [![Build Status](https://travis-ci.org/kaneplusplus/preference.svg?branch=master)](https://travis-ci.org/kaneplusplus/preference)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/ippgxxrkwi545nkq?svg=true)](https://ci.appveyor.com/project/kaneplusplus/preference)
