@@ -43,4 +43,3 @@ two-stage randomised trial design." \emph{Stat Med},
 \strong{31}(13):1307-1322.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
 }
-

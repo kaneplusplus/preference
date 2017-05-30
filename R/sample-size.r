@@ -39,6 +39,7 @@
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
+#' @importFrom stats qnorm
 #' @export
 selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
                 alpha=0.05, theta=0.5, xi=1, 
@@ -924,6 +925,7 @@ treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' two-stage randomised trial design." \emph{Stat Med}, 
 #' \strong{31}(13):1307-1322.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
+#' @importFrom stats uniroot
 #' @export
 optimal_proportion<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
   if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
@@ -1077,6 +1079,8 @@ means_stratum<-function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
 }
 
 #### Analaysis Function (Raw Data)
+
+#' @importFrom stats pnorm t.test var
 unstrat_analyze_raw_data<-function(x1,x2,y1,y2) {
   # Error messages
   if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
@@ -1170,6 +1174,8 @@ unstrat_analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1
 # m1,m1: sample means
 # s1,s2: sample variances
 # n1, n2: sample sizes
+
+#' @importFrom stats pt
 t.test2 <- function(m1,m2,s1,s2,n1,n2)
 {
   se <- sqrt( (s1/n1) + (s2/n2) )
@@ -1187,23 +1193,23 @@ t.test2 <- function(m1,m2,s1,s2,n1,n2)
 ######################
 
 # Unstratified summary data
-imap<-data.frame(matrix(NA,nrow=4,ncol=5))
-colnames(imap)<-c("mean","sd","n","trt","arm")
-imap$mean<-c(47.57283,50.58991,46.16386,45.51061)
-imap$sd<-c(10.6162889,4.8686232,9.7385777,9.9744353)
-imap$n<-c(50,22,76,64)
-imap$trt<-as.factor(c("HPV","Pap","HPV","Pap"))
-imap$arm<-as.factor(c("C","C","R","R"))
-save(imap,file="imap.rda")
+#imap<-data.frame(matrix(NA,nrow=4,ncol=5))
+#colnames(imap)<-c("mean","sd","n","trt","arm")
+#imap$mean<-c(47.57283,50.58991,46.16386,45.51061)
+#imap$sd<-c(10.6162889,4.8686232,9.7385777,9.9744353)
+#imap$n<-c(50,22,76,64)
+#imap$trt<-as.factor(c("HPV","Pap","HPV","Pap"))
+#imap$arm<-as.factor(c("C","C","R","R"))
+#save(imap,file="imap.rda")
 
 # Stratified summary data (stratified by STAI score)
-imap_strat<-data.frame(matrix(NA,nrow=8,ncol=6))
-colnames(imap_strat)<-c("mean","sd","n","trt","arm","stratum")
-imap_strat$mean<-c(54.3337592,41.0085061,51.5041323,49.8965119,52.0043692,42.179696,53.8427658,41.1461439)
-imap_strat$sd<-c(5.5000253,10.5061654,6.1202786,3.8040966,6.5603227,9.6234748,5.2579869,9.0525148)
-imap_strat$n<-c(24,25,10,11,30,44,22,42)
-imap_strat$trt<-as.factor(c("HPV","HPV","Pap","Pap","HPV","HPV","Pap","Pap"))
-imap_strat$arm<-as.factor(c("C","C","C","C","R","R","R","R"))
-imap_strat$stratum<-as.factor(c(1,2,1,2,1,2,1,2))
-save(imap_strat,file="imap_strat.rda")
+#imap_strat<-data.frame(matrix(NA,nrow=8,ncol=6))
+#colnames(imap_strat)<-c("mean","sd","n","trt","arm","stratum")
+#imap_strat$mean<-c(54.3337592,41.0085061,51.5041323,49.8965119,52.0043692,42.179696,53.8427658,41.1461439)
+#imap_strat$sd<-c(5.5000253,10.5061654,6.1202786,3.8040966,6.5603227,9.6234748,5.2579869,9.0525148)
+#imap_strat$n<-c(24,25,10,11,30,44,22,42)
+#imap_strat$trt<-as.factor(c("HPV","HPV","Pap","Pap","HPV","HPV","Pap","Pap"))
+#imap_strat$arm<-as.factor(c("C","C","C","C","R","R","R","R"))
+#imap_strat$stratum<-as.factor(c(1,2,1,2,1,2,1,2))
+#save(imap_strat,file="imap_strat.rda")
 

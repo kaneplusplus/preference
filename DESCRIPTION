@@ -3,10 +3,13 @@ Type: Package
 Title: 2-Stage Clinical Trial Design and Analysis
 Version: 0.0.1
 Date: 2016-09-14
-Authors@R: c(person(given="Briana", family="Cameron", email="briana.cameron@yale.edu", role=c("aut", "cph", "cre"))
+Authors@R: c(person("Briana", "Cameron", role=c("aut", "cph", "cre"),
+  email="briana.cameron@yale.edu"))
 URL: https://github.com/kaneplusplus/
 BugReports: https://github.com/kaneplusplus/preference/issues
 Description: Design and analyize two-stage randomized trials with a continuous outcome measure. The package contains functions to compute the required sample size needed to detect a given preference, treatment, and selection effect; alternatively, the package contains functions that can report the study power given a fixed sample size. Finally, analysis functions are provided to test each effect using either summary data (i.e. means, variances) or raw study data.
 License: LGPL-2
+Suggests: knitr, covr, testthat, ggplot2, devtools
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 LazyData: true

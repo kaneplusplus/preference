@@ -39,4 +39,3 @@ Inventory (STAI)." \emph{Br J Clin Psychol}, \strong{31}:301-306.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/1393159#}{PubMed})
 }
 \keyword{data}
-
