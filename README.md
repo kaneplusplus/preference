@@ -9,7 +9,6 @@ preference: A R client for Clinical Trials using Preference Design
 [![Coverage Status](https://coveralls.io/repos/github/kaneplusplus/preference/badge.svg?branch=master)](https://coveralls.io/github/kaneplusplus/preference?branch=master)
 
 
-
 ## Install the package
 
 ```{r}
