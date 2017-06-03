@@ -11,7 +11,7 @@
 
 <meta name="author" content="Briana Cameron" />
 
-<meta name="date" content="2017-05-04" />
+<meta name="date" content="2017-06-02" />
 
 <title>The preference package vignette</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">The preference package vignette</h1>
 <h4 class="author"><em>Briana Cameron</em></h4>
-<h4 class="date"><em>2017-05-04</em></h4>
+<h4 class="date"><em>2017-06-02</em></h4>
 
 </div>
 
@@ -156,9 +156,9 @@ library(preference)</code></pre>
 <h2>Sample Size</h2>
 <div id="unstratified-design" class="section level3">
 <h3>Unstratified design</h3>
-<p>Suppose we wish to establish the <a href="https://www.ncbi.nlm.nih.gov/pubmed/24695962">required sample size</a> to determine the effect of choice on SF36 MCS in the IMAP study. First, we need to define the size of the preference, selection, and treatment effects we expect to see in the study. If the effect sizes are known, these effect sizes are used directly in the <code>n_overall</code> function. If not, the function <code>calc_effects</code> can be used to compute these effects from the means of each treatment group in both the choice and random arm.</p>
+<p>Suppose we wish to establish the <a href="https://www.ncbi.nlm.nih.gov/pubmed/24695962">required sample size</a> to determine the effect of choice on SF36 MCS in the IMAP study. First, we need to define the size of the preference, selection, and treatment effects we expect to see in the study. If the effect sizes are known, these effect sizes are used directly in the <code>overall_sample_size</code> function. If not, the function <code>effects_from_means</code> can be used to compute these effects from the means of each treatment group in both the choice and random arm.</p>
 <p>In the IMAP study, we may expect the HCV triage method to result in only a small increase in SF36. Therefore, we might expect women randomized to the HCV triage method to have a mean SF36 score of 46 (<span class="math inline">\(\mu_1\)</span>), while women randomized to repeated Pap screening are expected to have a mean SF36 score of 45 (<span class="math inline">\(\mu_2\)</span>). In the choice group, we expect the mean SF36 score to increase by 4 points in both management groups. Therefore, we assume that women choosing the HCV triage method to have a mean score of 50 and women choosing the repeated Pap smear management option to have a mean SF36 of 49. In addition, we must specify the proportion of women preferring the HPV triage management method. Because management with an HPV triage approach is generally a speedier option, we expect 70% of women to prefer this approach, as compared to the 30% of women who would prefer management with repeated Pap smears. With these assumptions, we can calculate the preference, selection and treatment effects.</p>
-<pre class="r"><code>calc_effects(mu1=46, mu2=45, mu11=50, mu22=49, phi=0.7)</code></pre>
+<pre class="r"><code>effects_from_means(mu1=46, mu2=45, mu11=50, mu22=49, phi=0.7)</code></pre>
 <pre><code>## $delta_tau
 ## [1] 1
 ## 
@@ -167,8 +167,8 @@ library(preference)</code></pre>
 ## 
 ## $delta_pi
 ## [1] 9.52381</code></pre>
-<p>Therefore, with the mean SF36 scores assumed above, we need to design a study to detect a treatment effect of 1, selection effect of 3.81, and a preference effect of 9.52. To determine the necessary sample size, we must also specify the variance of the responses. In this example, we assume a variance of 5 for the SF36 outcome. Then, the sample size to detect the above effects with 80% power and a Type I error of 0.05 is given by the <code>n_overall</code> function. (Note, the <code>n_sel</code>, <code>n_pref</code>, and <code>n_treat</code> functions can be used to find the sample size if only one of the selection, preference, or treatment effects is of interest).</p>
-<pre class="r"><code>n_overall(power=0.8, phi=0.7, sigma2=5, delta_pi=9.52, delta_nu=3.81, delta_tau=1)</code></pre>
+<p>Therefore, with the mean SF36 scores assumed above, we need to design a study to detect a treatment effect of 1, selection effect of 3.81, and a preference effect of 9.52. To determine the necessary sample size, we must also specify the variance of the responses. In this example, we assume a variance of 5 for the SF36 outcome. Then, the sample size to detect the above effects with 80% power and a Type I error of 0.05 is given by the <code>overall_sample_size</code> function. (Note, the <code>selection_sample_size</code>, <code>preference_sample_size</code>, and <code>treatment_sample_size</code> functions can be used to find the sample size if only one of the selection, preference, or treatment effects is of interest).</p>
+<pre class="r"><code>overall_sample_size(power=0.8, phi=0.7, sigma2=5, delta_pi=9.52, delta_nu=3.81, delta_tau=1)</code></pre>
 <pre><code>## $trt.ss
 ## [1] 314
 ## 
@@ -184,7 +184,7 @@ library(preference)</code></pre>
 <p>We may also be interested in stratifying for STAI score (low vs high) in our study. Because women with low STAI scores have decreased anxiety, we expect women in this stratum to have improved SF36 compared to women in the high STAI stratum. Therefore, we expect women randomized to HCV triage with low STAI scores to have a mean SF36 of 52, while women randomized to HCV triage with high STAI scores to have a mean SF36 of 42. In addition, we assume that women randomized to repeated Pap screening will have a mean SF36 of 50 in the low STAI stratum and a mean SF36 of 42 in the high STAI group.</p>
 <p>In the choice arm, we expect both strata to have a small increase in SF36 across both management systems. For the low STAI group, we expect a 2 point increase in mean SF36 for both management groups. In the high STAI group, we also expect a 2 point increase in mean SF36 for women choosing repeated Pap screening. Because the HCV triage method is a speedier approach, we expect a slightly greater increase in SF36 for women in the high STAI group choosing this method; we assume a mean SF36 score of 46 for this group.</p>
 <p>Finally, we assume that both management systems will be equally preferable to women in the low STAI stratum (<span class="math inline">\(\phi_1, \phi_2=0.5\)</span>). Because women with high STAI score have increased anxiety, we may expect a greater proportion of these women to prefer the HPV triage management method, which is the speedier option. Therefore, we assume that 70% of the women in the high STAI stratum will prefer HPV triage, and only 30% will prefer repeated Pap screening. Furthermore, we assume that 40% of women will have low STAI scores and 60% of women will be in the high STAI score stratum. Based on these assumptions, we can calculate the preference, selection and treatment effects we wish to test in our study.</p>
-<pre class="r"><code>calc_effects(mu1=c(52,42), mu2=c(50,42), mu11=c(54,46), mu22=c(52,44), phi=c(0.5,0.7), nstrata=2, xi=c(0.4,0.6))</code></pre>
+<pre class="r"><code>effects_from_means(mu1=c(52,42), mu2=c(50,42), mu11=c(54,46), mu22=c(52,44), phi=c(0.5,0.7), nstrata=2, xi=c(0.4,0.6))</code></pre>
 <pre><code>## $delta_tau
 ## [1] 1
 ## 
@@ -193,8 +193,8 @@ library(preference)</code></pre>
 ## 
 ## $delta_pi
 ## [1] 7.666667</code></pre>
-<p>With the assumptions listed above, we will need to design a study that can detect an overall treatment effect of 1, selection effect of 3.67, and preference effect of 7.67. We also need to specify the variance of the responses. We assume a variance of 3 for the SF36 outcome in the low STAI stratum and a variance of 4 in the high STAI stratum. With 80% power and a Type I error rate of 0.05, we can use the <code>n_overall</code> function to find the sample size needed to detect the above effect.</p>
-<pre class="r"><code>n_overall(power=0.8, phi=c(0.5,0.7), sigma2=c(3,4), delta_pi=7.67, delta_nu=3.67, delta_tau=1, xi=c(0.4,0.6), nstrata=2)</code></pre>
+<p>With the assumptions listed above, we will need to design a study that can detect an overall treatment effect of 1, selection effect of 3.67, and preference effect of 7.67. We also need to specify the variance of the responses. We assume a variance of 3 for the SF36 outcome in the low STAI stratum and a variance of 4 in the high STAI stratum. With 80% power and a Type I error rate of 0.05, we can use the <code>overall_sample_size</code> function to find the sample size needed to detect the above effect.</p>
+<pre class="r"><code>overall_sample_size(power=0.8, phi=c(0.5,0.7), sigma2=c(3,4), delta_pi=7.67, delta_nu=3.67, delta_tau=1, xi=c(0.4,0.6), nstrata=2)</code></pre>
 <pre><code>## $trt.ss
 ## [1] 227
 ## 
@@ -211,8 +211,8 @@ library(preference)</code></pre>
 <p>Alternatively, we may have a pre-specified number of women to be enrolled and instead want to know the power of our study to detect each effect.</p>
 <div id="unstratified-design-1" class="section level3">
 <h3>Unstratified Design</h3>
-<p>Assume that we plan to enroll 212 women in the study. If we assume the same preference, treatment, and selection effects as above and make the same assumptions regarding the preference rate and response variance, we can use <code>pwr_overall</code> to estimate the study power, assuming a Type I error of 0.05. (Note, the <code>pwr_sel</code>, <code>pwr_pref</code>, and <code>pwr_treat</code> functions can be used to find the power if only one of the selection, preference, or treatment effects is of interest).</p>
-<pre class="r"><code>pwr_overall(N=212, phi=0.7, sigma2=5, delta_pi=9.52, delta_nu=3.81, delta_tau=1)</code></pre>
+<p>Assume that we plan to enroll 212 women in the study. If we assume the same preference, treatment, and selection effects as above and make the same assumptions regarding the preference rate and response variance, we can use <code>overall_power</code> to estimate the study power, assuming a Type I error of 0.05. (Note, the <code>selection_power</code>, <code>preference_power</code>, and <code>treatment_power</code> functions can be used to find the power if only one of the selection, preference, or treatment effects is of interest).</p>
+<pre class="r"><code>overall_power(N=212, phi=0.7, sigma2=5, delta_pi=9.52, delta_nu=3.81, delta_tau=1)</code></pre>
 <pre><code>## $trt_pwr
 ## [1] 0.6339032
 ## 
@@ -226,7 +226,7 @@ library(preference)</code></pre>
 <div id="stratified-design-1" class="section level3">
 <h3>Stratified Design</h3>
 <p>We may also wish to know our study power for a two-stage randomized trial stratified by STAI score with 212 patients. We will continue to assume that we wish to detect a treatment effect of 1, selection effect of 3.67, and preference effect of 7.67 and retain the assumptions above regarding the variance and preference rate within each stratum.</p>
-<pre class="r"><code>pwr_overall(N=212, phi=c(0.5,0.7), sigma2=c(3,4), delta_pi=7.67, delta_nu=3.67, delta_tau=1, xi=c(0.4,0.6), nstrata=2)</code></pre>
+<pre class="r"><code>overall_power(N=212, phi=c(0.5,0.7), sigma2=c(3,4), delta_pi=7.67, delta_nu=3.67, delta_tau=1, xi=c(0.4,0.6), nstrata=2)</code></pre>
 <pre><code>## $trt_pwr
 ## [1] 0.774327
 ## 
@@ -240,9 +240,9 @@ library(preference)</code></pre>
 </div>
 <div id="distribution-between-choice-and-random-arms" class="section level2">
 <h2>Distribution between choice and random arms</h2>
-<p>In the examples presented above, we have assumed <span class="math inline">\(\theta\)</span>, the proportion of individuals that are distributed to the choice arm, to be 0.5 (equal distribution). In general, however, <span class="math inline">\(\theta\)</span> is not a fixed parameter and can be specified according to the main goals of the study. If a desired <span class="math inline">\(\theta\)</span> is known in advance, the user can directly set this argument in the function calls above. If the desired <span class="math inline">\(\theta\)</span> is not known, the function <code>theta_optim</code> can be used to estimate the <a href="https://www.ncbi.nlm.nih.gov/pubmed/22362374">optimal value</a>optimal value given a the goals of a particular study.</p>
-<p>To use <code>theta_optim</code>, a set of weights must be defined that indicate the relative importance of estimating each of the three effects (<code>w_sel</code>, <code>w_pref</code>, <code>w_treat</code>) with the constraint <code>w_sel</code>+<code>w_pref</code>+<code>w_treat</code>=1. For example, if we are equally interested in estimating the selection, preference, and treatment effects, we would assign a weight of <span class="math inline">\(\frac{1}{3}\)</span> to each effect (i.e. <code>w_sel</code>=<code>w_pref</code>=<code>w_treat</code>=0.33). If we want to determine the optimal <span class="math inline">\(\theta\)</span> for the unstratified IMAP example above to detect a preference effect of <span class="math inline">\(\Delta\pi=9.52\)</span> and a selection effect of <span class="math inline">\(\Delta\nu=3.81\)</span> (assuming 70% of women prefer the HCV triage method and a variance of 5), we can use the following function call.</p>
-<pre class="r"><code>theta_optim(w_sel=1/3, w_pref=1/3, w_treat=1/3, sigma2=5, phi=0.7, delta_pi=9.52, delta_nu=3.81)</code></pre>
+<p>In the examples presented above, we have assumed <span class="math inline">\(\theta\)</span>, the proportion of individuals that are distributed to the choice arm, to be 0.5 (equal distribution). In general, however, <span class="math inline">\(\theta\)</span> is not a fixed parameter and can be specified according to the main goals of the study. If a desired <span class="math inline">\(\theta\)</span> is known in advance, the user can directly set this argument in the function calls above. If the desired <span class="math inline">\(\theta\)</span> is not known, the function <code>optimal_proportion</code> can be used to estimate the <a href="https://www.ncbi.nlm.nih.gov/pubmed/22362374">optimal value</a>optimal value given a the goals of a particular study.</p>
+<p>To use <code>optimal_proportion</code>, a set of weights must be defined that indicate the relative importance of estimating each of the three effects (<code>w_sel</code>, <code>w_pref</code>, <code>w_treat</code>) with the constraint <code>w_sel</code>+<code>w_pref</code>+<code>w_treat</code>=1. For example, if we are equally interested in estimating the selection, preference, and treatment effects, we would assign a weight of <span class="math inline">\(\frac{1}{3}\)</span> to each effect (i.e. <code>w_sel</code>=<code>w_pref</code>=<code>w_treat</code>=0.33). If we want to determine the optimal <span class="math inline">\(\theta\)</span> for the unstratified IMAP example above to detect a preference effect of <span class="math inline">\(\Delta\pi=9.52\)</span> and a selection effect of <span class="math inline">\(\Delta\nu=3.81\)</span> (assuming 70% of women prefer the HCV triage method and a variance of 5), we can use the following function call.</p>
+<pre class="r"><code>optimal_proportion(w_sel=1/3, w_pref=1/3, w_treat=1/3, sigma2=5, phi=0.7, delta_pi=9.52, delta_nu=3.81)</code></pre>
 <pre><code>## [1] 0.6399756</code></pre>
 <p>Therefore, if we are equally interested in the estimation of the preference, selection, and treatment effects, we should allocate 64% of patients to the choice arm in the initial randomization stage.</p>
 <p>Note, this function is only available for the unstratified design at this time.</p>
@@ -263,7 +263,7 @@ library(preference)</code></pre>
 ## 4 45.51061  9.974435 64 Pap   R</code></pre>
 <p>The <code>mean</code> and <code>sd</code> columns indicate the mean and standard deviation of the SF36 MCS for each study group. The treatment (HPV triage or repeated Pap screening) is indicated in the <code>trt</code> column, and the study arm (choice or random) is indicated in the <code>arm</code> column.</p>
 <p>To calculate the observed preference, selection and treatment effects, we can again use the <code>calc_effects</code> function.</p>
-<pre class="r"><code>calc_effects(mu1=46.16386, mu2=45.51061, mu11=47.57283, mu22=50.58991, phi=50/(50+22))</code></pre>
+<pre class="r"><code>effects_from_means(mu1=46.16386, mu2=45.51061, mu11=47.57283, mu22=50.58991, phi=50/(50+22))</code></pre>
 <pre><code>## $delta_tau
 ## [1] 0.65325
 ## 
@@ -272,11 +272,11 @@ library(preference)</code></pre>
 ## 
 ## $delta_pi
 ## [1] 5.962683</code></pre>
-<p>The results indicate small treatment and selection effects, but a moderate 6 point increase in SF36 score resulting from preference effects. If we want to use this summary data to test the significance of the preference, selection and treatment effects, we can use the <code>analysis_summary</code> function. To use this function, we need to input the mean, variance, and sample size of each group.</p>
-<pre class="r"><code>analysis_summary(x1mean=47.57283, x1var=10.6162889^2, m1=50, 
-                 x2mean=50.58991, x2var=4.8686232^2, m2=22, 
-                 y1mean=46.16386, y1var=9.7385777^2, n1=76, 
-                 y2mean=45.51061, y2var=9.9744353^2, n2=64)</code></pre>
+<p>The results indicate small treatment and selection effects, but a moderate 6 point increase in SF36 score resulting from preference effects. If we want to use this summary data to test the significance of the preference, selection and treatment effects, we can use the <code>analyze_summary_data</code> function. To use this function, we need to input the mean, variance, and sample size of each group.</p>
+<pre class="r"><code>analyze_summary_data(x1mean=47.57283, x1var=10.6162889^2, m1=50, 
+                     x2mean=50.58991, x2var=4.8686232^2, m2=22, 
+                     y1mean=46.16386, y1var=9.7385777^2, n1=76, 
+                     y2mean=45.51061, y2var=9.9744353^2, n2=64)</code></pre>
 <pre><code>##   pref_test  pref_pval   sel_test  sel_pval treat_test treat_pval
 ## 1  1.797166 0.07230934 -0.3989477 0.6899317  0.3902233  0.6963714</code></pre>
 <p>The output of this function provides the test statistic and p-value for each of these three effects. As was found in the <a href="https://www.ncbi.nlm.nih.gov/pubmed/21041538">original study</a>, none of these effects are statistically significant at a Type I error rate of 5%, although the preference effect is close to reaching this significance level with a p-value of 0.07.</p>
@@ -295,14 +295,14 @@ library(preference)</code></pre>
 ## 7 53.84277  5.257987 22 Pap   R       1
 ## 8 41.14614  9.052515 42 Pap   R       2</code></pre>
 <p>The low STAI group is indicated by <code>stratum=1</code>, and the high STAI group is indicated by <code>stratum=2</code>.</p>
-<p>The <code>calc_effects</code> function can be used to calculate the observed preference, selection and treatment effects. Note, baseline STAI is missing for 4 of the 212 patients included in the original IMAP study. Therefore, the total sample size for the stratified data is 208.</p>
+<p>The <code>effects_from_means</code> function can be used to calculate the observed preference, selection and treatment effects. Note, baseline STAI is missing for 4 of the 212 patients included in the original IMAP study. Therefore, the total sample size for the stratified data is 208.</p>
 <pre class="r"><code>mu1=c(52.00437,42.17970)
 mu2=c(53.84277,41.14614)
 mu11=c(54.33376,41.00851)
 mu22=c(51.50413,49.89651)
 phi=c(24/(24+10),25/(25+11))
 xi=c((24+10+30+22)/208,(25+11+44+42)/208)
-calc_effects(mu1, mu2, mu11, mu22, phi, nstrata=2, xi)</code></pre>
+effects_from_means(mu1, mu2, mu11, mu22, phi, nstrata=2, xi)</code></pre>
 <pre><code>## $delta_tau
 ## [1] -0.5799441
 ## 
@@ -311,7 +311,7 @@ calc_effects(mu1, mu2, mu11, mu22, phi, nstrata=2, xi)</code></pre>
 ## 
 ## $delta_pi
 ## [1] 4.670235</code></pre>
-<p>The results are similar to the unstratified case, in which small treatment and selection effects were observed with a moderate increase in SF36 due to preference effects. We can again use the <code>analysis_summary</code> function to test the significance of each effect. In a stratified design, the mean, variance, and sample size of each stratum must be included, along with the number of strata and the proportion (<code>nstrata</code>) of patients within each stratum (<code>xi</code>).</p>
+<p>The results are similar to the unstratified case, in which small treatment and selection effects were observed with a moderate increase in SF36 due to preference effects. We can again use the <code>analyze_summary_data</code> function to test the significance of each effect. In a stratified design, the mean, variance, and sample size of each stratum must be included, along with the number of strata and the proportion (<code>nstrata</code>) of patients within each stratum (<code>xi</code>).</p>
 <pre class="r"><code>x1mean=c(54.33376,41.00851)
 x1var=c(5.5, 10.5)
 m1=c(24,25)
@@ -325,7 +325,7 @@ y2mean=c(53.84277,41.14614)
 y2var=c(5.3,9.1)
 n2=c(22,42)
 xi=c((24+10+30+22)/208,(25+11+44+42)/208)
-analysis_summary(x1mean, x1var, m1, x2mean, x2var, m2, y1mean, y1var, n1, y2mean, y2var, n2, xi, nstrata=2)</code></pre>
+analyze_summary_data(x1mean, x1var, m1, x2mean, x2var, m2, y1mean, y1var, n1, y2mean, y2var, n2, xi, nstrata=2)</code></pre>
 <pre><code>##   pref_test  pref_pval   sel_test  sel_pval treat_test treat_pval
 ## 1  1.724443 0.08462782 -0.6823755 0.4950016 -0.2002993  0.8412465</code></pre>
 <p>Again, we see that none of the effects are significant at a 5% significance level, although the preference effect is close to reaching significance at <span class="math inline">\(p=0.08\)</span>.</p>
@@ -333,7 +333,7 @@ analysis_summary(x1mean, x1var, m1, x2mean, x2var, m2, y1mean, y1var, n1, y2mean
 </div>
 <div id="analysis-using-raw-data" class="section level2">
 <h2>Analysis using raw data</h2>
-<p>If we have access to raw study, we can use the <code>analysis_raw</code> function to compute the test statistics and p-values for each effect. This function requires the vector of responses for each treatment in the choice arm (<code>x1</code> for choice arm patients choosing treatment A, <code>x2</code> for choice arm patients choosing treatment B) and the random arm (<code>y1</code> for random arm patients receiving treatment A, <code>y2</code> for random arm patients receiving treatment B). In addition, the stratum membership of each group must be provided if the study is stratified.</p>
+<p>If we have access to raw study, we can use the <code>analyze_raw_data</code> function to compute the test statistics and p-values for each effect. This function requires the vector of responses for each treatment in the choice arm (<code>x1</code> for choice arm patients choosing treatment A, <code>x2</code> for choice arm patients choosing treatment B) and the random arm (<code>y1</code> for random arm patients receiving treatment A, <code>y2</code> for random arm patients receiving treatment B). In addition, the stratum membership of each group must be provided if the study is stratified.</p>
 </div>
 </div>
 <div id="references" class="section level1">

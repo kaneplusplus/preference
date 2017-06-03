@@ -298,9 +298,7 @@ overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
   sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
   treat=treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, nstrata)
   
-  ss<-list("trt.ss"=treat,"sel.ss"=sel,"pref.ss"=pref)
-  
-  #return(max(pref,sel,treat))
+  ss<-list("treatment"=treat,"selection"=sel,"preference"=pref)
   return(ss)
 }
 
@@ -1031,11 +1029,11 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
                   "delta_pi"=delta_pi)
   } else {
     # Stratified case
-    effects<-list("delta_tau"=sum(sapply(1:nstrata, function(x) 
+    effects<-list("treatment"=sum(sapply(1:nstrata, function(x) 
                               phi[x]*delta_tau[x])),
-                  "delta_nu"=sum(sapply(1:nstrata, function(x) 
+                  "selection"=sum(sapply(1:nstrata, function(x) 
                               phi[x]*delta_nu[x])),
-                  "delta_pi"=sum(sapply(1:nstrata,function(x) 
+                  "preference"=sum(sapply(1:nstrata,function(x) 
                               phi[x]*delta_pi[x])))
   }
 
