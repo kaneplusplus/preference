@@ -11,7 +11,7 @@
 
 <meta name="author" content="Briana Cameron" />
 
-<meta name="date" content="2017-06-02" />
+<meta name="date" content="2017-06-03" />
 
 <title>The preference package vignette</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">The preference package vignette</h1>
 <h4 class="author"><em>Briana Cameron</em></h4>
-<h4 class="date"><em>2017-06-02</em></h4>
+<h4 class="date"><em>2017-06-03</em></h4>
 
 </div>
 
@@ -169,13 +169,13 @@ library(preference)</code></pre>
 ## [1] 9.52381</code></pre>
 <p>Therefore, with the mean SF36 scores assumed above, we need to design a study to detect a treatment effect of 1, selection effect of 3.81, and a preference effect of 9.52. To determine the necessary sample size, we must also specify the variance of the responses. In this example, we assume a variance of 5 for the SF36 outcome. Then, the sample size to detect the above effects with 80% power and a Type I error of 0.05 is given by the <code>overall_sample_size</code> function. (Note, the <code>selection_sample_size</code>, <code>preference_sample_size</code>, and <code>treatment_sample_size</code> functions can be used to find the sample size if only one of the selection, preference, or treatment effects is of interest).</p>
 <pre class="r"><code>overall_sample_size(power=0.8, phi=0.7, sigma2=5, delta_pi=9.52, delta_nu=3.81, delta_tau=1)</code></pre>
-<pre><code>## $trt.ss
+<pre><code>## $treatment
 ## [1] 314
 ## 
-## $sel.ss
+## $selection
 ## [1] 224
 ## 
-## $pref.ss
+## $preference
 ## [1] 23</code></pre>
 <p>Selecting the largest of these three sample sizes, we would need a study of 314 patients to detect the effects given above. Note, in analysis, if all three of these effects were of interest, the type I error rate would need to be adjusted to account for multiple testing.</p>
 </div>
@@ -185,23 +185,23 @@ library(preference)</code></pre>
 <p>In the choice arm, we expect both strata to have a small increase in SF36 across both management systems. For the low STAI group, we expect a 2 point increase in mean SF36 for both management groups. In the high STAI group, we also expect a 2 point increase in mean SF36 for women choosing repeated Pap screening. Because the HCV triage method is a speedier approach, we expect a slightly greater increase in SF36 for women in the high STAI group choosing this method; we assume a mean SF36 score of 46 for this group.</p>
 <p>Finally, we assume that both management systems will be equally preferable to women in the low STAI stratum (<span class="math inline">\(\phi_1, \phi_2=0.5\)</span>). Because women with high STAI score have increased anxiety, we may expect a greater proportion of these women to prefer the HPV triage management method, which is the speedier option. Therefore, we assume that 70% of the women in the high STAI stratum will prefer HPV triage, and only 30% will prefer repeated Pap screening. Furthermore, we assume that 40% of women will have low STAI scores and 60% of women will be in the high STAI score stratum. Based on these assumptions, we can calculate the preference, selection and treatment effects we wish to test in our study.</p>
 <pre class="r"><code>effects_from_means(mu1=c(52,42), mu2=c(50,42), mu11=c(54,46), mu22=c(52,44), phi=c(0.5,0.7), nstrata=2, xi=c(0.4,0.6))</code></pre>
-<pre><code>## $delta_tau
+<pre><code>## $treatment
 ## [1] 1
 ## 
-## $delta_nu
+## $selection
 ## [1] 3.666667
 ## 
-## $delta_pi
+## $preference
 ## [1] 7.666667</code></pre>
 <p>With the assumptions listed above, we will need to design a study that can detect an overall treatment effect of 1, selection effect of 3.67, and preference effect of 7.67. We also need to specify the variance of the responses. We assume a variance of 3 for the SF36 outcome in the low STAI stratum and a variance of 4 in the high STAI stratum. With 80% power and a Type I error rate of 0.05, we can use the <code>overall_sample_size</code> function to find the sample size needed to detect the above effect.</p>
 <pre class="r"><code>overall_sample_size(power=0.8, phi=c(0.5,0.7), sigma2=c(3,4), delta_pi=7.67, delta_nu=3.67, delta_tau=1, xi=c(0.4,0.6), nstrata=2)</code></pre>
-<pre><code>## $trt.ss
+<pre><code>## $treatment
 ## [1] 227
 ## 
-## $sel.ss
+## $selection
 ## [1] 143
 ## 
-## $pref.ss
+## $preference
 ## [1] 21</code></pre>
 <p>In the two-stage randomized design stratified by STAI score, we would need an overall sample size of 227 patients.</p>
 </div>
@@ -303,13 +303,13 @@ mu22=c(51.50413,49.89651)
 phi=c(24/(24+10),25/(25+11))
 xi=c((24+10+30+22)/208,(25+11+44+42)/208)
 effects_from_means(mu1, mu2, mu11, mu22, phi, nstrata=2, xi)</code></pre>
-<pre><code>## $delta_tau
+<pre><code>## $treatment
 ## [1] -0.5799441
 ## 
-## $delta_nu
+## $selection
 ## [1] -1.741495
 ## 
-## $delta_pi
+## $preference
 ## [1] 4.670235</code></pre>
 <p>The results are similar to the unstratified case, in which small treatment and selection effects were observed with a moderate increase in SF36 due to preference effects. We can again use the <code>analyze_summary_data</code> function to test the significance of each effect. In a stratified design, the mean, variance, and sample size of each stratum must be included, along with the number of strata and the proportion (<code>nstrata</code>) of patients within each stratum (<code>xi</code>).</p>
 <pre class="r"><code>x1mean=c(54.33376,41.00851)
