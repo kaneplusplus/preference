@@ -1025,8 +1025,8 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   
   if (nstrata==1) { 
     # Unstratified case
-    effects<-list("delta_tau"=delta_tau,"delta_nu"=delta_nu,
-                  "delta_pi"=delta_pi)
+    effects<-list("treatment"=delta_tau,"selection"=delta_nu,
+                  "preference"=delta_pi)
   } else {
     # Stratified case
     effects<-list("treatment"=sum(sapply(1:nstrata, function(x) 
