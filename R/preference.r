@@ -87,7 +87,7 @@
 #' 
 #' Acknowledgements: This work was partially supported through a 
 #' Patient-Centered Outcomes Research Institute (PCORI) Award (ME-1511-32832) 
-#' and Yale’s CTSA Award (Ul1TR001863).  We would also like to thank the IMAP 
+#' and Yale's CTSA Award (Ul1TR001863).  We would also like to thank the IMAP 
 #' team for sharing their data to demonstrate this package.
 #'
 #' Disclaimer: All statements in this report, including its findings and 
