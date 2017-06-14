@@ -84,6 +84,17 @@
 #' \item{imap_strat: }{summary SF36 outcome data for the two-stage randomized 
 #' IMAP study stratified by high vs. low STAI score}
 #' }
+#' 
+#' Acknowledgements: This work was partially supported through a 
+#' Patient-Centered Outcomes Research Institute (PCORI) Award (ME-1511-32832) 
+#' and Yale’s CTSA Award (Ul1TR001863).  We would also like to thank the IMAP 
+#' team for sharing their data to demonstrate this package.
+#'
+#' Disclaimer: All statements in this report, including its findings and 
+#' conclusions, are solely those of the authors and do not necessarily 
+#' represent the views of the Patient-Centered Outcomes Research Institute 
+#' (PCORI), its Board of Governors or Methodology Committee.
+#' 
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment,
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 

@@ -30,9 +30,9 @@ test_that("treatment_sample_size function works", {
 test_that("overall_sample_size function works", {
   resp <- overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), 
     delta_pi=1, delta_nu=0.5, delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
-  expect_equal(resp$trt.ss, 28)
-  expect_equal(resp$sel.ss, 596)
-  expect_equal(resp$pref.ss, 138)
+  expect_equal(resp$treatment, 28)
+  expect_equal(resp$selection, 596)
+  expect_equal(resp$preference, 138)
   expect_is(resp, 'list')
 })
 
@@ -132,9 +132,9 @@ test_that("optimal_proportion function works", {
 
 test_that("effects_from_means function works", {
   resp <- effects_from_means(mu1=1, mu2=2, mu11=1.5, mu22=2.5, phi=0.5)
-  expect_equal(resp$delta_tau, -1)
-  expect_equal(resp$delta_nu, 0)
-  expect_equal(resp$delta_pi, 1)
+  expect_equal(resp$treatment, -1)
+  expect_equal(resp$selection, 0)
+  expect_equal(resp$preference, 1)
   expect_is(resp, 'list')
 })
 
