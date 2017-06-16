@@ -9,7 +9,7 @@
 #' to the random arm undergo a second randomization procedure to one of the 
 #' available treatment options. The design has also been extended to include
 #' important stratification variables; the functions provided in this package
-#' can accomodate both the unstratified and stratified designs.
+#' can accommodate both the unstratified and stratified designs.
 #' 
 #' In this study, there are three effects that may be of interest. The treatment
 #' effect captures the difference in outcome between patients randomized to 
