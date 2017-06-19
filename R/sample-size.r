@@ -11,7 +11,7 @@
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If 
+#' @param sigma2 variance estimate. Should be positive numeric values. If 
 #'               study is stratified, should be vector of within-stratum 
 #'               variances with length equal to the number of strata in the 
 #'               study. 
@@ -90,7 +90,7 @@ selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_pi overall study preference effect.
@@ -163,7 +163,7 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' in a two-stage randomized clinical trial
 #'
 #' @param power desired study power. Should be numeric value between 0 and 1.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_tau overall study treatment effect.
@@ -233,7 +233,7 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, 
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_pi overall study preference effect.
@@ -312,7 +312,7 @@ overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' sample size in a two-stage randomized clinical trial
 #'
 #' @param N overall study sample size.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_tau overall study treatment effect.
@@ -379,7 +379,7 @@ treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_pi overall study preference effect.
@@ -456,7 +456,7 @@ preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_pi overall study preference effect.
@@ -533,7 +533,7 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param delta_pi overall study preference effect.
@@ -848,7 +848,7 @@ analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
 #' 
 #' @param N overall study sample size.
 #' @param power desired study power. Should be numeric value between 0 and 1.
-#' @param sigma2 variance estimate. Should be positive numberic values. If study
+#' @param sigma2 variance estimate. Should be positive numeric values. If study
 #'               is stratified, should be vector of within-stratum variances 
 #'               with length equal to the number of strata in the study.
 #' @param alpha desired type I error rate.

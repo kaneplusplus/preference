@@ -6,9 +6,19 @@ Date: 2017-06-14
 Authors@R: c(person(given="Briana", family="Cameron", email="briana.cameron@yale.edu", role=c("aut", "cph", "cre")), person(given="Denise", family="Esserman", email="denise.esserman@yale.edu", role="ctb"), person(given="Michael",family="Kane",email="michael.kane@yale.edu",role="ctb"))
 URL: https://github.com/kaneplusplus/preference
 BugReports: https://github.com/kaneplusplus/preference/issues
-Description: Design and analyize two-stage randomized trials with a continuous outcome measure. The package contains functions to compute the required sample size needed to detect a given preference, treatment, and selection effect; alternatively, the package contains functions that can report the study power given a fixed sample size. Finally, analysis functions are provided to test each effect using either summary data (i.e. means, variances) or raw study data.
+Description: Design and analyze two-stage randomized trials with a continuous
+    outcome measure. The package contains functions to compute the required sample
+    size needed to detect a given preference, treatment, and selection effect;
+    alternatively, the package contains functions that can report the study power
+    given a fixed sample size. Finally, analysis functions are provided to test each
+    effect using either summary data (i.e. means, variances) or raw study data.
 License: LGPL-2
-Suggests: knitr, covr, testthat, ggplot2, devtools
+Suggests:
+    knitr,
+    covr,
+    testthat,
+    ggplot2,
+    devtools
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 LazyData: true
