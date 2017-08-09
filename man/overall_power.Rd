@@ -14,7 +14,7 @@ overall_power(N, phi, sigma2, delta_pi, delta_nu, delta_tau, alpha = 0.05,
 numeric value between 0 and 1. If study is stratified, should be
 vector with length equal to the number of strata in the study.}
 
-\item{sigma2}{variance estimate. Should be positive numberic values. If study
+\item{sigma2}{variance estimate. Should be positive numeric values. If study
 is stratified, should be vector of within-stratum variances 
 with length equal to the number of strata in the study.}
 

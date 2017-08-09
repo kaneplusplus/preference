@@ -10,7 +10,7 @@ treatment_power(N, sigma2, delta_tau, alpha = 0.05, theta = 0.5, xi = 1,
 \arguments{
 \item{N}{overall study sample size.}
 
-\item{sigma2}{variance estimate. Should be positive numberic values. If study
+\item{sigma2}{variance estimate. Should be positive numeric values. If study
 is stratified, should be vector of within-stratum variances 
 with length equal to the number of strata in the study.}
 
