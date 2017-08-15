@@ -7,7 +7,7 @@
 #' Calculates the sample size required to detect a given selection effect 
 #' in a two-stage randomized clinical trial
 #'
-#' @param power desired study power. Should be numeric value between 0 and 1.
+#' @param power desired study power. Should be numeric value between 0 and 1. 
 #' @param phi the proportion of patients preferring treatment 1. Should be
 #'            numeric value between 0 and 1. If study is stratified, should be
 #'            vector with length equal to the number of strata in the study.
@@ -37,7 +37,7 @@
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @importFrom stats qnorm
 #' @export
@@ -45,8 +45,8 @@ selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
                 alpha=0.05, theta=0.5, xi=1, 
                 nstrata=1) {
   # Error messages
-  if(!is.numeric(power) || power <= 0 || power >= 1)
-    stop('Power must be numeric in [0,1]')
+  if(!is.numeric(power) || power <= 0 || power >= 1 || length(power)!=1)
+    stop('Power must be single numeric value in [0,1]')
   if (length(phi) != nstrata) 
     stop('Length vector does not match number of strata')
   if(any(!is.numeric(phi)) || any(phi <= 0) || any(phi >= 1))
@@ -55,19 +55,20 @@ selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
     stop('Length of variance vector does not match number of strata')
   if(any(!is.numeric(sigma2) || any(sigma2 <= 0)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) || !is.numeric(delta_nu))
-    stop('Effect size must be numeric value')
-  if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1)
-    stop('Type I error rate must be numeric in [0,1]')
-  if(!is.numeric(theta) || theta <= 0 || theta >= 1)
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_pi) || !is.numeric(delta_nu) ||
+     length(delta_pi)!=1 || length(delta_nu)!=1)
+    stop('Effect size must be single numeric value')
+  if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1 || length(alpha)!=1)
+    stop('Type I error rate must be single numeric value in [0,1]')
+  if(!is.numeric(theta) || theta <= 0 || theta >= 1 || length(theta)!=1)
+    stop('Theta must be single numeric value in [0,1]')
   if(any(!is.numeric(xi) || any(xi <= 0) || any(xi > 1)))
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi) != nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi) != 1) 
     stop('Stratum proportions do not sum to 1')
-  if(!is.numeric(nstrata) || nstrata <=0)
+  if(!is.numeric(nstrata) || nstrata <=0 || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
@@ -121,8 +122,8 @@ selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
                  alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(power<0 | power>1 | !is.numeric(power)) 
-    stop('Power must be numeric in [0,1]')
+  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
+    stop('Power must be single numeric value in [0,1]')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
@@ -131,19 +132,20 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
+     length(delta_pi)!=1 || length(delta_nu)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) | length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
@@ -180,7 +182,8 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' # Unstratified
 #' treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
 #' # Stratified
-#' treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
+#' treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),
+#' nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -189,28 +192,28 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, xi=1, 
-                nstrata=1) {
+treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, 
+                                xi=1, nstrata=1) {
   # Error messages
-  if(power<0 | power>1 | !is.numeric(power)) 
-    stop('Power must be numeric in [0,1]')
+  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
+    stop('Power must be single numeric value in [0,1]')
   if(length(sigma2)!=nstrata)
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_tau))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_tau) || length(delta_tau)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   #Calculate sample size
@@ -253,8 +256,8 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, 
 #' overall_sample_size(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
 #' delta_tau=1.5)
 #' # Stratified
-#' overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, delta_nu=0.5,
-#' delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
+#' overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, 
+#' delta_nu=0.5, delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -266,8 +269,8 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, 
 overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                     alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(power<0 | power>1 | !is.numeric(power)) 
-    stop('Power must be numeric in [0,1]')
+  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
+    stop('Power must be single numeric value in [0,1]')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
@@ -276,27 +279,31 @@ overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau) 
+     || length(delta_pi)!=1 || length(delta_nu)!=1 || length(delta_tau)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
   zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
-  pref=preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
-  sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, xi, nstrata)
-  treat=treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, nstrata)
+  pref=preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
+                              theta, xi, nstrata)
+  sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, 
+                            xi, nstrata)
+  treat=treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, 
+                              nstrata)
   
   ss<-list("treatment"=treat,"selection"=sel,"preference"=pref)
   return(ss)
@@ -341,30 +348,30 @@ overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
 treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1, 
                   nstrata=1) {
   # Error messages
-  if(N<0 | !is.numeric(N)) 
-    stop('N must be a positive numeric value')
+  if(N<0 | !is.numeric(N) | length(N)!=1) 
+    stop('N must be a single positive numeric value')
   if(length(sigma2)!=nstrata)
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_tau))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_tau) || length(delta_tau)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate study power
   zalpha<-qnorm(1-(alpha/2))
-  power=pnorm(sqrt((((1-theta)*delta_tau^2*N)/(4*sum(sapply(1:nstrata, function(i)
+  power=pnorm(sqrt((((1-theta)*delta_tau^2*N)/(4*sum(sapply(1:nstrata,function(i)
     xi[i]*sigma2[i])))))-zalpha)
   
   return(power)
@@ -397,8 +404,8 @@ treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #' # Unstratified
 #' preference_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' preference_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
-#' xi=c(0.5,0.5), nstrata=2)
+#' preference_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
+#' delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -410,8 +417,8 @@ treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
                    theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(N<0 | !is.numeric(N)) 
-    stop('N must be a positive numeric value')
+  if(N<0 | !is.numeric(N) | length(N)!=1) 
+    stop('N must be a single positive numeric value')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
@@ -420,19 +427,20 @@ preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
+     length(delta_pi)!=1 || length(delta_nu)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate study power
@@ -474,8 +482,8 @@ preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' # Unstratified
 #' selection_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 #' # Stratified
-#' selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
-#' xi=c(0.5,0.5), nstrata=2)
+#' selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
+#' delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -487,8 +495,8 @@ preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
                   theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(N<0 | !is.numeric(N)) 
-    stop('N must be a positive numeric value')
+  if(N<0 | !is.numeric(N) | length(N)!=1) 
+    stop('N must be a single positive numeric value')
   if (length(phi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
@@ -497,19 +505,20 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
+     length(delta_pi)!=1 || length(delta_nu)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate study power
@@ -566,8 +575,8 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                       alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(N<0 | !is.numeric(N)) 
-    stop('N must be a positive numeric value')
+  if(N<0 | !is.numeric(N) | length(N)!=1) 
+    stop('N must be a single positive numeric value')
   if (length(phi)!=nstrata) 
     stop('Length vector does not match number of strata')
   if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
@@ -576,19 +585,20 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau))
-    stop('Effect size must be numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau) 
+     || length(delta_pi)!=1 || length(delta_nu)!=1 || length(delta_tau)!=1)
+    stop('Effect size must be single numeric value')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be single numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   
@@ -656,7 +666,8 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' s1<-c(1,1,1,2,2,2)
 #' y2<-c(8,9,10,7,8,11)
 #' s2<-c(1,1,1,2,2,2)
-#' analyze_raw_data(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),nstrata=2)
+#' analyze_raw_data(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),
+#' nstrata=2)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 
@@ -692,7 +703,7 @@ analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   unstrat_stats<-matrix(NA,nrow=nstrata,ncol=6)
@@ -713,11 +724,12 @@ analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
   treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,5]))
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
-  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
-  treat_pval<-(1-pnorm(abs(treat_test)))*2
+  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
+  treat_pval<-pnorm(abs(treat_test), lower.tail=FALSE)*2
   
-  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, 
+                      treat_test, treat_pval)
   
   return(results)
 }
@@ -813,7 +825,7 @@ analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Compute unstratified test statistics
@@ -825,14 +837,15 @@ analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
   # Compute stratified test statistics and p-values
   pref_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[1,i])))
   sel_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[3,i])))
-  treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[5,i])))
+  treat_test<-sum(sapply(1:nstrata,function(i) xi[i]*unlist(unstrat_stats[5,i])))
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
-  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
-  treat_pval<-(1-pnorm(abs(treat_test)))*2
+  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
+  treat_pval<-pnorm(abs(treat_test), lower.tail = FALSE)*2
   
-  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
+                      treat_pval)
   
   return(results)
 }
@@ -861,30 +874,31 @@ analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
-#' treatment_effect_size(N=300,power=0.9,sigma2=c(1,0.8), xi=c(0.3,0.7), nstrata=2)
+#' treatment_effect_size(N=300,power=0.9,sigma2=c(1,0.8), xi=c(0.3,0.7), 
+#' nstrata=2)
 #' @export
 treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1, 
                      nstrata=1) {
   # Error messages
-  if(N<0 | !is.numeric(N)) 
-    stop('N must be a positive numeric value')
-  if(power<0 | power>1 | !is.numeric(power)) 
-    stop('Power must be numeric in [0,1]')
+  if(N<0 | !is.numeric(N) | length(N)!=1) 
+    stop('N must be a single positive numeric value')
+  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
+    stop('Power must be single numeric value in [0,1]')
   if(length(sigma2)!=nstrata)
     stop('Length of variance vector does not match number of strata')
   if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha))
-    stop('Type I error rate must be numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta)) 
-    stop('Theta must be numeric in [0,1]')
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+    stop('Type I error rate must be alpha numeric in [0,1]')
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+    stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate effect size
@@ -927,19 +941,21 @@ treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' @export
 optimal_proportion<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
   if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
-     any(!is.numeric(c(w_sel,w_pref,w_treat))))
-    stop('Weights must be numeric value in [0,1]')
+     any(!is.numeric(c(w_sel,w_pref,w_treat))) | length(w_sel)!=1 | 
+     length(w_pref)!=1 | length(w_treat)!=1)
+    stop('Weights must be single numeric value in [0,1]')
   if (w_sel+w_pref+w_treat!=1) 
     stop('weights do not sum to 1')
   if(sigma2<=0 | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
   if(phi<0 | phi>1 | !is.numeric(phi)) 
     stop('Preference rate must be numeric value in [0,1]')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu))
-    stop('Effect size must be numeric value')
+  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
+     length(delta_pi)!=1 || length(delta_nu)!=1)
+    stop('Effect size must be single numeric value')
   # Based on Equation 16 in Walter paper
   num<-w_sel+w_pref+phi*(1-phi)*((w_sel*((2*phi-1)*delta_nu+delta_pi)^2
-                                  +w_pref*((2*phi-1)*delta_pi+delta_nu)^2)/sigma2)
+                                +w_pref*((2*phi-1)*delta_pi+delta_nu)^2)/sigma2)
   denom<-16*w_treat*phi^2*(1-phi)^2+2*(w_sel+w_pref)*(phi^2+(1-phi)^2)
   
   return(uniroot(f,c(0,1),value=(num/denom))$root)
@@ -995,7 +1011,7 @@ f<-function(theta,value) {
 #' @export
 effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   # Error messages
-  if(nstrata<=0 | !is.numeric(nstrata))
+  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   if (nstrata>1 & is.null(xi))
     stop('Must define xi for stratified design')
@@ -1012,7 +1028,6 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1 & !is.null(xi)) 
     stop('Stratum proportions do not sum to 1')
-  
   
   # Calculate unobserved means
   mu12<-(mu1-phi*mu11)/(1-phi)
@@ -1109,22 +1124,23 @@ unstrat_analyze_raw_data<-function(x1,x2,y1,y2) {
   sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
-  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
   
   # Compute treatment effect t-test from random arm
   treat_test<-t.test(y1,y2)$statistic
   treat_pval<-t.test(y1,y2)$p.value
   
-  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
+                      treat_pval)
   
   return(results)
 }
 
 
 ### Analysis Function (Summary Data)
-unstrat_analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,n1,
-                                   y2mean,y2var,n2) {
+unstrat_analyze_summary_data<-function(x1mean, x1var, m1, x2mean, x2var, m2, 
+                                       y1mean, y1var,n1, y2mean, y2var, n2) {
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
      !is.numeric(x2mean) | !is.numeric(x2var) |
@@ -1154,14 +1170,15 @@ unstrat_analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1
   sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-(1-pnorm(abs(pref_test)))*2 # Preference effect
-  sel_pval<-(1-pnorm(abs(sel_test)))*2 # Selection effect
+  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
   
   # Compute treatment effect t-test from random arm
   treat_test<-t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$t
   treat_pval<-t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$p.value
   
-  results<-data.frame(pref_test,pref_pval,sel_test,sel_pval,treat_test,treat_pval)
+  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
+                      treat_pval)
   
   return(results)
 }
