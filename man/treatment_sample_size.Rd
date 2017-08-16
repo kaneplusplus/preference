@@ -37,7 +37,8 @@ in a two-stage randomized clinical trial
 # Unstratified
 treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
 # Stratified
-treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
+treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),
+nstrata=2)
 }
 \references{
 Turner RM, et al. (2014). "Sample Size and Power When Designing

@@ -64,7 +64,8 @@ y1<-c(10,5,7,9,12,6)
 s1<-c(1,1,1,2,2,2)
 y2<-c(8,9,10,7,8,11)
 s2<-c(1,1,1,2,2,2)
-analyze_raw_data(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),nstrata=2)
+analyze_raw_data(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),
+nstrata=2)
 }
 \references{
 Rucker G (1989). "A two-stage trial design for testing treatment, 

@@ -43,8 +43,8 @@ sample size in a two-stage randomized clinical trial
 # Unstratified
 selection_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
 # Stratified
-selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
-xi=c(0.5,0.5), nstrata=2)
+selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
+delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
 }
 \references{
 Turner RM, et al. (2014). "Sample Size and Power When Designing

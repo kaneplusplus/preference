@@ -1,4 +1,4 @@
-preference: A R client for Clinical Trials using Preference Design
+preference: An R package for Clinical Trials using Preference Design
 ===
 
 **Author:** Briana Cameron<br/>
