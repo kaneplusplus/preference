@@ -1,7 +1,7 @@
 Package: preference
 Type: Package
 Title: 2-Stage Clinical Trial Design and Analysis
-Version: 0.1.1
+Version: 0.1.2
 Date: 2017-06-14
 Authors@R: c(person(given="Briana", family="Cameron", email="briana.cameron@yale.edu", role=c("aut", "cph", "cre")), person(given="Denise", family="Esserman", email="denise.esserman@yale.edu", role="ctb"), person(given="Michael",family="Kane",email="michael.kane@yale.edu",role="ctb"))
 URL: https://github.com/kaneplusplus/preference
