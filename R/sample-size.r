@@ -182,14 +182,16 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' # Unstratified
 #' treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
 #' # Stratified
-#' treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, xi=c(0.3,0.7),
+#' treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, 
+#'                       xi=c(0.3,0.7),
 #' nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." 
+#' \emph{Stat Methods Med Res}.  
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, 
@@ -1202,29 +1204,4 @@ t.test2 <- function(m1,m2,s1,s2,n1,n2)
   names(dat) <- c("Mean.Diff", "Std.Err", "t", "p.value")
   return(dat) 
 }
-
-######################
-### IMAP DATA SETS ###
-######################
-
-# Unstratified summary data
-#imap<-data.frame(matrix(NA,nrow=4,ncol=5))
-#colnames(imap)<-c("mean","sd","n","trt","arm")
-#imap$mean<-c(47.57283,50.58991,46.16386,45.51061)
-#imap$sd<-c(10.6162889,4.8686232,9.7385777,9.9744353)
-#imap$n<-c(50,22,76,64)
-#imap$trt<-as.factor(c("HPV","Pap","HPV","Pap"))
-#imap$arm<-as.factor(c("C","C","R","R"))
-#save(imap,file="imap.rda")
-
-# Stratified summary data (stratified by STAI score)
-#imap_strat<-data.frame(matrix(NA,nrow=8,ncol=6))
-#colnames(imap_strat)<-c("mean","sd","n","trt","arm","stratum")
-#imap_strat$mean<-c(54.3337592,41.0085061,51.5041323,49.8965119,52.0043692,42.179696,53.8427658,41.1461439)
-#imap_strat$sd<-c(5.5000253,10.5061654,6.1202786,3.8040966,6.5603227,9.6234748,5.2579869,9.0525148)
-#imap_strat$n<-c(24,25,10,11,30,44,22,42)
-#imap_strat$trt<-as.factor(c("HPV","HPV","Pap","Pap","HPV","HPV","Pap","Pap"))
-#imap_strat$arm<-as.factor(c("C","C","C","C","R","R","R","R"))
-#imap_strat$stratum<-as.factor(c(1,2,1,2,1,2,1,2))
-#save(imap_strat,file="imap_strat.rda")
 
