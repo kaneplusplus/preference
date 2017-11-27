@@ -303,13 +303,14 @@ overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
   zalpha<-qnorm(1-(alpha/2))
   pref=preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
                               theta, xi, nstrata)
-  sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, theta, 
-                            xi, nstrata)
+  sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
+                            theta, xi, nstrata)
   treat=treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, 
                               nstrata)
-  
-  ss<-list("treatment"=treat,"selection"=sel,"preference"=pref)
-  return(ss)
+ 
+  ret <- data.frame(treatment=treat, selection=sel, preference=pref) 
+  class(ret) <- c(class(ret), "preference.sample.size")
+  ret
 }
 
 ###################################
@@ -565,7 +566,7 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' overall_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5, 
 #' delta_tau=1.5)
 #' # Stratified
-#' overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5, 
+#' overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5,
 #' delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -614,8 +615,9 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
   sel_pwr<-selection_power(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
                    delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
                    nstrata=nstrata)
-  
-  return(list("trt_pwr"=trt_pwr,"pref_pwr"=pref_pwr,"sel_pwr"=sel_pwr))  
+  ret <- data.frame(treatment=trt_pwr, selection=sel_pwr, preference=pref_pwr)
+  class(ret) <- c(class(ret), "preference.power")
+  ret
 }
 
 ##########################
@@ -737,6 +739,8 @@ analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
   return(results)
 }
 
+#' Fit the preference data collected from a clinical trial
+#' 
 #' @param outcome (numeric) individual trial outcomes.
 #' @param random (logical) was this individual part of the random arm?
 #' @param treatment (character, factor, or integer) which treatment an 

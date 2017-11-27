@@ -5,26 +5,28 @@ plot.selection_designs <- function(x, y, ...) {
 plot.preference_designs <- function(x, y, ...) {
 }
 
+#' @importFrom ggplot2 ggplot aes_string geom_line ylab xlab aes
 create_strat_selection_plot = function(params, df) {
-  ret = NULL
-  if (length(unique(df$preference_effect)) > 1 && 
-      length(unique(df$selection_effect)) == 1) {
-    ret = ggplot2::ggplot(data=df, 
-      ggplot2::aes_string(x="preference_effect", y="sample_size")) +
-      ggplot2::geom_line() + ggplot2::xlab("Preference Effect") + 
-      ggplot2::ylab("Sample Size")
+  `Preference Effect` <- NULL
+  ret <- NULL
+  if (length(unique(df[, "preference_effect"])) > 1 && 
+      length(unique(df[, "selection_effect"])) == 1) {
+    ret = ggplot(data=df, 
+      aes_string(x="preference_effect", y="sample_size")) +
+      geom_line() + xlab("Preference Effect") + 
+      ylab("Sample Size")
   }
-  else if (length(unique(df$preference_effect)) == 1 &&
-           length(unique(df$selection_effect)) > 1) {
-    ret = ggplot2::ggplot(data=df, 
-      ggplot2::aes_string(x="selection_effect", y="sample_size")) +
-      ggplot2::geom_line() + ggplot2::xlab("Selection Effect") + 
-      ggplot2::ylab("Sample Size")
+  else if (length(unique(df[, "preference_effect"])) == 1 &&
+           length(unique(df[, "selection_effect"])) > 1) {
+    ret = ggplot(data=df, 
+      aes_string(x="selection_effect", y="sample_size")) +
+      geom_line() + xlab("Selection Effect") + 
+      ylab("Sample Size")
   }
-  else if (length(unique(df$preference_effect)) > 1 &&
-           length(unique(df$selection_effect)) > 1) {
-    df$`Preference Effect` <- factor(df$preference_effect)
-    ret <- ggplot(data=df, aes(x=selection_effect, y=sample_size, 
+  else if (length(unique(df[, 'preference_effect'])) > 1 &&
+           length(unique(df[, 'selection_effect'])) > 1) {
+    df$`Preference Effect` <- factor(df[, "preference_effect"])
+    ret <- ggplot(data=df, aes_string(x="selection_effect", y="sample_size", 
       group=`Preference Effect`, color=`Preference Effect`)) + 
       geom_line() + xlab("Selection Effect") + ylab("Sample Size")
 

@@ -4,6 +4,8 @@ context('preference function calls')
 ### Sample Size Functions ###
 #############################
 
+# Private functions
+
 test_that("selection_sample_size function works", {
   resp <- selection_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), 
     delta_pi=1, delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
@@ -33,7 +35,16 @@ test_that("overall_sample_size function works", {
   expect_equal(resp$treatment, 28)
   expect_equal(resp$selection, 596)
   expect_equal(resp$preference, 138)
-  expect_is(resp, 'list')
+  expect_is(resp, 'data.frame')
+})
+
+# Public functions
+
+# Get this working!!
+test_that("preference.trial and sample_size works", {
+  pt <- preference.trial(power=0.8, sigma2=c(1, 1), phi=c(0.5, 0.5), 
+    delta_nu=0.5, delta_pi=1, delta_tau=1.5, alpha=0.05, theta=0.5,
+    xi=c(0.3,0.7), nstrata=2L, k=1L)
 })
 
 #######################
@@ -64,10 +75,10 @@ test_that("treatment_power function works", {
 test_that("overall_power function works", {
   resp <- overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
                     delta_nu=0.5, delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
-  expect_equal(round(resp$trt_pwr,6), 0.864747)
-  expect_equal(round(resp$pref_pwr,6), 0.984880)
-  expect_equal(round(resp$sel_pwr,6), 0.508326)
-  expect_is(resp, 'list')
+  expect_equal(round(resp$treatment,6), 0.864747)
+  expect_equal(round(resp$preference,6), 0.984880)
+  expect_equal(round(resp$selection,6), 0.508326)
+  expect_is(resp, 'data.frame')
 })
 
 ##########################
