@@ -3,6 +3,7 @@
 export(analyze_raw_data)
 export(analyze_summary_data)
 export(effects_from_means)
+export(fit_preference_data)
 export(optimal_proportion)
 export(overall_power)
 export(overall_sample_size)

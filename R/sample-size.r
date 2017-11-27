@@ -178,6 +178,8 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
+#' @param k the ratio of treatment A to treatment B. (default 1, i.e. equal
+#' distribution to the two treatment arms)
 #' @examples
 #' # Unstratified
 #' treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
@@ -194,14 +196,12 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' \emph{Stat Methods Med Res}.  
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5, 
-                                xi=1, nstrata=1) {
+treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05, theta=0.5,
+                                xi=1, nstrata=1, k=1) {
   # Error messages
   if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
     stop('Power must be single numeric value in [0,1]')
   if(length(sigma2)!=nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
   if(!is.numeric(delta_tau) || length(delta_tau)!=1)
     stop('Effect size must be single numeric value')
@@ -223,7 +223,8 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05,theta=0.5,
   zalpha<-qnorm(1-(alpha/2))
   terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
   sum_total=sum(terms)
-  N=4*(zalpha+zbeta)^2/((1-theta)*delta_tau^2)*sum_total
+  N <- (k+1)^2 / (4*k) * 4 * (zalpha+zbeta)^2 / ((1-theta)*delta_tau^2) *
+    sum_total
   return(ceiling(N))
 }
 
@@ -734,6 +735,77 @@ analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
                       treat_test, treat_pval)
   
   return(results)
+}
+
+#' @param outcome (numeric) individual trial outcomes.
+#' @param random (logical) was this individual part of the random arm?
+#' @param treatment (character, factor, or integer) which treatment an 
+#' individual received
+#' @param strata (optional integer) which strata the individual belongs to.
+#' @examples
+#' #Unstratified
+#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
+#'              8, 9, 10, 7, 8,11)
+#' random <- c(rep(FALSE, 13), rep(TRUE, 12))
+#' treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
+#' fit_preference_data(outcome, random, treatment)
+#' 
+#' #Stratified
+#' x1<-c(10,8,6,10,5)
+#' s11<-c(1,1,2,2,2)
+#' x2<-c(8,7,6,10,12,11,6,8)
+#' s22<-c(1,1,1,1,2,2,2,2)
+#' y1<-c(10,5,7,9,12,6)
+#' s1<-c(1,1,1,2,2,2)
+#' y2<-c(8,9,10,7,8,11)
+#' s2<-c(1,1,1,2,2,2)
+#' analyze_raw_data(x1,x2,y1,y2,s11=s11,s22=s22,s1=s1,s2=s2,xi=c(0.5,0.5),
+#' nstrata=2)
+#' @export
+fit_preference_data <- function(outcome, random, treatment, strata) {
+  if (missing(strata)) {
+    strata <- rep(1, length(outcome))
+  }
+  # TODO: add more checking or use s4
+  if (length(unique(treatment)) != 2) {
+    stop("You may only have two treatments.")
+  }
+  pd <- data.frame(outcome=outcome, random=random, treatment=treatment,
+                   strata=strata)
+ 
+  # Compute unstratified test statistics
+  strat_split <- split(1:length(strata), strata)
+  
+  treatments <- sort(unique(treatment)) 
+  unstrat_stats <- NULL
+  for (ss in strat_split) { 
+    pds <- pd[ss , ]
+    unstrat_stats <- rbind(unstrat_stats, 
+      # unstrat_analyze_raw_data NEEDS TO CHANGE to include other values.
+      unstrat_analyze_raw_data(
+        pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]],
+        pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]],
+        pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]],
+        pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+  }
+ 
+  #calculate xi
+  xi <- table(strata) / length(outcome)
+  nstrata <- length(unique(strata))
+ 
+  # Compute stratified test statistics and p-values
+  pref_test <- sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,1]))
+  sel_test <- sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,3]))
+  treat_test <- sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,5]))
+ 
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval <- pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval <- pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
+  treat_pval <- pnorm(abs(treat_test), lower.tail=FALSE)*2
+ 
+  #Might need for unstrat_analyze_raw_data to also return the variance values
+  ret <- data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
+                    treat_pval)
 }
 
 #' Analysis Function: Summary Data
