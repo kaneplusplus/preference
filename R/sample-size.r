@@ -681,7 +681,7 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
+analyze_raw_data <- function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1) {
   # Check stratum assignments
   if(nstrata==1){
     s11=rep(1,length(x1))
@@ -729,9 +729,9 @@ analyze_raw_data<-function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1){
   treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,5]))
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
-  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
-  treat_pval<-pnorm(abs(treat_test), lower.tail=FALSE)*2
+  pref_pval<-pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)*2 # Preference effect
+  sel_pval<-pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE)*2 # Selection effect
+  treat_pval<-pnorm(abs(treat_test/sum(xi^2)), lower.tail=FALSE)*2
   
   results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, 
                       treat_test, treat_pval)
@@ -918,9 +918,9 @@ analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
   treat_test<-sum(sapply(1:nstrata,function(i) xi[i]*unlist(unstrat_stats[5,i])))
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
-  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
-  treat_pval<-pnorm(abs(treat_test), lower.tail = FALSE)*2
+  pref_pval<-pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)*2 # Preference effect
+  sel_pval<-pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE)*2 # Selection effect
+  treat_pval<-pnorm(abs(treat_test/sum(xi^2)), lower.tail=FALSE)*2
   
   results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
                       treat_pval)
