@@ -269,8 +269,8 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05, theta=0.5,
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-overall_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, delta_tau, 
-                    alpha=0.05, theta=0.5, xi=1, nstrata=1) {
+overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
+  delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
   if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
     stop('Power must be single numeric value in [0,1]')
