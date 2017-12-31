@@ -184,8 +184,18 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
 
 #' Design Preference Trials with Power Constraint(s)
 #' @examples
+#' 
+#' Unstratified trials with power constraints.
 #' pt_from_power(power=seq(.1, 0.8, by=0.1), pref_effect=1, selection_effect=1, 
 #'   treatment_effect=1, sigma2=1, pref_prop=0.6)
+#'
+#' Stratified trials with power constraints. Note that the proportion
+#' of patients in the choice arm (choice prop) is fixed for all strata.
+#' pt_from_power(power=seq(0.1, 0.8, by=0.1), pref_effect=1, 
+#'   selection_effect=1, treatment_effect=1,
+#'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+#'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
+#' 
 #' @export
 pt_from_power <- function(power, pref_effect, selection_effect, 
   treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop,
@@ -205,12 +215,15 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   ret <- do.call(preference.trial, args)
   for (i in 1:nrow(ret)) {
     sss <- overall_sample_size(power[cind(i, length(power))], 
-                               ret$pref_prop[[i]],
-                               ret$sigma2[[i]], ret$pref_effect[i], 
-                               ret$selection_effect[i], ret$treatment_effect[i],
-                               ret$alpha[i], ret$choice_prop[[i]], 
-                               ret$stratum_prop[[i]], 
-                               length(ret$stratum_prop[[i]]))
+                               ret$pref_prop[[i]][[1]],
+                               ret$sigma2[[i]][[1]], 
+                               ret$pref_effect[i], 
+                               ret$selection_effect[i], 
+                               ret$treatment_effect[i],
+                               ret$alpha[i], 
+                               ret$choice_prop[[i]][[1]][[1]],
+                               ret$stratum_prop[[i]][[1]],
+                               length(ret$stratum_prop[[i]][[1]]))
     ret$treatment_ss[i] <- sss$treatment[1]
     ret$pref_ss[i] <- sss$preference[1]
     ret$selection_ss[i] <- sss$selection[1]
