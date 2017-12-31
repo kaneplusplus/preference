@@ -108,6 +108,17 @@ cind <- function(i, vec_len) {
 #'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
 #'   choice_prop=list(c(0.5, 0.5)), stratum_prop=list(c(0.3, 0.7)))
 #' 
+#' # Multiple trials unstratified.
+#' preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5), 
+#'   selection_ss=100, selection_effect=1, treatment_ss=100, treatment_effect=1,
+#'   sigma2=1, pref_prop=0.6)
+#' 
+#' # Multiple, stratified trials.
+#' preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5), 
+#'   selection_ss=100, selection_effect=1, treatment_ss=100, treatment_effect=1,
+#'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)), 
+#'   choice_prop=list(c(0.5, 0.5)), stratum_prop=list(c(0.3, 0.7)))
+#' 
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -122,6 +133,20 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
 
   # Evaluate the arguments once from the match.call return.
   args <- lapply(as.list(match.call())[-1], eval)
+
+  # Default arguments are not included in match.call. Fill them in
+  # manually.
+  if ( !("alpha" %in% names(args)) ) {
+    args$alpha <- alpha
+  } 
+  if ( !("stratum_prop" %in% names(args)) ) {
+    args$stratum_prop <- stratum_prop
+  }
+  if ( !("choice_prop" %in% names(args)) ) {
+    args$choice_prop <- choice_prop
+  }
+
+  # Get the lengths of the arguments.
   arg_lens <- vapply(args, length, 0L)
 
   if (all(arg_lens == 1)) {
@@ -137,12 +162,23 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
     }
 
     # Create a set of preference trials.
-    exp_arg_df <- as.data.frame(
-      Map(function(x) x[cind(1:max_arg_len, length(x))], args))
-    expanded_args <- 
-      Map(function(x) as.list(exp_arg_df[x,]), 1:nrow(exp_arg_df))
-    Reduce(rbind,
-      Map(function(x) do.call(preference.trial.single, x), expanded_args))
+    exp_arg_list <- Map(function(x) x[cind(1:max_arg_len, length(x))], args)
+    x <- as.data.frame(exp_arg_list[setdiff(names(args), 
+      c("pref_prop", "choice_prop", "stratum_prop", "sigma2"))])
+    x$pref_prop <- exp_arg_list$pref_prop
+    x$choice_prop <- exp_arg_list$choice_prop
+    x$stratum_prop <- exp_arg_list$stratum_prop
+    x$sigma2 <- exp_arg_list$sigma2
+    ret <- NULL
+    for (i in 1:nrow(x)) {
+      ret <- rbind(ret,
+        preference.trial.single(x$pref_ss[i], x$pref_effect[i], 
+                                x$selection_ss[i], x$selection_effect[i], 
+                                x$treatment_ss[i], x$treatment_effect[i], 
+                                x$sigma2[i], x$pref_prop[i], x$choice_prop[i], 
+                                x$stratum_prop[i], x$alpha[i]))
+    }
+    ret
   }
 }
 
