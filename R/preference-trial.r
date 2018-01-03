@@ -23,7 +23,7 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
   }
   if (!is.list(pref_prop)) pref_prop <- list(pref_prop)
   if (!is.list(stratum_prop)) stratum_prop <- list(stratum_prop)
-  if (!is.list(sigma2)) sigma2<- list(sigma2)
+  if (!is.list(sigma2)) sigma2 <- list(sigma2)
    
   if (length(stratum_prop[[1]]) != length(pref_prop[[1]])) {
     stop(paste("The stratum_prop and pref_pop parameters",
@@ -58,10 +58,10 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
     selection_ss=selection_ss, selection_effect=selection_effect, 
     treatment_ss=treatment_ss, treatment_effect=treatment_effect, 
     alpha=alpha)
-  ret$pref_prop=list(pref_prop)
+  ret$pref_prop=pref_prop
   ret$choice_prop=choice_prop
-  ret$stratum_prop=list(stratum_prop)
-  ret$sigma2=list(sigma2)
+  ret$stratum_prop=stratum_prop
+  ret$sigma2=sigma2
   class(ret) <- c("preference.trial", class(ret))
   ret
 }
@@ -235,15 +235,15 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   ret <- do.call(preference.trial, args)
   for (i in 1:nrow(ret)) {
     sss <- overall_sample_size(power[cind(i, length(power))], 
-                               ret$pref_prop[[i]][[1]],
-                               ret$sigma2[[i]][[1]], 
+                               ret$pref_prop[[i]],
+                               ret$sigma2[[i]], 
                                ret$pref_effect[i], 
                                ret$selection_effect[i], 
                                ret$treatment_effect[i],
                                ret$alpha[i], 
                                ret$choice_prop[i],
-                               ret$stratum_prop[[i]][[1]],
-                               length(ret$stratum_prop[[i]][[1]]))
+                               ret$stratum_prop[[i]],
+                               length(ret$stratum_prop[[i]]))
     ret$treatment_ss[i] <- sss$treatment[1]
     ret$pref_ss[i] <- sss$preference[1]
     ret$selection_ss[i] <- sss$selection[1]
@@ -251,18 +251,13 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   ret
 }
 
+#pt_from_ss 
+
 # TODO:
 # pt_from_ss take one sample size (for each trial) and find the 
 # best allocation per arm.
 #
 # pt_optimize_choice_prop
-
-# sample_size
-# power
-# effect
-# proportion
-# alpha
-# sigma2
 # plot
 # website forwarding
 # pt_from_group_means (not high priority)
