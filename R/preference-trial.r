@@ -22,13 +22,11 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
     stop("The treatment_effect parameter should be a single numeric value.")
   }
   if (!is.list(pref_prop)) pref_prop <- list(pref_prop)
-  if (!is.list(choice_prop)) choice_prop <- list(choice_prop)
   if (!is.list(stratum_prop)) stratum_prop <- list(stratum_prop)
   if (!is.list(sigma2)) sigma2<- list(sigma2)
    
-  if (length(stratum_prop[[1]]) != length(choice_prop[[1]]) ||
-      length(choice_prop[[1]]) != length(pref_prop[[1]])) {
-    stop(paste("The stratum_prop, choice_prop, and pref_pop parameters",
+  if (length(stratum_prop[[1]]) != length(pref_prop[[1]])) {
+    stop(paste("The stratum_prop and pref_pop parameters",
                "must have the same length."))
   }
   if (sum(stratum_prop[[1]]) != 1) {
@@ -40,7 +38,7 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
   }
   if (any(!is.numeric(choice_prop[[1]])) || any(choice_prop[[1]] < 0) ||
       any(choice_prop[[1]] > 1)) {
-    stop("The choice_prop parameter must be a list of numeric values in [0, 1]")
+    stop("The choice_prop parameter must be a numeric values in [0, 1]")
   }
   if (any(!is.numeric(pref_prop[[1]])) || any(pref_prop[[1]] < 0) ||
       any(pref_prop[[1]] > 1)) {
@@ -51,7 +49,7 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
       any(sigma2[[1]] < 0)) {
     stop(paste("The sigma2 parameter must be a list of numeric values",
                "greater than zero and the length is equal to",
-               "the stratum_prop, choice_prop, and pref_prop parameters."))
+               "the stratum_prop and pref_prop parameters."))
   }
   if (!is.numeric(alpha) || length(alpha) != 1 || any(alpha < 0 | alpha > 1)) {
     stop("The alpha parameter must be a single numeric value in [0, 1].")
@@ -61,7 +59,7 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
     treatment_ss=treatment_ss, treatment_effect=treatment_effect, 
     alpha=alpha)
   ret$pref_prop=list(pref_prop)
-  ret$choice_prop=list(choice_prop)
+  ret$choice_prop=choice_prop
   ret$stratum_prop=list(stratum_prop)
   ret$sigma2=list(sigma2)
   class(ret) <- c("preference.trial", class(ret))
@@ -81,10 +79,10 @@ cind <- function(i, vec_len) {
 #' @param selection_effect the effect size of selection arm (delta_nu).
 #' @param treatment_ss the sample size of the treatment arm .
 #' @param treatment_effect the sample size of the treatment arm (delta_tau)
-#' @param sigma2 the variance estimate of ???. This value should be 
-#' positive numeric values. If study is stratified, should be vector of 
-#' within-stratum variances with length equal to the number of strata in the
-#' study.
+#' @param sigma2 the variance estimate of the outcome of interest. This 
+#' value should be positive numeric values. If study is stratified, should 
+#' be vector of within-stratum variances with length equal to the number of 
+#' strata in the study.
 #' @param pref_prop the proportion of patients preferring treatment 1. This
 #' value should be between 0 and 1 (phi).
 #' @param choice_prop the proportion of patients assigned to choice arm in 
@@ -106,7 +104,7 @@ cind <- function(i, vec_len) {
 #' preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
 #'   selection_effect=1, treatment_ss=100, treatment_effect=1,
 #'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
-#'   choice_prop=list(c(0.5, 0.5)), stratum_prop=list(c(0.3, 0.7)))
+#'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
 #' 
 #' # Multiple trials unstratified.
 #' preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5), 
@@ -117,7 +115,7 @@ cind <- function(i, vec_len) {
 #' preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5), 
 #'   selection_ss=100, selection_effect=1, treatment_ss=100, treatment_effect=1,
 #'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)), 
-#'   choice_prop=list(c(0.5, 0.5)), stratum_prop=list(c(0.3, 0.7)))
+#'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
 #' 
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and
@@ -185,20 +183,27 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
 #' Design Preference Trials with Power Constraint(s)
 #' @examples
 #' 
-#' Unstratified trials with power constraints.
+#' # Unstratified trials with power constraints.
 #' pt_from_power(power=seq(.1, 0.8, by=0.1), pref_effect=1, selection_effect=1, 
 #'   treatment_effect=1, sigma2=1, pref_prop=0.6)
 #'
-#' Stratified trials with power constraints. Note that the proportion
-#' of patients in the choice arm (choice prop) is fixed for all strata.
+#' # Stratified trials with power constraints. Note that the proportion
+#' # of patients in the choice arm (choice prop) is fixed for all strata.
 #' pt_from_power(power=seq(0.1, 0.8, by=0.1), pref_effect=1, 
 #'   selection_effect=1, treatment_effect=1,
 #'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
 #'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
 #' 
+#' # or...
+#' 
+#' pt_from_power(power=seq(0.1, 0.8, by=0.1), pref_effect=1, 
+#'   selection_effect=1, treatment_effect=1,
+#'   sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
+#'   choice_prop=0.5, stratum_prop=c(0.3, 0.7))
+#' 
 #' @export
 pt_from_power <- function(power, pref_effect, selection_effect, 
-  treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop,
+  treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop=1,
   alpha=0.05) {
 
   # Check the power parameter. Other parameters will be checked later.
@@ -206,11 +211,26 @@ pt_from_power <- function(power, pref_effect, selection_effect,
     stop('Power must be numeric in [0,1]')
   }
 
-
   # Use preference.trial to create the data frame. Use power as a
   # place holder. Fill it in after the object is created.
   args <- lapply(as.list(match.call())[-1], eval)
   args$pref_ss <- args$selection_ss <- args$treatment_ss <- rep(1,length(power))
+  
+  if (missing(choice_prop)) args$choice_prop <- choice_prop
+  if (missing(stratum_prop)) args$stratum_prop <- stratum_prop
+  if (missing(alpha)) args$alpha <- alpha  
+
+  # Make the strata vectors lists.
+  if (!is.list(args$sigma2)) {
+    args$sigma2 <- list(args$sigma2)
+  }
+  if (!is.list(args$pref_prop)) {
+    args$pref_prop <- list(args$pref_prop)
+  }
+  if (!is.list(args$stratum_prop)) {
+    args$stratum_prop <- list(args$stratum_prop)
+  }
+
   args <- args[names(args) != "power"]
   ret <- do.call(preference.trial, args)
   for (i in 1:nrow(ret)) {
@@ -221,7 +241,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
                                ret$selection_effect[i], 
                                ret$treatment_effect[i],
                                ret$alpha[i], 
-                               ret$choice_prop[[i]][[1]][[1]],
+                               ret$choice_prop[i],
                                ret$stratum_prop[[i]][[1]],
                                length(ret$stratum_prop[[i]][[1]]))
     ret$treatment_ss[i] <- sss$treatment[1]
@@ -230,4 +250,20 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   }
   ret
 }
+
+# TODO:
+# pt_from_ss take one sample size (for each trial) and find the 
+# best allocation per arm.
+#
+# pt_optimize_choice_prop
+
+# sample_size
+# power
+# effect
+# proportion
+# alpha
+# sigma2
+# plot
+# website forwarding
+# pt_from_group_means (not high priority)
 
