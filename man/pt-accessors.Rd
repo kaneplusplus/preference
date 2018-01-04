@@ -61,22 +61,22 @@ trials <- preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5),
                            treatment_ss=100, treatment_effect=1, sigma2=1, 
                            pref_prop=0.6)
 
-# The sample sizes
+# the sample sizes
 sample_size(trials)
 
-# The powers
+# the powers
 power(trials)
 
-# The effect sizes
+# the effect sizes
 effect_size(trials)
 
-# The arm proportions
+# the arm proportions
 proportion(trials)
 
-# The significance
+# the significance
 significance(trials)
 
-# The variance estimates
+# the variance estimates
 sigma2(trials)
 
 }

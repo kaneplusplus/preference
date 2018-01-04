@@ -314,7 +314,6 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
                                  nstrata)
  
   ret <- data.frame(treatment=treat, selection=sel, preference=pref) 
-  class(ret) <- c(class(ret), "preference.sample.size")
   ret
 }
 
@@ -618,17 +617,19 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
   
   
   # Calculate study power
-  trt_pwr<-treatment_power(N=N,sigma2=sigma2,delta_tau=delta_tau,alpha=alpha,
-                   theta=theta,xi=xi,nstrata=nstrata)
-  pref_pwr<-preference_power(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
-                     delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
-                     nstrata=nstrata)
-  sel_pwr<-selection_power(N=N,phi=phi,sigma2=sigma2,delta_pi=delta_pi,
-                   delta_nu=delta_nu,alpha=alpha,theta=theta,xi=xi,
-                   nstrata=nstrata)
-  ret <- data.frame(treatment=trt_pwr, selection=sel_pwr, preference=pref_pwr)
-  class(ret) <- c(class(ret), "preference.power")
-  ret
+  trt_pwr <- treatment_power(N = N, sigma2 = sigma2, delta_tau = delta_tau,
+                             alpha = alpha, theta = theta, xi = xi,
+                             nstrata = nstrata)
+  pref_pwr <- preference_power(N = N, phi = phi, sigma2 = sigma2,
+                               delta_pi = delta_pi, delta_nu = delta_nu,
+                               alpha = alpha, theta = theta, xi = xi,
+                               nstrata = nstrata)
+  sel_pwr <- selection_power(N = N, phi = phi, sigma2 = sigma2, 
+                             delta_pi = delta_pi, delta_nu = delta_nu,
+                             alpha = alpha, theta = theta, xi = xi,
+                             nstrata = nstrata)
+
+  data.frame(treatment = trt_pwr, selection = sel_pwr, preference = pref_pwr)
 }
 
 ##########################

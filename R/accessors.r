@@ -24,22 +24,22 @@
 #'                            treatment_ss=100, treatment_effect=1, sigma2=1, 
 #'                            pref_prop=0.6)
 #' 
-#' # The sample sizes
+#' # the sample sizes
 #' sample_size(trials)
 #'
-#' # The powers
+#' # the powers
 #' power(trials)
 #'
-#' # The effect sizes
+#' # the effect sizes
 #' effect_size(trials)
 #'
-#' # The arm proportions
+#' # the arm proportions
 #' proportion(trials)
 #'
-#' # The significance
+#' # the significance
 #' significance(trials)
 #'
-#' # The variance estimates
+#' # the variance estimates
 #' sigma2(trials)
 #'
 #' @export
@@ -50,7 +50,9 @@ sample_size <- function(x) {
 #' @rdname pt-accessors
 #' @export
 sample_size.preference.trial <- function(x) {
-  x[,c("pref_ss", "pref_effect", "selection_ss"), drop=FALSE]
+  ret <- x[,c("pref_ss", "selection_ss", "treatment_ss"), drop=FALSE]
+  class(ret) <- setdiff(class(ret), "preference.trial")
+  ret
 }
 
 #' @rdname pt-accessors
@@ -76,6 +78,7 @@ power.preference.trial <- function(x) {
       length(x$stratum_prop[[i]]))
     ret <- rbind(ret, pows)
   }
+  class(ret) <- setdiff(class(ret), "preference.trial")
   ret
 }
 
@@ -88,7 +91,10 @@ effect_size <- function(x) {
 #' @rdname pt-accessors
 #' @export
 effect_size.preference.trial <- function(x) {
-  x[,c("pref_effect", "selection_effect", "treatment_effect"), drop=FALSE]
+  ret <- x[, c("pref_effect", "selection_effect", "treatment_effect"), 
+           drop=FALSE]
+  class(ret) <- setdiff(class(ret), "preference.trial")
+  ret
 }
 
 #' @rdname pt-accessors
@@ -100,7 +106,9 @@ proportion <- function(x) {
 #' @rdname pt-accessors
 #' @export
 proportion.preference.trial <- function(x) {
-  x[,c("pref_prop", "choice_prop", "stratum_prop"), drop=FALSE]
+  ret <- x[,c("pref_prop", "choice_prop", "stratum_prop"), drop=FALSE]
+  class(ret) <- setdiff(class(ret), "preference.trial")
+  ret
 }
 
 #' @rdname pt-accessors
@@ -112,7 +120,9 @@ significance <- function(x) {
 #' @rdname pt-accessors
 #' @export
 significance.preference.trial <- function(x) {
-  x[, c("alpha")]
+  ret <- x[, c("alpha")]
+  class(ret) <- setdiff(class(ret), "preference.trial")
+  ret
 }
 
 #' @rdname pt-accessors
@@ -124,7 +134,8 @@ sigma2 <- function(x) {
 #' @rdname pt-accessors
 #' @export
 sigma2.preference.trial <- function(x) {
-  x[, c("sigma2")]
+  ret <- x[, c("sigma2")]
+  class(ret) <- setdiff(class(ret), "preference.trial")
+  ret
+
 }
-
-
