@@ -180,7 +180,30 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
   }
 }
 
-#' Design Preference Trials with Power Constraint(s)
+#' @title Design Preference Trials with Power Constraint(s)
+#'
+#' @description Create a set of preference trials with specified power.
+#' The power parameter guarantees that the power will be at least what is
+#' specified for each of the three arms.
+#'
+#' @param power the desired power(s) for the trial(s)
+#' @param pref_effect the effect size of the preference arm (delta_pi). 
+#' @param selection_effect the effect size of selection arm (delta_nu).
+#' @param treatment_effect the sample size of the treatment arm (delta_tau)
+#' @param sigma2 the variance estimate of the outcome of interest. This 
+#' value should be positive numeric values. If study is stratified, should 
+#' be vector of within-stratum variances with length equal to the number of 
+#' strata in the study.
+#' @param pref_prop the proportion of patients preferring treatment 1. This
+#' value should be between 0 and 1 (phi).
+#' @param choice_prop the proportion of patients assigned to choice arm in 
+#' the initial randomization. Should be numeric value between
+#' 0 and 1 (default=0.5) (theta).
+#' @param stratum_prop xi a numeric vector of the proportion of patients in 
+#' each stratum. Length of vector should equal the number of strata in the 
+#' study and sum of vector should be 1. All vector elements should be numeric
+#' values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).
+#' @param alpha the desired type I error rate.
 #' @examples
 #' 
 #' # Unstratified trials with power constraints.
@@ -234,16 +257,17 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   args <- args[names(args) != "power"]
   ret <- do.call(preference.trial, args)
   for (i in 1:nrow(ret)) {
-    sss <- overall_sample_size(power[cind(i, length(power))], 
-                               ret$pref_prop[[i]],
-                               ret$sigma2[[i]], 
-                               ret$pref_effect[i], 
-                               ret$selection_effect[i], 
-                               ret$treatment_effect[i],
-                               ret$alpha[i], 
-                               ret$choice_prop[i],
-                               ret$stratum_prop[[i]],
-                               length(ret$stratum_prop[[i]]))
+    sss <- overall_sample_size(
+      power[cind(i, length(power))], 
+      ret$pref_prop[[cind(i, length(ret$pref_prop))]],
+      ret$sigma2[[cind(i, length(ret$sigma2))]], 
+      ret$pref_effect[cind(i, length(ret$pref_effect))], 
+      ret$selection_effect[cind(i, length(ret$selection_effect))],
+      ret$treatment_effect[cind(i, length(ret$treatment_effect))],
+      ret$alpha[cind(i, length(ret$alpha))], 
+      ret$choice_prop[cind(i, length(ret$choice_prop))],
+      ret$stratum_prop[[cind(i, length(ret$stratum_prop))]],
+      length(ret$stratum_prop[[cind(i, length(ret$stratum))]]))
     ret$treatment_ss[i] <- sss$treatment[1]
     ret$pref_ss[i] <- sss$preference[1]
     ret$selection_ss[i] <- sss$selection[1]
@@ -251,7 +275,111 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   ret
 }
 
-#pt_from_ss 
+#' @title Design Preference Trials with Sample Size Constraint(s)
+#'
+#' @description Create a set of preference trials where the maxiumum 
+#' sample size for an arm is specified.
+#'
+#' @param sample_size the maxiumum size of any of the three arms.
+#' @param pref_effect the effect size of the preference arm (delta_pi). 
+#' @param selection_effect the effect size of selection arm (delta_nu).
+#' @param treatment_effect the sample size of the treatment arm (delta_tau)
+#' @param sigma2 the variance estimate of the outcome of interest. This 
+#' value should be positive numeric values. If study is stratified, should 
+#' be vector of within-stratum variances with length equal to the number of 
+#' strata in the study.
+#' @param pref_prop the proportion of patients preferring treatment 1. This
+#' value should be between 0 and 1 (phi).
+#' @param choice_prop the proportion of patients assigned to choice arm in 
+#' the initial randomization. Should be numeric value between
+#' 0 and 1 (default=0.5) (theta).
+#' @param stratum_prop xi a numeric vector of the proportion of patients in 
+#' each stratum. Length of vector should equal the number of strata in the 
+#' study and sum of vector should be 1. All vector elements should be numeric
+#' values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).
+#' @param alpha the desired type I error rate.
+#' @examples
+#' 
+#' # Unstratified trials with power constraints.
+#' pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1, 
+#'   selection_effect=1, treatment_effect=1, sigma2=1, pref_prop=0.6)
+#'
+#' # Stratified trials with power constraints. Note that the proportion
+#' # of patients in the choice arm (choice prop) is fixed for all strata.
+#' pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1, 
+#'   selection_effect=1, treatment_effect=1,
+#'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+#'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
+#' 
+#' # or...
+#' 
+#' pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1, 
+#'   selection_effect=1, treatment_effect=1,
+#'   sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
+#'   choice_prop=0.5, stratum_prop=c(0.3, 0.7))
+#' 
+#' @export
+pt_from_ss <- function(sample_size, pref_effect, selection_effect, 
+  treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop=1,
+  alpha=0.05) {
+
+  # Check the power parameter. Other parameters will be checked later.
+  if(!is.numeric(sample_size) || sample_size < 1) {
+    stop('Sample size must be one or greater.')
+  }
+
+  # Use preference.trial to create the data frame. Use power as a
+  # place holder. Fill it in after the object is created.
+  args <- lapply(as.list(match.call())[-1], eval)
+  args$pref_ss <- args$selection_ss <- args$treatment_ss <- rep(1,length(power))
+  
+  if (missing(choice_prop)) args$choice_prop <- choice_prop
+  if (missing(stratum_prop)) args$stratum_prop <- stratum_prop
+  if (missing(alpha)) args$alpha <- alpha  
+
+  # Make the strata vectors lists.
+  if (!is.list(args$sigma2)) {
+    args$sigma2 <- list(args$sigma2)
+  }
+  if (!is.list(args$pref_prop)) {
+    args$pref_prop <- list(args$pref_prop)
+  }
+  if (!is.list(args$stratum_prop)) {
+    args$stratum_prop <- list(args$stratum_prop)
+  }
+
+  args <- args[names(args) != "sample_size"]
+  ret <- do.call(preference.trial, args)
+  for (i in 1:nrow(ret)) {
+    # First get the power for each of the three arms.
+    pwr <- overall_power(sample_size[cind(i, length(sample_size))], 
+      ret$pref_prop[[cind(i, length(ret$pref_prop))]],
+      ret$sigma2[[cind(i, length(ret$sigma2))]], 
+      ret$pref_effect[cind(i,length(ret$pref_effect))],
+      ret$selection_effect[cind(i, length(ret$selection_effect))], 
+      ret$treatment_effect[cind(i, length(ret$treatment_effect))],
+      ret$alpha[cind(i, length(ret$alpha))],
+      ret$choice_prop[cind(i, length(ret$choice_prop))],
+      ret$stratum_prop[[cind(i, length(ret$stratum_prop))]],
+      length(ret$stratum_prop[[i]]))
+    # Then get the sample sizes.
+    sss <- overall_sample_size(
+      min(pwr),
+      ret$pref_prop[[cind(i, length(ret$pref_prop))]],
+      ret$sigma2[[cind(i, length(ret$sigma2))]], 
+      ret$pref_effect[cind(i,length(ret$pref_effect))],
+      ret$selection_effect[cind(i, length(ret$selection_effect))], 
+      ret$treatment_effect[cind(i, length(ret$treatment_effect))],
+      ret$alpha[cind(i, length(ret$alpha))],
+      ret$choice_prop[cind(i, length(ret$choice_prop))],
+      ret$stratum_prop[[cind(i, length(ret$stratum_prop))]],
+      length(ret$stratum_prop[[i]]))
+    ret$treatment_ss[i] <- sss$treatment[1]
+    ret$pref_ss[i] <- sss$preference[1]
+    ret$selection_ss[i] <- sss$selection[1]
+  }
+  ret
+}
 
 # TODO:
 # pt_from_ss take one sample size (for each trial) and find the 
