@@ -41,11 +41,10 @@
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @importFrom stats qnorm
 #' @export
-selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
-                alpha=0.05, theta=0.5, xi=1, 
-                nstrata=1) {
+selection_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
+                                  alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(!is.numeric(power) || power <= 0 || power >= 1 || length(power)!=1)
+  if(!is.numeric(power) || power <= 0 || power >= 1 || length(power) != 1)
     stop('Power must be single numeric value in [0,1]')
   if (length(phi) != nstrata) 
     stop('Length vector does not match number of strata')
@@ -74,12 +73,15 @@ selection_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
   # Calculate sample size
   zbeta<-qnorm(power)
   zalpha<-qnorm(1-(alpha/2))
-  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
-               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2
-                 +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
-  sum_total=sum(terms)
-  N=(zalpha+zbeta)^2/(4*theta*delta_nu^2)*sum_total
-  return(ceiling(N))
+  terms <- vapply(seq_len(nstrata), 
+    function(x) {
+      (xi[x]/(phi[x]^2*(1-phi[x])^2)) *
+        (sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2 +
+        2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2))
+    }, 0.0)
+  sum_total <- sum(terms)
+  N <- (zalpha+zbeta)^2/(4*theta*delta_nu^2)*sum_total
+  ceiling(N)
 }
 
 #' Preference Effect Sample Size
@@ -135,28 +137,31 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
   if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
      length(delta_pi)!=1 || length(delta_nu)!=1)
     stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha) != 1)
     stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+  if(theta < 0 | theta > 1 | !is.numeric(theta) || length(theta) != 1) 
     stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+  if(any(xi < 0) | any(xi > 1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   if (length(xi)!=nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) | length(nstrata)!=1)
+  if(nstrata <= 0 | !is.numeric(nstrata) | length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
-  zbeta<-qnorm(power)
-  zalpha<-qnorm(1-(alpha/2))
-  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
-               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_pi+delta_nu)^2
-                 +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
-  sum_total=sum(terms)
-  N=(zalpha+zbeta)^2/(4*theta*delta_pi^2)*sum_total
-  return(ceiling(N))
+  zbeta <- qnorm(power)
+  zalpha <- qnorm(1-(alpha/2))
+  terms <- vapply(seq_len(nstrata), 
+    function(x) {
+      (xi[x] / (phi[x]^2 * (1-phi[x])^2)) *
+        (sigma2[x] + phi[x] * (1-phi[x]) * ((2*phi[x]-1)*delta_pi+delta_nu)^2 +
+        2*(theta/(1-theta)) * sigma2[x]*(phi[x]^2+(1-phi[x])^2))
+    }, 0.0)
+  sum_total <- sum(terms)
+  N <- (zalpha+zbeta)^2 / (4*theta*delta_pi^2) * sum_total
+  ceiling(N)
 }
 
 #' Treatment Effect Sample Size
@@ -196,18 +201,18 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' \emph{Stat Methods Med Res}.  
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05, theta=0.5,
-                                xi=1, nstrata=1, k=1) {
+treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05, 
+                                  theta=0.5, xi=1, nstrata=1, k=1) {
   # Error messages
-  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
+  if(power < 0 | power > 1 | !is.numeric(power) || length(power) != 1) 
     stop('Power must be single numeric value in [0,1]')
-  if(length(sigma2)!=nstrata)
+  if(length(sigma2) != nstrata)
     stop('Variance estimate must be numeric value greater than 0')
   if(!is.numeric(delta_tau) || length(delta_tau)!=1)
     stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+  if(alpha < 0 | alpha > 1 | !is.numeric(alpha) || length(alpha) != 1)
     stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta) != 1) 
     stop('Theta must be single numeric in [0,1]')
   if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
@@ -219,10 +224,10 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05, theta=0.5,
     stop('Number of strata must be numeric greater than 0')
   
   #Calculate sample size
-  zbeta<-qnorm(power)
-  zalpha<-qnorm(1-(alpha/2))
-  terms=sapply(1:nstrata, function(x) xi[x]*sigma2[x])
-  sum_total=sum(terms)
+  zbeta <- qnorm(power)
+  zalpha <- qnorm(1-(alpha/2))
+  terms <- vapply(seq_len(nstrata), function(x) xi[x]*sigma2[x], 0.0)
+  sum_total <- sum(terms)
   N <- (k+1)^2 / (4*k) * 4 * (zalpha+zbeta)^2 / ((1-theta)*delta_tau^2) *
     sum_total
   return(ceiling(N))
@@ -272,41 +277,41 @@ treatment_sample_size<-function(power, sigma2, delta_tau, alpha=0.05, theta=0.5,
 overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
   delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   # Error messages
-  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
+  if(power < 0 | power > 1 | !is.numeric(power) || length(power) != 1) 
     stop('Power must be single numeric value in [0,1]')
-  if (length(phi)!=nstrata) 
+  if (length(phi) != nstrata) 
     stop('Length vector does not match number of strata')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+  if(any(phi < 0) | any(phi > 1) | any(!is.numeric(phi))) 
     stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2)!=nstrata)
+  if(length(sigma2) != nstrata)
     stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
+  if(any(sigma2 <= 0) | any(!is.numeric(sigma2)))
     stop('Variance estimate must be numeric value greater than 0')
   if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau) 
-     || length(delta_pi)!=1 || length(delta_nu)!=1 || length(delta_tau)!=1)
+     || length(delta_pi) != 1 || length(delta_nu)!=1 || length(delta_tau)!=1)
     stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
+  if(alpha < 0 | alpha > 1 | !is.numeric(alpha) || length(alpha) != 1)
     stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
+  if(theta < 0 | theta > 1 | !is.numeric(theta) || length(theta) != 1) 
     stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
+  if(any(xi < 0) | any(xi > 1) | any(!is.numeric(xi))) 
     stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
+  if (length(xi) != nstrata) 
     stop('Length of vector does not match number of strata')
   if (sum(xi)!=1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
+  if(nstrata <=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
-  zbeta<-qnorm(power)
-  zalpha<-qnorm(1-(alpha/2))
-  pref=preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
-                              theta, xi, nstrata)
-  sel=selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
-                            theta, xi, nstrata)
-  treat=treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, 
-                              nstrata)
+  zbeta <- qnorm(power)
+  zalpha <- qnorm(1-(alpha/2))
+  pref <- preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
+                                 theta, xi, nstrata)
+  sel <- selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
+                               theta, xi, nstrata)
+  treat <- treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, 
+                                 nstrata)
  
   ret <- data.frame(treatment=treat, selection=sel, preference=pref) 
   class(ret) <- c(class(ret), "preference.sample.size")
@@ -374,11 +379,11 @@ treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate study power
-  zalpha<-qnorm(1-(alpha/2))
-  power=pnorm(sqrt((((1-theta)*delta_tau^2*N)/(4*sum(sapply(1:nstrata,function(i)
-    xi[i]*sigma2[i])))))-zalpha)
-  
-  return(power)
+  zalpha <- qnorm(1-(alpha/2))
+  strata_terms <- vapply(seq_len(nstrata),
+    function(i) xi[i] * sigma2[i],
+    0.0)
+  pnorm( sqrt( ((1-theta)*delta_tau^2*N) / (4*sum(strata_terms)) ) - zalpha )
 }
 
 #' Preference Effect Power Calculation
@@ -450,13 +455,15 @@ preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
   # Calculate study power
   zalpha<-qnorm(1-(alpha/2))
   
-  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
-               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_pi+delta_nu)^2
-                 +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
-  sum_total=sum(terms)
-  power=pnorm(sqrt((4*theta*delta_pi^2*N)/(sum_total))-zalpha)
-  
-  return(power)
+  strata_terms <- vapply(seq_len(nstrata), 
+    function(x) {
+      ( xi[x] / (phi[x]^2*(1-phi[x])^2) ) * 
+        ( sigma2[x] + phi[x]*(1-phi[x])*
+          ( (2*phi[x]-1)*delta_pi+delta_nu )^2 +
+          2* (theta / (1-theta)) *sigma2[x] * ( phi[x]^2+(1-phi[x])^2 ) )
+    }, 0.0)
+  sum_total <- sum(strata_terms)
+  pnorm( sqrt( (4*theta*delta_pi^2*N) / sum_total ) - zalpha )
 }
 
 #' Selection Effect Power Calculation
@@ -528,11 +535,15 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
   # Calculate study power
   zalpha<-qnorm(1-(alpha/2))
   
-  terms=sapply(1:nstrata, function(x) (xi[x]/(phi[x]^2*(1-phi[x])^2))
-               *(sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2
-                 +2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2)))
-  sum_total=sum(terms)
-  power=pnorm(sqrt((4*theta*delta_nu^2*N)/(sum_total))-zalpha)
+  strata_terms <- vapply(seq_len(nstrata), 
+    function(x) {
+      ( xi[x] / (phi[x]^2 *(1 - phi[x])^2) ) *
+        ( sigma2[x] + phi[x] *(1 - phi[x]) * 
+          ( (2 * phi[x] - 1) * delta_nu + delta_pi )^2 +
+          2 * (theta / (1-theta) ) * sigma2[x] * (phi[x]^2 + (1-phi[x])^2) )
+    }, 0.0)
+  sum_total <- sum(strata_terms)
+  power <- pnorm(sqrt((4*theta*delta_nu^2*N)/(sum_total))-zalpha)
   
   return(power)
 }
@@ -682,61 +693,68 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
 analyze_raw_data <- function(x1,x2,y1,y2,s11=1,s22=1,s1=1,s2=1,xi=1,nstrata=1) {
+
   # Check stratum assignments
-  if(nstrata==1){
-    s11=rep(1,length(x1))
-    s22=rep(1,length(x2))
-    s1=rep(1,length(y1))
-    s2=rep(1,length(y2))
+  if(nstrata == 1) {
+    s11 <- rep(1,length(x1))
+    s22 <- rep(1,length(x2))
+    s1 <- rep(1,length(y1))
+    s2 <- rep(1,length(y2))
   }
   
   # Error messages
   if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
     stop("Arguments must be numeric vectors")
-  if(length(s11)!=length(x1))
+  if(length(s11) != length(x1))
     stop("Length of s11, x1 must match")
-  if(length(s22)!=length(x2))
+  if(length(s22) != length(x2))
     stop("Length of s22, x2 must match")
-  if(length(s1)!=length(y1))
+  if(length(s1) != length(y1))
     stop("Length of s1, y1 must match")
-  if(length(s2)!=length(y2))
+  if(length(s2) != length(y2))
     stop("Length of s2, y2 must match")
-  if(length(unique(s11))!=nstrata | length(unique(s22))!=nstrata | 
-     length(unique(s11))!=nstrata | length(unique(s11))!=nstrata)
+  if(length(unique(s11)) != nstrata | length(unique(s22)) != nstrata | 
+     length(unique(s11)) != nstrata | length(unique(s11)) != nstrata)
     stop("Number of unique elements in strata membership not equal to nstrata")
-  if (length(xi)!=nstrata) 
+  if (length(xi) != nstrata) 
     stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
+  if (sum(xi) != 1) 
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
+  if(nstrata <=0 | !is.numeric(nstrata) || length(nstrata)!=1)
     stop('Number of strata must be numeric greater than 0')
   
-  unstrat_stats<-matrix(NA,nrow=nstrata,ncol=6)
+  unstrat_stats <- matrix(NA,nrow=nstrata,ncol=6)
   
   # Compute unstratified test statistics
   for(i in 1:nstrata){
-    x1i<-x1[as.factor(s11)==levels(as.factor(s11))[i]]
-    x2i<-x2[as.factor(s22)==levels(as.factor(s22))[i]]
-    y1i<-y1[as.factor(s1)==levels(as.factor(s1))[i]]
-    y2i<-y2[as.factor(s2)==levels(as.factor(s2))[i]]
+    x1i <- x1[as.factor(s11)==levels(as.factor(s11))[i]]
+    x2i <- x2[as.factor(s22)==levels(as.factor(s22))[i]]
+    y1i <- y1[as.factor(s1)==levels(as.factor(s1))[i]]
+    y2i <- y2[as.factor(s2)==levels(as.factor(s2))[i]]
     
-    unstrat_stats[i,]<-unlist(unstrat_analyze_raw_data(x1i,x2i,y1i,y2i))
+    unstrat_stats[i,] <- unlist(unstrat_analyze_raw_data(x1i,x2i,y1i,y2i))
   }
   
   # Compute stratified test statistics and p-values
-  pref_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,1]))
-  sel_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,3]))
-  treat_test<-sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,5]))
+  pref_test <- sum(vapply(seq_len(nstrata), 
+                   function(i) xi[i] * unstrat_stats[i, 1], 0.0))
+  sel_test <- sum(vapply(seq_len(nstrata), 
+                  function(i) xi[i]*unstrat_stats[i, 3], 0.0))
+  treat_test <- sum(vapply(seq_len(nstrata), 
+                    function(i) xi[i]*unstrat_stats[i, 5], 0.0))
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)*2 # Preference effect
-  sel_pval<-pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE)*2 # Selection effect
-  treat_pval<-pnorm(abs(treat_test/sum(xi^2)), lower.tail=FALSE)*2
+
+  # preference effect
+  pref_pval <- 2 * pnorm( abs( pref_test / sum(xi^2) ), lower.tail = FALSE ) 
+
+  # selection effect
+  sel_pval <- 2 * pnorm( abs( sel_test /sum(xi^2) ), lower.tail = FALSE )
+
+  # treatment effect
+  treat_pval <- 2 * pnorm( abs( treat_test / sum(xi^2) ), lower.tail=FALSE )
   
-  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, 
-                      treat_test, treat_pval)
-  
-  return(results)
+  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
 #' Fit the preference data collected from a clinical trial
@@ -770,7 +788,7 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
   if (missing(strata)) {
     strata <- rep(1, length(outcome))
   }
-  # TODO: add more checking or use s4
+  
   if (length(unique(treatment)) != 2) {
     stop("You may only have two treatments.")
   }
@@ -778,7 +796,7 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
                    strata=strata)
  
   # Compute unstratified test statistics
-  strat_split <- split(1:length(strata), strata)
+  strat_split <- split(seq_len(length(strata)), strata)
   
   treatments <- sort(unique(treatment)) 
   unstrat_stats <- NULL
@@ -798,18 +816,26 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
   nstrata <- length(unique(strata))
  
   # Compute stratified test statistics and p-values
-  pref_test <- sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,1]))
-  sel_test <- sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,3]))
-  treat_test <- sum(sapply(1:nstrata, function(i) xi[i]*unstrat_stats[i,5]))
+  pref_test <- sum(vapply(seq_len(nstrata), 
+                          function(i) xi[i] * unstrat_stats[i,1], 0.0))
+  sel_test <- sum(vapply(seq_len(nstrata), 
+                         function(i) xi[i] * unstrat_stats[i,3], 0.0))
+  treat_test <- sum(vapply(seq_len(nstrata), 
+                           function(i) xi[i] * unstrat_stats[i,5], 0.0))
  
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval <- pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
-  sel_pval <- pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
-  treat_pval <- pnorm(abs(treat_test), lower.tail=FALSE)*2
+  
+  # preference effect
+  pref_pval <- 2 * pnorm(abs(pref_test), lower.tail = FALSE)
+
+  # selection effect
+  sel_pval <- 2 * pnorm(abs(sel_test), lower.tail = FALSE)
+
+  # treatment effect
+  treat_pval <- 2 * pnorm(abs(treat_test), lower.tail=FALSE)
  
   #Might need for unstrat_analyze_raw_data to also return the variance values
-  ret <- data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
-                    treat_pval)
+  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
 #' Analysis Function: Summary Data
@@ -860,72 +886,95 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @examples
-#' x1mean<-5
-#' x1var<-1
-#' m1<-15
-#' x2mean<-7
-#' x2var<-1.1
-#' m2<-35
-#' y1mean<-6
-#' y1var<-1
-#' n1<-25
-#' y2mean<-8
-#' y2var<-1.2
-#' n2<-25
-#' analyze_summary_data(x1mean,x2var,m1,x2mean,x2var,m2,y1mean,y2var,n1,y2mean,
-#' y2var,n2)
+#' x1mean <- 5
+#' x1var <- 1
+#' m1 <- 15
+#' x2mean <- 7
+#' x2var <- 1.1
+#' m2 <- 35
+#' y1mean <- 6
+#' y1var <- 1
+#' n1 <- 25
+#' y2mean <- 8
+#' y2var <- 1.2
+#' n2 <- 25
+#' analyze_summary_data(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y2var,
+#'                      n1, y2mean, y2var, n2)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment,
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." 
+#' \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-analyze_summary_data<-function(x1mean,x1var,m1,x2mean,x2var,m2,y1mean,y1var,
-                           n1,y2mean,y2var,n2,xi=1,nstrata=1){
+analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
+                                 y1var, n1, y2mean, y2var, n2, xi=1, 
+                                 nstrata=1) {
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
      !is.numeric(x2mean) | !is.numeric(x2var) |
      !is.numeric(y1mean) | !is.numeric(y1var) |
      !is.numeric(y2mean) | !is.numeric(y2var) |
-     !is.numeric(m1) | !is.numeric(m2) | !is.numeric(n1) | !is.numeric(n2))
+     !is.numeric(m1) | !is.numeric(m2) | !is.numeric(n1) | !is.numeric(n2)) {
     stop("Arguments must be numeric vectors")
-  if(length(x1mean)!=nstrata | length(x1var)!=nstrata | length(m1)!=nstrata)
+  }
+  if(length(x1mean)!=nstrata | length(x1var)!=nstrata | length(m1)!=nstrata) {
     stop("Length of vector must match number of strata")
-  if(length(x2mean)!=nstrata | length(x2var)!=nstrata | length(m2)!=nstrata)
+  }
+  if(length(x2mean)!=nstrata | length(x2var)!=nstrata | length(m2)!=nstrata) {
     stop("Length of vector must match number of strata")
-  if(length(y1mean)!=nstrata | length(y1var)!=nstrata | length(n1)!=nstrata)
+  }
+  if(length(y1mean)!=nstrata | length(y1var)!=nstrata | length(n1)!=nstrata) {
     stop("Length of vector must match number of strata")
-  if(length(y2mean)!=nstrata | length(y2var)!=nstrata | length(n2)!=nstrata)
+  }
+  if(length(y2mean)!=nstrata | length(y2var)!=nstrata | length(n2)!=nstrata) {
     stop("Length of vector must match number of strata")
-  if (length(xi)!=nstrata) 
+  }
+  if (length(xi)!=nstrata) {
     stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
+  }
+  if (sum(xi)!=1) {
     stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
+  }
+  if(nstrata <= 0 || !is.numeric(nstrata) || length(nstrata)!=1) {
     stop('Number of strata must be numeric greater than 0')
+  }
   
   # Compute unstratified test statistics
-  unstrat_stats<-sapply(1:nstrata, function(i) 
-    unstrat_analyze_summary_data(x1mean[i],x1var[i],m1[i],x2mean[i],x2var[i],
-                             m2[i],y1mean[i],y1var[i],n1[i],y2mean[i],y2var[i],
-                             n2[i]))
-  
+  unstrat_stats <- vapply(seq_len(nstrata), 
+    function(i) {
+      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
+                                   x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
+                                   y2mean[i], y2var[i], n2[i])
+    }, data.frame(pref_test = NA, pref_pval = NA, sel_test = NA , 
+                  sel_pval = NA, treat_test = NA, treat_pval = NA))
   # Compute stratified test statistics and p-values
-  pref_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[1,i])))
-  sel_test<-sum(sapply(1:nstrata, function(i) xi[i]*unlist(unstrat_stats[3,i])))
-  treat_test<-sum(sapply(1:nstrata,function(i) xi[i]*unlist(unstrat_stats[5,i])))
+  pref_test <- sum(
+    vapply(seq_len(nstrata), 
+           function(i) xi[i] * unlist(unstrat_stats[1, i]), 0.0))
+  
+  sel_test <- sum(
+    vapply(seq_len(nstrata), 
+           function(i) xi[i] * unlist(unstrat_stats[3, i]), 0.0))
+
+  treat_test <- sum(
+    vapply(seq_len(nstrata),
+           function(i) xi[i] * unlist(unstrat_stats[5, i]), 0.0))
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)*2 # Preference effect
-  sel_pval<-pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE)*2 # Selection effect
-  treat_pval<-pnorm(abs(treat_test/sum(xi^2)), lower.tail=FALSE)*2
+
+  # preference effect
+  pref_pval <- 2 * pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)
+
+  # selection effect
+  sel_pval <- 2 * pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE) 
+    
+  # treatment effect
+  treat_pval <- 2 * pnorm(abs(treat_test/sum(xi^2)), lower.tail = FALSE)
   
-  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
-                      treat_pval)
-  
-  return(results)
+  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
 ######################
@@ -980,12 +1029,10 @@ treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
     stop('Number of strata must be numeric greater than 0')
   
   # Calculate effect size
-  zbeta=qnorm(power)
-  zalpha<-qnorm(1-(alpha/2))
-  effect=sqrt(((4*(zbeta+zalpha)^2)/((1-theta)*N))*
-                sum(sapply(1:nstrata, function(i) xi[i]*sigma2[i])))
-  
-  return(effect)
+  zbeta <- qnorm(power)
+  zalpha <- qnorm(1-(alpha/2))
+  strata_terms <- vapply(seq_len(nstrata), function(i) xi[i] * sigma2[i], 0.0)
+  sqrt( ( (4 * (zbeta+zalpha)^2) / ((1-theta) * N) ) * sum(strata_terms) )
 }
 
 #' Unstratified Optimized Theta
@@ -1017,7 +1064,8 @@ treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
 #' @importFrom stats uniroot
 #' @export
-optimal_proportion<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) {
+optimal_proportion<-function(w_sel, w_pref, w_treat, sigma2, phi, delta_pi,
+                             delta_nu) {
   if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
      any(!is.numeric(c(w_sel,w_pref,w_treat))) | length(w_sel)!=1 | 
      length(w_pref)!=1 | length(w_treat)!=1)
@@ -1032,11 +1080,14 @@ optimal_proportion<-function(w_sel,w_pref,w_treat,sigma2,phi,delta_pi,delta_nu) 
      length(delta_pi)!=1 || length(delta_nu)!=1)
     stop('Effect size must be single numeric value')
   # Based on Equation 16 in Walter paper
-  num<-w_sel+w_pref+phi*(1-phi)*((w_sel*((2*phi-1)*delta_nu+delta_pi)^2
-                                +w_pref*((2*phi-1)*delta_pi+delta_nu)^2)/sigma2)
-  denom<-16*w_treat*phi^2*(1-phi)^2+2*(w_sel+w_pref)*(phi^2+(1-phi)^2)
+  num <- w_sel + w_pref + 
+    phi * (1-phi) * 
+    ( (w_sel*( (2*phi-1) * delta_nu + delta_pi )^2 + 
+       w_pref*( (2*phi-1) * delta_pi + delta_nu)^2) / sigma2 )
+  denom <- 16 * w_treat * phi^2 * (1-phi)^2 +
+    2 * (w_sel+w_pref) * ( phi^2+(1-phi)^2 )
   
-  return(uniroot(f,c(0,1),value=(num/denom))$root)
+  uniroot(f,c(0,1),value=(num/denom))$root
 }
 
 # Function used in theta optimization function
@@ -1089,48 +1140,59 @@ f<-function(theta,value) {
 #' @export
 effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   # Error messages
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
+  if(nstrata <= 0 | !is.numeric(nstrata) || length(nstrata) != 1) {
     stop('Number of strata must be numeric greater than 0')
-  if (nstrata>1 & is.null(xi))
+  }
+  if (nstrata > 1 & is.null(xi)) {
     stop('Must define xi for stratified design')
-  if (length(phi)!=nstrata | length(mu1)!=nstrata | length(mu2)!=nstrata
-      | length(mu11)!=nstrata |length(mu22)!=nstrata) 
+  }
+  if (length(phi) != nstrata || length(mu1) != nstrata || 
+      length(mu2) != nstrata || length(mu11) != nstrata || 
+      length(mu22) != nstrata) {
     stop('Length vector does not match number of strata')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
+  }
+  if(any(phi < 0) || any(phi > 1) || any(!is.numeric(phi))) {
     stop('Preference rate must be numeric value in [0,1]')
-  if(!is.numeric(mu1) | !is.numeric(mu2) | !is.numeric(mu11) | !is.numeric(mu22))
+  }
+  if(!is.numeric(mu1) || !is.numeric(mu2) || !is.numeric(mu11) || 
+     !is.numeric(mu22)) {
     stop('Mean must be numeric value')
-  if((any(xi<0) | any(xi>1) | any(!is.numeric(xi))) & !is.null(xi))
+  }
+  if((any(xi < 0) || any(xi > 1) || any(!is.numeric(xi))) & !is.null(xi)) {
     stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata & nstrata!=1) 
+  }
+  if (length(xi) != nstrata && nstrata != 1) {
     stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1 & !is.null(xi)) 
+  }
+  if (sum(xi) != 1 && !any(is.null(xi))) {
     stop('Stratum proportions do not sum to 1')
+  }
   
   # Calculate unobserved means
-  mu12<-(mu1-phi*mu11)/(1-phi)
-  mu21<-(mu2-(1-phi)*mu22)/phi
+  mu12 <- (mu1 - phi * mu11) / (1-phi)
+  mu21 <- (mu2 - (1-phi) * mu22) / phi
   
   # Calculate effect sizes
-  delta_tau<-mu1-mu2
-  delta_nu<-(mu11+mu21-mu12-mu22)/2
-  delta_pi<-(mu11-mu21-mu12+mu22)/2
+  delta_tau <- mu1 - mu2
+  delta_nu <- (mu11 + mu21 -mu12 - mu22) / 2
+  delta_pi <- (mu11 - mu21 -mu12 + mu22) / 2
   
-  if (nstrata==1) { 
+  if (nstrata == 1) { 
     # Unstratified case
-    effects<-list("treatment"=delta_tau,"selection"=delta_nu,
-                  "preference"=delta_pi)
+    effects <- list(treatment = delta_tau, selection = delta_nu,
+                    preference = delta_pi)
   } else {
     # Stratified case
-    effects<-list("treatment"=sum(sapply(1:nstrata, function(x) 
-                              phi[x]*delta_tau[x])),
-                  "selection"=sum(sapply(1:nstrata, function(x) 
-                              phi[x]*delta_nu[x])),
-                  "preference"=sum(sapply(1:nstrata,function(x) 
-                              phi[x]*delta_pi[x])))
+    effects <- list(
+      treatment = sum(vapply(seq_len(nstrata), 
+                             function(x) phi[x]*delta_tau[x], 0.0)),
+      selection = sum(vapply(seq_len(nstrata), 
+                             function(x) phi[x]*delta_nu[x], 0.0)),
+      preference = sum(vapply(seq_len(nstrata),
+                              function(x) phi[x]*delta_pi[x], 0.0)))
   }
 
-  return(effects)
+  effects
 }
 
 ######################################
@@ -1138,87 +1200,84 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
 ######################################
 
 ### Find sigma^2 for unstratified case
-sigma2_mixtures<-function(sigma2,means,prop){
+sigma2_mixtures <- function(sigma2,means,prop){
   # Overall mixture
-  val=prop[1]*sigma2[1]+prop[2]*sigma2[2]+(prop[1]*means[1]^2+
-      prop[2]*means[2]^2-(prop[1]*means[1]+prop[2]*means[2])^2)
-  return(val)
+  prop[1]*sigma2[1]+prop[2]*sigma2[2]+(prop[1]*means[1]^2+
+    prop[2]*means[2]^2-(prop[1]*means[1]+prop[2]*means[2])^2)
 }
 
 ### Find sigma^2 for each stratum based on means
-sigma2_stratum<-function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
-  mean_choice=sapply(1:2, function(x) mu[x]+tau[x]+nu[x]+pi[x])
-  mean_random=sapply(1:2, function(x) mu[x]+tau[x])
+sigma2_stratum <- function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
+  mean_choice <- vapply(1:22, function(x) mu[x]+tau[x]+nu[x]+pi[x], 0.0)
+  mean_random <- vapply(1:2, function(x) mu[x]+tau[x], 0.0)
   # Compute mean, variance for each stratum
-  means=sapply(1:2, function(x) theta[x]*mean_choice[x]+
-                 (1-theta[x])*mean_random[x])
-  sigma2_derived=sapply(1:2, function(x) theta[x]*sigma[x]+(1-theta[x])
-                        *sigma[x]+(theta[x]*mean_choice[x]^2+(1-theta[x])
-                        *mean_random[x]^2-(theta[x]*mean_choice[x]
-                        +(1-theta[x])*mean_random[x])^2))
-  return(sigma2_derived)
+  means <- vapply(1:2, function(x) theta[x]*mean_choice[x] +
+                 (1-theta[x])*mean_random[x], 0.0)
+  vapply(1:2, 
+         function(x) {
+           theta[x] * sigma[x] + (1-theta[x]) * sigma[x] +
+             (theta[x] * mean_choice[x]^2 + (1-theta[x]) * mean_random[x]^2 -
+               (theta[x]*mean_choice[x] + (1-theta[x])*mean_random[x])^2)
+         }, 0.0)
 }
 
 ### Find means from effects
 means_stratum<-function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
-  mean_choice=sapply(1:2, function(x) mu[x]+tau[x]+nu[x]+pi[x])
-  mean_random=sapply(1:2, function(x) mu[x]+tau[x])
+  mean_choice <- vapply(1:2, function(x) mu[x]+tau[x]+nu[x]+pi[x], 0.0)
+  mean_random <- vapply(1:2, function(x) mu[x]+tau[x], 0.0)
   # Compute mean value for each stratum
-  means=sapply(1:2, function(x) theta[x]*mean_choice[x]+
-              (1-theta[x])*mean_random[x])
-  return(means)
+  vapply(1:2, 
+         function(x) theta[x] * mean_choice[x] + (1-theta[x]) * mean_random[x],
+         0.0)
 }
 
 #### Analaysis Function (Raw Data)
 
 #' @importFrom stats pnorm t.test var
-unstrat_analyze_raw_data<-function(x1,x2,y1,y2) {
+unstrat_analyze_raw_data <- function(x1,x2,y1,y2) {
   # Error messages
   if(!is.numeric(x1) | !is.numeric(x1) | !is.numeric(y1) | !is.numeric(y2))
     stop("Arguments must be numeric vectors")
   
   # Define sample sizes
-  m1<-length(x1)
-  m2<-length(x2)
-  n1<-length(y1)
-  n2<-length(y2)
-  m<-m1+m2
-  n<-n1+n2
-  N<-m+n
+  m1 <- length(x1)
+  m2 <- length(x2)
+  n1 <- length(y1)
+  n2 <- length(y2)
+  m <- m1+m2
+  n <- n1+n2
+  N <- m+n
   
   # Calculate z statistic
-  z1<-sum(x1)-m1*mean(y1)
-  z2<-sum(x2)-m2*mean(y2)
+  z1 <- sum(x1)-m1*mean(y1)
+  z2 <- sum(x2)-m2*mean(y2)
   
   # Calculate variances (formulas from Rucker paper)
-  var1<-m1*var(x1)+(1+((m-1)/m)*m1)*m1*(var(y1)/n1)+
+  var1 <- m1*var(x1)+(1+((m-1)/m)*m1)*m1*(var(y1)/n1)+
     (m1*m2/m)*(mean(x1)-mean(y1))^2
-  var2<-m2*var(x2)+(1+((m-1)/m)*m2)*m2*(var(y2)/n2)+
+  var2 <- m2*var(x2)+(1+((m-1)/m)*m2)*m2*(var(y2)/n2)+
     (m1*m2/m)*(mean(x2)-mean(y2))^2
-  cov<--(m1*m2/m)*(mean(x1)-mean(y1))*(mean(x2)-mean(y2))
+  cov <- -(m1*m2/m)*(mean(x1)-mean(y1))*(mean(x2)-mean(y2))
   
   # Compute test statistics (from Rucker paper)
-  pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
-  sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
+  pref_test <- (z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
+  sel_test <- (z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
-  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
+  pref_pval <- pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval <- pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
   
   # Compute treatment effect t-test from random arm
-  treat_test<-t.test(y1,y2)$statistic
-  treat_pval<-t.test(y1,y2)$p.value
+  treat_test <- t.test(y1,y2)$statistic
+  treat_pval <- t.test(y1,y2)$p.value
   
-  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
-                      treat_pval)
-  
-  return(results)
+  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
 
 ### Analysis Function (Summary Data)
-unstrat_analyze_summary_data<-function(x1mean, x1var, m1, x2mean, x2var, m2, 
-                                       y1mean, y1var,n1, y2mean, y2var, n2) {
+unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, 
+                                         y1mean, y1var,n1, y2mean, y2var, n2) {
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
      !is.numeric(x2mean) | !is.numeric(x2var) |
@@ -1228,37 +1287,34 @@ unstrat_analyze_summary_data<-function(x1mean, x1var, m1, x2mean, x2var, m2,
     stop("Arguments must be numeric vectors")
   
   # Define sample sizes
-  m<-m1+m2
-  n<-n1+n2
-  N<-m+n
+  m <- m1+m2
+  n <- n1+n2
+  N <- m+n
   
   # Calculate z statistic
-  z1<-m1*x1mean-m1*y1mean
-  z2<-m2*x2mean-m2*y2mean
+  z1 <- m1*x1mean-m1*y1mean
+  z2 <- m2*x2mean-m2*y2mean
   
   # Calculate variances (formulas from Rucker paper)
-  var1<-m1*x1var+(1+((m-1)/m)*m1)*m1*(y1var/n1)+
+  var1 <- m1*x1var+(1+((m-1)/m)*m1)*m1*(y1var/n1)+
     (m1*m2/m)*(x1mean-y1mean)^2
-  var2<-m2*x2var+(1+((m-1)/m)*m2)*m2*(y2var/n2)+
+  var2 <- m2*x2var+(1+((m-1)/m)*m2)*m2*(y2var/n2)+
     (m1*m2/m)*(x2mean-y2mean)^2
-  cov<--(m1*m2/m)*(x1mean-y1mean)*(x2mean-y2mean)
+  cov <- -(m1*m2/m)*(x1mean-y1mean)*(x2mean-y2mean)
   
   # Compute test statistics (from Rucker paper)
-  pref_test<-(z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
-  sel_test<-(z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
+  pref_test <- (z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
+  sel_test <- (z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
   
   # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval<-pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
-  sel_pval<-pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
+  pref_pval <- pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval <- pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
   
   # Compute treatment effect t-test from random arm
-  treat_test<-t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$t
-  treat_pval<-t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$p.value
+  treat_test <- t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$t
+  treat_pval <- t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$p.value
   
-  results<-data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, 
-                      treat_pval)
-  
-  return(results)
+  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
 
@@ -1278,6 +1334,6 @@ t.test2 <- function(m1,m2,s1,s2,n1,n2)
   t <- (m1-m2)/se 
   dat <- data.frame(m1-m2, se, t, 2*pt(-abs(t),df))    
   names(dat) <- c("Mean.Diff", "Std.Err", "t", "p.value")
-  return(dat) 
+  dat
 }
 

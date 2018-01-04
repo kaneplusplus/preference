@@ -69,20 +69,20 @@ treatment effects for the two-stage randomized trial using provided summary
 data
 }
 \examples{
-x1mean<-5
-x1var<-1
-m1<-15
-x2mean<-7
-x2var<-1.1
-m2<-35
-y1mean<-6
-y1var<-1
-n1<-25
-y2mean<-8
-y2var<-1.2
-n2<-25
-analyze_summary_data(x1mean,x2var,m1,x2mean,x2var,m2,y1mean,y2var,n1,y2mean,
-y2var,n2)
+x1mean <- 5
+x1var <- 1
+m1 <- 15
+x2mean <- 7
+x2var <- 1.1
+m2 <- 35
+y1mean <- 6
+y1var <- 1
+n1 <- 25
+y2mean <- 8
+y2var <- 1.2
+n2 <- 25
+analyze_summary_data(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y2var,
+                     n1, y2mean, y2var, n2)
 }
 \references{
 Rucker G (1989). "A two-stage trial design for testing treatment,
@@ -91,6 +91,7 @@ self-selection and treatment preference effects." \emph{Stat Med},
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 
 Cameron B, Esserman D (2016). "Sample Size and Power for a 
-Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+Stratified Doubly Randomized Preference Design." 
+\emph{Stat Methods Med Res}. 
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }

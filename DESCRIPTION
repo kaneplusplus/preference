@@ -2,7 +2,6 @@ Package: preference
 Type: Package
 Title: 2-Stage Preference Trial Design and Analysis
 Version: 0.2.0
-Date: 2017-06-14
 Authors@R: c(person(given="Briana", family="Cameron", email="briana.cameron@yale.edu", role=c("aut", "cph")), person(given="Denise", family="Esserman", email="denise.esserman@yale.edu", role="ctb"), person(given="Michael",family="Kane",email="michael.kane@yale.edu",role=c("cre", "ctb")))
 URL: https://github.com/kaneplusplus/preference
 BugReports: https://github.com/kaneplusplus/preference/issues
@@ -14,7 +13,7 @@ Description: Design and analyze two-stage randomized trials with a continuous
     provided to test each effect using either summary data (i.e. means, 
     variances) or raw study data.
 License: LGPL-2
-Imports: methods, ggplot2
+Imports: ggplot2
 Suggests: knitr, testthat,
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1

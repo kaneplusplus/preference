@@ -64,7 +64,7 @@ power <- function(x) {
 power.preference.trial <- function(x) {
   ret <- data.frame(treatment_power=numeric(), selection_power=numeric(),
     preference_power=numeric())
-  for (i in 1:nrow(x)) {
+  for (i in seq_len(nrow(x))) {
     pows <- overall_power(
       sum(as.vector(x[,c("pref_ss", "selection_ss", "treatment_ss")])),
       unlist(x$pref_prop[[i]]),

@@ -1,30 +1,33 @@
 
-# Internal function for creating a single preference trial object.
-preference.trial.single <- function(pref_ss, pref_effect, selection_ss, 
-  selection_effect, treatment_ss, treatment_effect, sigma2, 
-  pref_prop, choice_prop=0.05, stratum_prop=1, alpha=0.05) {
+check_ss <- function(pref_ss, selection_ss, treatment_ss) {
   if (!is.numeric(pref_ss) || pref_ss < 1) {
     stop("The pref_ss parameter should be a numeric value of at least 1.")
-  }
-  if (!is.numeric(pref_effect) || length(pref_effect) != 1) {
-    stop("The pref_effect parameter should be a single numeric value.")
   }
   if (!is.numeric(selection_ss) || selection_ss < 1) {
     stop("The selection_ss parameter should be a numeric value of at least 1.")
   }
-  if (!is.numeric(selection_effect) || length(selection_effect) != 1) {
-    stop("The selection_effect parameter should be a single numeric value.")
-  }
   if (!is.numeric(treatment_ss) || treatment_ss < 1) {
     stop("The treatment_ss parameter should be a numeric value of at least 1.")
+  }
+  invisible(TRUE)
+}
+
+check_effect <- function(pref_effect, selection_effect, treatment_effect) {
+  if (!is.numeric(pref_effect) || length(pref_effect) != 1) {
+    stop("The pref_effect parameter should be a single numeric value.")
+  }
+  if (!is.numeric(selection_effect) || length(selection_effect) != 1) {
+    stop("The selection_effect parameter should be a single numeric value.")
   }
   if (!is.numeric(treatment_effect) || length(treatment_effect) != 1) {
     stop("The treatment_effect parameter should be a single numeric value.")
   }
-  if (!is.list(pref_prop)) pref_prop <- list(pref_prop)
-  if (!is.list(stratum_prop)) stratum_prop <- list(stratum_prop)
-  if (!is.list(sigma2)) sigma2 <- list(sigma2)
-   
+  invisible(TRUE)
+}
+
+# Multi-strata parameters.
+check_props_and_sigma2 <- function(stratum_prop, choice_prop, pref_prop, 
+  sigma2) {
   if (length(stratum_prop[[1]]) != length(pref_prop[[1]])) {
     stop(paste("The stratum_prop and pref_pop parameters",
                "must have the same length."))
@@ -51,17 +54,38 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
                "greater than zero and the length is equal to",
                "the stratum_prop and pref_prop parameters."))
   }
+  invisible(TRUE)
+}
+
+check_alpha <- function(alpha) {
   if (!is.numeric(alpha) || length(alpha) != 1 || any(alpha < 0 | alpha > 1)) {
     stop("The alpha parameter must be a single numeric value in [0, 1].")
   }
+}
+
+# Internal function for creating a single preference trial object.
+preference.trial.single <- function(pref_ss, pref_effect, selection_ss, 
+  selection_effect, treatment_ss, treatment_effect, sigma2, 
+  pref_prop, choice_prop=0.05, stratum_prop=1, alpha=0.05) {
+
+  check_ss(pref_ss, selection_ss, treatment_ss)
+  check_effect(pref_effect, selection_effect, treatment_effect)
+  check_alpha(alpha)
+
+  if (!is.list(pref_prop)) pref_prop <- list(pref_prop)
+  if (!is.list(stratum_prop)) stratum_prop <- list(stratum_prop)
+  if (!is.list(sigma2)) sigma2 <- list(sigma2)
+
+  check_props_and_sigma2(stratum_prop, choice_prop, pref_prop, sigma2)
+   
   ret <- data.frame(pref_ss=pref_ss, pref_effect=pref_effect, 
     selection_ss=selection_ss, selection_effect=selection_effect, 
     treatment_ss=treatment_ss, treatment_effect=treatment_effect, 
     alpha=alpha)
-  ret$pref_prop=pref_prop
-  ret$choice_prop=choice_prop
-  ret$stratum_prop=stratum_prop
-  ret$sigma2=sigma2
+  ret$pref_prop <- pref_prop
+  ret$choice_prop <- choice_prop
+  ret$stratum_prop <- stratum_prop
+  ret$sigma2 <- sigma2
   class(ret) <- c("preference.trial", class(ret))
   ret
 }
@@ -168,7 +192,7 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
     x$stratum_prop <- exp_arg_list$stratum_prop
     x$sigma2 <- exp_arg_list$sigma2
     ret <- NULL
-    for (i in 1:nrow(x)) {
+    for (i in seq_len(nrow(x))) {
       ret <- rbind(ret,
         preference.trial.single(x$pref_ss[i], x$pref_effect[i], 
                                 x$selection_ss[i], x$selection_effect[i], 
@@ -256,7 +280,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 
   args <- args[names(args) != "power"]
   ret <- do.call(preference.trial, args)
-  for (i in 1:nrow(ret)) {
+  for (i in seq_len(nrow(ret))) {
     sss <- overall_sample_size(
       power[cind(i, length(power))], 
       ret$pref_prop[[cind(i, length(ret$pref_prop))]],
@@ -350,7 +374,7 @@ pt_from_ss <- function(sample_size, pref_effect, selection_effect,
 
   args <- args[names(args) != "sample_size"]
   ret <- do.call(preference.trial, args)
-  for (i in 1:nrow(ret)) {
+  for (i in seq_len(nrow(ret))) {
     # First get the power for each of the three arms.
     pwr <- overall_power(sample_size[cind(i, length(sample_size))], 
       ret$pref_prop[[cind(i, length(ret$pref_prop))]],
