@@ -13,7 +13,6 @@ test_that("The preference.trial object has been created correctly.", {
   expect_equal(ncol(trials), 11)
 })
 
-
 test_that("The sample_size() function works", {
   df <- data.frame(pref_ss = rep(100, 4), selection_ss = rep(100, 4), 
                    treatment_ss = rep(100, 4))

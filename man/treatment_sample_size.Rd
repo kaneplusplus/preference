@@ -36,14 +36,6 @@ distribution to the two treatment arms)}
 Calculates the sample size required to detect a given treatment effect 
 in a two-stage randomized clinical trial
 }
-\examples{
-# Unstratified
-treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
-# Stratified
-treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, 
-                      xi=c(0.3,0.7),
-nstrata=2)
-}
 \references{
 Turner RM, et al. (2014). "Sample Size and Power When Designing
  a Randomized Trial for the Estimation of Treatment, Selection, and 

@@ -39,13 +39,6 @@ values between 0 and 1. Default is 1 (i.e. unstratified design).}
 Calculates the study power to detect the selection effect given a particular 
 sample size in a two-stage randomized clinical trial
 }
-\examples{
-# Unstratified
-selection_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
-# Stratified
-selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
-delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
-}
 \references{
 Turner RM, et al. (2014). "Sample Size and Power When Designing
  a Randomized Trial for the Estimation of Treatment, Selection, and 
@@ -53,6 +46,7 @@ Turner RM, et al. (2014). "Sample Size and Power When Designing
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 
 Cameron B, Esserman D (2016). "Sample Size and Power for a 
-Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+Stratified Doubly Randomized Preference Design." 
+\emph{Stat Methods Med Res}. 
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }

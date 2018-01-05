@@ -26,12 +26,6 @@
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' selection_sample_size(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
-#' # Stratified
-#' selection_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), delta_pi=1, 
-#'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -40,35 +34,8 @@
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @importFrom stats qnorm
-#' @export
 selection_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
                                   alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  # Error messages
-  if(!is.numeric(power) || power <= 0 || power >= 1 || length(power) != 1)
-    stop('Power must be single numeric value in [0,1]')
-  if (length(phi) != nstrata) 
-    stop('Length vector does not match number of strata')
-  if(any(!is.numeric(phi)) || any(phi <= 0) || any(phi >= 1))
-    stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2) != nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(!is.numeric(sigma2) || any(sigma2 <= 0)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) || !is.numeric(delta_nu) ||
-     length(delta_pi)!=1 || length(delta_nu)!=1)
-    stop('Effect size must be single numeric value')
-  if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1 || length(alpha)!=1)
-    stop('Type I error rate must be single numeric value in [0,1]')
-  if(!is.numeric(theta) || theta <= 0 || theta >= 1 || length(theta)!=1)
-    stop('Theta must be single numeric value in [0,1]')
-  if(any(!is.numeric(xi) || any(xi <= 0) || any(xi > 1)))
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi) != nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi) != 1) 
-    stop('Stratum proportions do not sum to 1')
-  if(!is.numeric(nstrata) || nstrata <=0 || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
   zbeta<-qnorm(power)
@@ -107,12 +74,6 @@ selection_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' preference_sample_size(power=0.8, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
-#' # Stratified
-#' preference_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), delta_pi=1, 
-#'  delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -120,36 +81,8 @@ selection_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
                  alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  # Error messages
-  if(power<0 | power>1 | !is.numeric(power) || length(power)!=1) 
-    stop('Power must be single numeric value in [0,1]')
-  if (length(phi)!=nstrata) 
-    stop('Length vector does not match number of strata')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
-    stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2)!=nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
-     length(delta_pi)!=1 || length(delta_nu)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha) != 1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta < 0 | theta > 1 | !is.numeric(theta) || length(theta) != 1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi < 0) | any(xi > 1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata <= 0 | !is.numeric(nstrata) | length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
-  
   # Calculate sample size
   zbeta <- qnorm(power)
   zalpha <- qnorm(1-(alpha/2))
@@ -185,13 +118,6 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @param k the ratio of treatment A to treatment B. (default 1, i.e. equal
 #' distribution to the two treatment arms)
-#' @examples
-#' # Unstratified
-#' treatment_sample_size(power=0.8, sigma2=1, delta_tau=1.5)
-#' # Stratified
-#' treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, 
-#'                       xi=c(0.3,0.7),
-#' nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -200,29 +126,8 @@ preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu,
 #' Stratified Doubly Randomized Preference Design." 
 #' \emph{Stat Methods Med Res}.  
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05, 
                                   theta=0.5, xi=1, nstrata=1, k=1) {
-  # Error messages
-  if(power < 0 | power > 1 | !is.numeric(power) || length(power) != 1) 
-    stop('Power must be single numeric value in [0,1]')
-  if(length(sigma2) != nstrata)
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_tau) || length(delta_tau)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha < 0 | alpha > 1 | !is.numeric(alpha) || length(alpha) != 1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta) != 1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
-  
   #Calculate sample size
   zbeta <- qnorm(power)
   zalpha <- qnorm(1-(alpha/2))
@@ -230,7 +135,7 @@ treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05,
   sum_total <- sum(terms)
   N <- (k+1)^2 / (4*k) * 4 * (zalpha+zbeta)^2 / ((1-theta)*delta_tau^2) *
     sum_total
-  return(ceiling(N))
+  ceiling(N)
 }
 
 #' Overall Sample Size
@@ -259,13 +164,6 @@ treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' overall_sample_size(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
-#' delta_tau=1.5)
-#' # Stratified
-#' overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, 
-#' delta_nu=0.5, delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -273,39 +171,13 @@ treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05,
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
   delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  # Error messages
-  if(power < 0 | power > 1 | !is.numeric(power) || length(power) != 1) 
-    stop('Power must be single numeric value in [0,1]')
-  if (length(phi) != nstrata) 
-    stop('Length vector does not match number of strata')
-  if(any(phi < 0) | any(phi > 1) | any(!is.numeric(phi))) 
-    stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2) != nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2 <= 0) | any(!is.numeric(sigma2)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau) 
-     || length(delta_pi) != 1 || length(delta_nu)!=1 || length(delta_tau)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha < 0 | alpha > 1 | !is.numeric(alpha) || length(alpha) != 1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta < 0 | theta > 1 | !is.numeric(theta) || length(theta) != 1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi < 0) | any(xi > 1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi) != nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata <=0 | !is.numeric(nstrata) || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
   
   # Calculate sample size
   zbeta <- qnorm(power)
   zalpha <- qnorm(1-(alpha/2))
+
   pref <- preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
                                  theta, xi, nstrata)
   sel <- selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
@@ -313,8 +185,7 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
   treat <- treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, 
                                  nstrata)
  
-  ret <- data.frame(treatment=treat, selection=sel, preference=pref) 
-  ret
+  data.frame(treatment=treat, selection=sel, preference=pref) 
 }
 
 ###################################
@@ -340,11 +211,6 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' treatment_power(N=300, sigma2=1, delta_tau=0.5)
-#' # Stratified
-#' treatment_power(N=300, sigma2=c(1,1), delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -352,30 +218,8 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1, 
                   nstrata=1) {
-  # Error messages
-  if(N<0 | !is.numeric(N) | length(N)!=1) 
-    stop('N must be a single positive numeric value')
-  if(length(sigma2)!=nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_tau) || length(delta_tau)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
   
   # Calculate study power
   zalpha <- qnorm(1-(alpha/2))
@@ -408,12 +252,6 @@ treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' preference_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
-#' # Stratified
-#' preference_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
-#' delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -421,35 +259,8 @@ treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1,
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
                    theta=0.5, xi=1, nstrata=1) {
-  # Error messages
-  if(N<0 | !is.numeric(N) | length(N)!=1) 
-    stop('N must be a single positive numeric value')
-  if (length(phi)!=nstrata) 
-    stop('Length vector does not match number of strata')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
-    stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2)!=nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
-     length(delta_pi)!=1 || length(delta_nu)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
   
   # Calculate study power
   zalpha<-qnorm(1-(alpha/2))
@@ -488,49 +299,16 @@ preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' selection_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5)
-#' # Stratified
-#' selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
-#' delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." 
+#' \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
                   theta=0.5, xi=1, nstrata=1) {
-  # Error messages
-  if(N<0 | !is.numeric(N) | length(N)!=1) 
-    stop('N must be a single positive numeric value')
-  if (length(phi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
-    stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2)!=nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
-     length(delta_pi)!=1 || length(delta_nu)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
-  
   # Calculate study power
   zalpha<-qnorm(1-(alpha/2))
   
@@ -542,9 +320,7 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
           2 * (theta / (1-theta) ) * sigma2[x] * (phi[x]^2 + (1-phi[x])^2) )
     }, 0.0)
   sum_total <- sum(strata_terms)
-  power <- pnorm(sqrt((4*theta*delta_nu^2*N)/(sum_total))-zalpha)
-  
-  return(power)
+  pnorm(sqrt((4*theta*delta_nu^2*N)/(sum_total))-zalpha)
 }
 
 #' Power Calculation from Sample Size
@@ -571,13 +347,6 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @examples
-#' # Unstratified
-#' overall_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5, 
-#' delta_tau=1.5)
-#' # Stratified
-#' overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5,
-#' delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -585,36 +354,8 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @export
 overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                       alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  # Error messages
-  if(N<0 | !is.numeric(N) | length(N)!=1) 
-    stop('N must be a single positive numeric value')
-  if (length(phi)!=nstrata) 
-    stop('Length vector does not match number of strata')
-  if(any(phi<0) | any(phi>1) | any(!is.numeric(phi))) 
-    stop('Preference rate must be numeric value in [0,1]')
-  if(length(sigma2)!=nstrata)
-    stop('Length of variance vector does not match number of strata')
-  if(any(sigma2<=0) | any(!is.numeric(sigma2)))
-    stop('Variance estimate must be numeric value greater than 0')
-  if(!is.numeric(delta_pi) | !is.numeric(delta_nu) | !is.numeric(delta_tau) 
-     || length(delta_pi)!=1 || length(delta_nu)!=1 || length(delta_tau)!=1)
-    stop('Effect size must be single numeric value')
-  if(alpha<0 | alpha>1 | !is.numeric(alpha) || length(alpha)!=1)
-    stop('Type I error rate must be single numeric in [0,1]')
-  if(theta<0 | theta>1 | !is.numeric(theta) || length(theta)!=1) 
-    stop('Theta must be single numeric in [0,1]')
-  if(any(xi<0) | any(xi>1) | any(!is.numeric(xi))) 
-    stop('Proportion of patients in strata must be numeric value in [0,1]')
-  if (length(xi)!=nstrata) 
-    stop('Length of vector does not match number of strata')
-  if (sum(xi)!=1) 
-    stop('Stratum proportions do not sum to 1')
-  if(nstrata<=0 | !is.numeric(nstrata) || length(nstrata)!=1)
-    stop('Number of strata must be numeric greater than 0')
-  
   
   # Calculate study power
   trt_pwr <- treatment_power(N = N, sigma2 = sigma2, delta_tau = delta_tau,
@@ -1065,7 +806,7 @@ treatment_effect_size<-function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
 #' @importFrom stats uniroot
 #' @export
-optimal_proportion<-function(w_sel, w_pref, w_treat, sigma2, phi, delta_pi,
+optimal_proportion <- function(w_sel, w_pref, w_treat, sigma2, phi, delta_pi,
                              delta_nu) {
   if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
      any(!is.numeric(c(w_sel,w_pref,w_treat))) | length(w_sel)!=1 | 
@@ -1092,7 +833,7 @@ optimal_proportion<-function(w_sel, w_pref, w_treat, sigma2, phi, delta_pi,
 }
 
 # Function used in theta optimization function
-f<-function(theta,value) {
+f <- function(theta,value) {
   (theta/(1-theta))^2-value
 }  
 

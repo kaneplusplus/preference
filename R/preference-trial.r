@@ -13,13 +13,16 @@ check_ss <- function(pref_ss, selection_ss, treatment_ss) {
 }
 
 check_effect <- function(pref_effect, selection_effect, treatment_effect) {
-  if (!is.numeric(pref_effect) || length(pref_effect) != 1) {
+  if (!is.numeric(pref_effect) || length(pref_effect) != 1 || 
+      pref_effect <=0 ) {
     stop("The pref_effect parameter should be a single numeric value.")
   }
-  if (!is.numeric(selection_effect) || length(selection_effect) != 1) {
+  if (!is.numeric(selection_effect) || length(selection_effect) != 1 ||
+      selection_effect <= 0) {
     stop("The selection_effect parameter should be a single numeric value.")
   }
-  if (!is.numeric(treatment_effect) || length(treatment_effect) != 1) {
+  if (!is.numeric(treatment_effect) || length(treatment_effect) != 1 ||
+      treatment_effect <= 0) {
     stop("The treatment_effect parameter should be a single numeric value.")
   }
   invisible(TRUE)
@@ -406,11 +409,8 @@ pt_from_ss <- function(sample_size, pref_effect, selection_effect,
 }
 
 # TODO:
-# pt_from_ss take one sample size (for each trial) and find the 
-# best allocation per arm.
 #
 # pt_optimize_choice_prop
-# plot
 # website forwarding
 # pt_from_group_means (not high priority)
 

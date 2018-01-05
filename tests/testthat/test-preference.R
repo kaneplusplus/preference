@@ -40,12 +40,174 @@ test_that("overall_sample_size function works", {
 
 # Public functions
 
-# Get this working!!
-#test_that("preference.trial and sample_size works", {
-#  pt <- preference.trial(power=0.8, sigma2=c(1, 1), phi=c(0.5, 0.5), 
-#    delta_nu=0.5, delta_pi=1, delta_tau=1.5, alpha=0.05, theta=0.5,
-#    xi=c(0.3,0.7), nstrata=2L, k=1L)
-#})
+test_that("Unstratified single trial", {
+  trial <- preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6)
+  expect_is(trial, "preference.trial")
+  expect_is(trial, "data.frame")
+})
+
+test_that("Pref sample size checking works", {
+  expect_error(preference.trial(pref_ss=-100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6))
+})
+
+test_that("Selection sample size checking works", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=-100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6))
+})
+
+test_that("Treatment sample size checking works", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=-100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6))
+})
+
+test_that("Preference effect size checking works", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=-1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6))
+})
+
+test_that("Treatment effect size checking works", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=-1,
+    sigma2=1, pref_prop=0.6))
+})
+
+test_that("Selection effect size checking works", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=-1, treatment_ss=100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6))
+})
+
+test_that("Alpha checking works", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=1, pref_prop=0.6, alpha = 300))
+})
+
+test_that("Stratified single trial", {
+  trial <- preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
+
+  expect_is(trial, "preference.trial")
+  expect_is(trial, "data.frame")
+})
+
+test_that("Multiple trials unstratified", {
+  trial <- preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
+
+  expect_is(trial, "preference.trial")
+  expect_is(trial, "data.frame")
+})
+
+test_that("Multiple trials error checking 1", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(0.7, 0.1, 0.2))))
+})
+
+test_that("Multiple trials error checking 2", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(-0.7, 14))))
+})
+
+test_that("Multiple trials error checking 3", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(-0.7, 1.7))))
+})
+
+test_that("Multiple trials error checking 4", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(0.2, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=-0.5, stratum_prop=list(c(0.7, 0.3))))
+})
+
+test_that("Multiple trials error checking 5", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(0.2, 0.8)), pref_prop=list(c(1.6, -0.6)),
+    choice_prop=0.5, stratum_prop=list(c(0.7, 0.3))))
+})
+
+test_that("Multiple trials error checking 6", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c("a", "b")), pref_prop=list(c(0.6, 0.4)),
+    choice_prop=0.5, stratum_prop=list(c(0.7, 0.3))))
+})
+
+test_that("Multiple trials error checking 7", {
+  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+    selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(0.1)), pref_prop=list(c(1.6, -0.6)),
+    choice_prop=0.5, stratum_prop=list(c(0.7, 0.3))))
+})
+
+test_that("Multiple trials stratified", {
+  trial <- preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5),
+    selection_ss=100, selection_effect=1, treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
+
+  expect_is(trial, "preference.trial")
+  expect_is(trial, "data.frame")
+})
+
+test_that("Circular indexing warning.", {
+  expect_warning(preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5),
+    selection_ss=100:102, selection_effect=1, 
+    treatment_ss=100, treatment_effect=1,
+    sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
+    choice_prop=0.5, stratum_prop=list(c(0.3, 0.7))))
+})
+
+test_that("pt_from_power ", {
+  trial <- pt_from_power(power=seq(0.1, 0.8, by=0.1), pref_effect=1,
+    selection_effect=1, treatment_effect=1,
+    sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
+    choice_prop=0.5, stratum_prop=c(0.3, 0.7))
+  expect_is(trial, "preference.trial")
+  expect_is(trial, "data.frame")
+})
+
+test_that("pt_from_power fail", {
+  expect_error(pt_from_power(power=letters, pref_effect=1,
+    selection_effect=1, treatment_effect=1,
+    sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
+    choice_prop=0.5, stratum_prop=c(0.3, 0.7)))
+})
+
+test_that("pt_from_ss", {
+  trial <- pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1,
+    selection_effect=1, treatment_effect=1,
+    sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
+    choice_prop=0.5, stratum_prop=c(0.3, 0.7))
+  expect_is(trial, "preference.trial")
+  expect_is(trial, "data.frame")
+})
+
+test_that("pt_from_ss fail", {
+  expect_error(pt_from_ss(sample_size=letters, pref_effect=1,
+    selection_effect=1, treatment_effect=1,
+    sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
+    choice_prop=0.5, stratum_prop=c(0.3, 0.7)))
+})
 
 #######################
 ### Power Functions ###

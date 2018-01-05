@@ -41,14 +41,6 @@ values between 0 and 1. Default is 1 (i.e. unstratified design).}
 Calculates the study power to detect a set of effects given a particular 
 sample size in a two-stage randomized clinical trial
 }
-\examples{
-# Unstratified
-overall_power(N=300, phi=0.6, sigma2=1, delta_pi=1, delta_nu=0.5, 
-delta_tau=1.5)
-# Stratified
-overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, delta_nu=0.5,
-delta_tau=0.5, xi=c(0.5,0.5), nstrata=2)
-}
 \references{
 Turner RM, et al. (2014). "Sample Size and Power When Designing
  a Randomized Trial for the Estimation of Treatment, Selection, and 

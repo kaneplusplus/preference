@@ -43,14 +43,6 @@ in a two-stage randomized clinical trial. Returns the largest
 of the required sample sizes for a given set of treatment, selection, and 
 preference effects.
 }
-\examples{
-# Unstratified
-overall_sample_size(power=0.8, phi=0.5, sigma2=1, delta_pi=1, delta_nu=0.5, 
-delta_tau=1.5)
-# Stratified
-overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), delta_pi=1, 
-delta_nu=0.5, delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
-}
 \references{
 Turner RM, et al. (2014). "Sample Size and Power When Designing
  a Randomized Trial for the Estimation of Treatment, Selection, and 
