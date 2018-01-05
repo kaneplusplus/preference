@@ -9,7 +9,6 @@ preference: An R package for Clinical Trials using Preference Design
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/ippgxxrkwi545nkq?svg=true)](https://ci.appveyor.com/project/kaneplusplus/preference)
 [![Coverage Status](https://coveralls.io/repos/github/kaneplusplus/preference/badge.svg?branch=master)](https://coveralls.io/github/kaneplusplus/preference?branch=master)
 
-
 ## Install the package
 
 ```{r}
