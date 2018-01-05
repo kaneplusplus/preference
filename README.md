@@ -1,8 +1,8 @@
 preference: An R package for Clinical Trials using Preference Design
 ===
 
-**Author:** Briana Cameron<br/>
-**Contributors:** Denise Esserman and Michael J. Kane<br/>
+**Author:** Briana Cameron and Michael J. Kane<br/>
+**Contributors:** Denise Esserman<br/>
 **License:** [LGPL-2](https://opensource.org/licenses/LGPL-2.1)
 
 [![Build Status](https://travis-ci.org/kaneplusplus/preference.svg?branch=master)](https://travis-ci.org/kaneplusplus/preference)
