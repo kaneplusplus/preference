@@ -5,7 +5,7 @@
 #' preference effect, the selection effect, or both as a function of the
 #' total sample size of the trial. If the preference effect varies but the
 #' selection effect does not, then it plots the preference effect by the
-#' total sample size. Similarly if the selection effect varies but not hte
+#' total sample size. Similarly if the selection effect varies but not the
 #' preference effect then selection effect vs total sample size is shown.
 #' When both preference and selection effect vary then the selection effect
 #' is shown conditioned on the given preference effects.

@@ -304,7 +304,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 
 #' @title Design Preference Trials with Sample Size Constraint(s)
 #'
-#' @description Create a set of preference trials where the maxiumum 
+#' @description Create a set of preference trials where the maximum 
 #' sample size for an arm is specified.
 #'
 #' @param sample_size the maxiumum size of any of the three arms.
