@@ -1,143 +1,3 @@
-############################
-### SAMPLE SIZE FORMULAS ###
-############################
-
-#' Selection Effect Sample Size
-#'
-#' Calculates the sample size required to detect a given selection effect 
-#' in a two-stage randomized clinical trial
-#'
-#' @param power desired study power. Should be numeric value between 0 and 1. 
-#' @param phi the proportion of patients preferring treatment 1. Should be
-#'            numeric value between 0 and 1. If study is stratified, should be
-#'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numeric values. If 
-#'               study is stratified, should be vector of within-stratum 
-#'               variances with length equal to the number of strata in the 
-#'               study. 
-#' @param delta_pi overall study preference effect.
-#' @param delta_nu overall study selection effect.
-#' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
-#' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
-#' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
-#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
-#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-#' @importFrom stats qnorm
-selection_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
-                                  alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  
-  # Calculate sample size
-  zbeta<-qnorm(power)
-  zalpha<-qnorm(1-(alpha/2))
-  terms <- vapply(seq_len(nstrata), 
-    function(x) {
-      (xi[x]/(phi[x]^2*(1-phi[x])^2)) *
-        (sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2 +
-        2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2))
-    }, 0.0)
-  sum_total <- sum(terms)
-  N <- (zalpha+zbeta)^2/(4*theta*delta_nu^2)*sum_total
-  ceiling(N)
-}
-
-#' Preference Effect Sample Size
-#'
-#' Calculates the sample size required to detect a given preference effect 
-#' in a two-stage randomized clinical trial
-#'
-#' @param power desired study power. Should be numeric value between 0 and 1.
-#' @param phi the proportion of patients preferring treatment 1. Should be
-#'            numeric value between 0 and 1. If study is stratified, should be
-#'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numeric values. If study
-#'               is stratified, should be vector of within-stratum variances 
-#'               with length equal to the number of strata in the study.
-#' @param delta_pi overall study preference effect.
-#' @param delta_nu overall study selection effect.
-#' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
-#' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
-#' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
-#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
-#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-preference_sample_size<-function(power, phi, sigma2, delta_pi, delta_nu, 
-                 alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  # Calculate sample size
-  zbeta <- qnorm(power)
-  zalpha <- qnorm(1-(alpha/2))
-  terms <- vapply(seq_len(nstrata), 
-    function(x) {
-      (xi[x] / (phi[x]^2 * (1-phi[x])^2)) *
-        (sigma2[x] + phi[x] * (1-phi[x]) * ((2*phi[x]-1)*delta_pi+delta_nu)^2 +
-        2*(theta/(1-theta)) * sigma2[x]*(phi[x]^2+(1-phi[x])^2))
-    }, 0.0)
-  sum_total <- sum(terms)
-  N <- (zalpha+zbeta)^2 / (4*theta*delta_pi^2) * sum_total
-  ceiling(N)
-}
-
-#' Treatment Effect Sample Size
-#'
-#' Calculates the sample size required to detect a given treatment effect 
-#' in a two-stage randomized clinical trial
-#'
-#' @param power desired study power. Should be numeric value between 0 and 1.
-#' @param sigma2 variance estimate. Should be positive numeric values. If study
-#'               is stratified, should be vector of within-stratum variances 
-#'               with length equal to the number of strata in the study.
-#' @param delta_tau overall study treatment effect.
-#' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
-#' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
-#' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @param k the ratio of treatment A to treatment B. (default 1, i.e. equal
-#' distribution to the two treatment arms)
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
-#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
-#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." 
-#' \emph{Stat Methods Med Res}.  
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05, 
-                                  theta=0.5, xi=1, nstrata=1, k=1) {
-  #Calculate sample size
-  zbeta <- qnorm(power)
-  zalpha <- qnorm(1-(alpha/2))
-  terms <- vapply(seq_len(nstrata), function(x) xi[x]*sigma2[x], 0.0)
-  sum_total <- sum(terms)
-  N <- (k+1)^2 / (4*k) * 4 * (zalpha+zbeta)^2 / ((1-theta)*delta_tau^2) *
-    sum_total
-  ceiling(N)
-}
-
 #' Overall Sample Size
 #'
 #' Calculates the sample size required to detect a given set of effects 
@@ -169,158 +29,43 @@ treatment_sample_size <- function(power, sigma2, delta_tau, alpha=0.05,
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
-  delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-  
-  # Calculate sample size
-  zbeta <- qnorm(power)
-  zalpha <- qnorm(1-(alpha/2))
-
-  pref <- preference_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
-                                 theta, xi, nstrata)
-  sel <- selection_sample_size(power, phi, sigma2, delta_pi, delta_nu, alpha, 
-                               theta, xi, nstrata)
-  treat <- treatment_sample_size(power, sigma2, delta_tau, alpha, theta, xi, 
-                                 nstrata)
- 
-  data.frame(treatment=treat, selection=sel, preference=pref) 
-}
-
-###################################
-### POWER CALCULATION FUNCTIONS ###
-###################################
-
-#' Treatment Effect Power Calculation
-#'
-#' Calculates the study power to detect the treatment effect given a particular 
-#' sample size in a two-stage randomized clinical trial
-#'
-#' @param N overall study sample size.
-#' @param sigma2 variance estimate. Should be positive numeric values. If study
-#'               is stratified, should be vector of within-stratum variances 
-#'               with length equal to the number of strata in the study.
-#' @param delta_tau overall study treatment effect.
-#' @param alpha desired type I error rate.. 
-#' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
-#' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
-#' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
-#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
-#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-treatment_power<-function(N, sigma2, delta_tau, alpha=0.05, theta=0.5, xi=1, 
-                  nstrata=1) {
-  
-  # Calculate study power
-  zalpha <- qnorm(1-(alpha/2))
-  strata_terms <- vapply(seq_len(nstrata),
-    function(i) xi[i] * sigma2[i],
-    0.0)
-  pnorm( sqrt( ((1-theta)*delta_tau^2*N) / (4*sum(strata_terms)) ) - zalpha )
-}
-
-#' Preference Effect Power Calculation
-#'
-#' Calculates the study power to detect the preference effect given a particular 
-#' sample size in a two-stage randomized clinical trial
-#'
-#' @param N overall study sample size.
-#' @param phi the proportion of patients preferring treatment 1. Should be
-#'            numeric value between 0 and 1. If study is stratified, should be
-#'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numeric values. If study
-#'               is stratified, should be vector of within-stratum variances 
-#'               with length equal to the number of strata in the study.
-#' @param delta_pi overall study preference effect.
-#' @param delta_nu overall study selection effect.
-#' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
-#' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
-#' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
-#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
-#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-preference_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
-                   theta=0.5, xi=1, nstrata=1) {
-  
-  # Calculate study power
-  zalpha<-qnorm(1-(alpha/2))
-  
-  strata_terms <- vapply(seq_len(nstrata), 
-    function(x) {
-      ( xi[x] / (phi[x]^2*(1-phi[x])^2) ) * 
-        ( sigma2[x] + phi[x]*(1-phi[x])*
-          ( (2*phi[x]-1)*delta_pi+delta_nu )^2 +
-          2* (theta / (1-theta)) *sigma2[x] * ( phi[x]^2+(1-phi[x])^2 ) )
-    }, 0.0)
-  sum_total <- sum(strata_terms)
-  pnorm( sqrt( (4*theta*delta_pi^2*N) / sum_total ) - zalpha )
-}
-
-#' Selection Effect Power Calculation
-#'
-#' Calculates the study power to detect the selection effect given a particular 
-#' sample size in a two-stage randomized clinical trial
-#'
-#' @param N overall study sample size.
-#' @param phi the proportion of patients preferring treatment 1. Should be
-#'            numeric value between 0 and 1. If study is stratified, should be
-#'            vector with length equal to the number of strata in the study.
-#' @param sigma2 variance estimate. Should be positive numeric values. If study
-#'               is stratified, should be vector of within-stratum variances 
-#'               with length equal to the number of strata in the study.
-#' @param delta_pi overall study preference effect.
-#' @param delta_nu overall study selection effect.
-#' @param alpha desired type I error rate.
-#' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
-#' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
-#' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
-#'  a Randomized Trial for the Estimation of Treatment, Selection, and 
-#'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
-#' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." 
 #' \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05, 
-                  theta=0.5, xi=1, nstrata=1) {
-  # Calculate study power
-  zalpha<-qnorm(1-(alpha/2))
-  
-  strata_terms <- vapply(seq_len(nstrata), 
+overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
+  delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1) {
+
+  zbeta <- qnorm(power)
+  zalpha <- qnorm(1-(alpha/2))
+
+  # selection sample size
+  sel_terms <- vapply(seq_len(nstrata),
     function(x) {
-      ( xi[x] / (phi[x]^2 *(1 - phi[x])^2) ) *
-        ( sigma2[x] + phi[x] *(1 - phi[x]) * 
-          ( (2 * phi[x] - 1) * delta_nu + delta_pi )^2 +
-          2 * (theta / (1-theta) ) * sigma2[x] * (phi[x]^2 + (1-phi[x])^2) )
+      (xi[x] / ( phi[x]^2*(1-phi[x])^2 )) *
+        (sigma2[x] + phi[x]*(1-phi[x])*( (2*phi[x]-1)*delta_nu + delta_pi )^2 +
+        2*( theta / (1-theta) )*sigma2[x]*(phi[x]^2 + (1-phi[x])^2))
     }, 0.0)
-  sum_total <- sum(strata_terms)
-  pnorm(sqrt((4*theta*delta_nu^2*N)/(sum_total))-zalpha)
+  sel_sum_total <- sum(sel_terms)
+  sel_N <- ceiling((zalpha+zbeta)^2/(4*theta*delta_nu^2)*sel_sum_total)
+
+  #preference sample size
+  pref_terms <- vapply(seq_len(nstrata),
+    function(x) {
+      (xi[x] / (phi[x]^2 * (1-phi[x])^2)) *
+        (sigma2[x] + phi[x] * (1-phi[x])*( (2*phi[x]-1)*delta_pi+delta_nu )^2 +
+        2*( theta/(1-theta) ) * sigma2[x]*( phi[x]^2+(1-phi[x])^2 ))
+    }, 0.0)
+  pref_sum_total <- sum(pref_terms)
+  pref_N <- ceiling( (zalpha+zbeta)^2 / (4*theta*delta_pi^2) * pref_sum_total )
+
+  #Treatment sample size
+
+  treat_terms <- vapply(seq_len(nstrata), function(x) xi[x]*sigma2[x], 0.0)
+  treat_sum_total <- sum(treat_terms)
+  treat_N <- ceiling( ( (k+1)^2 / (4*k) ) * 4 * 
+    ( zalpha+zbeta )^2 / ( (1-theta)*delta_tau^2 ) * treat_sum_total)
+
+  data.frame(treatment=treat_N, selection=sel_N, preference=pref_N)
 }
 
 #' Power Calculation from Sample Size
@@ -356,21 +101,44 @@ selection_power<-function(N, phi, sigma2, delta_pi, delta_nu, alpha=0.05,
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                       alpha=0.05, theta=0.5, xi=1, nstrata=1) {
+
+  zalpha <- qnorm(1-(alpha/2))
+
+  # Calculate study power for treatment efect
+  treat_strata_terms <- vapply(seq_len(nstrata),
+    function(i) xi[i] * sigma2[i], 0.0)
   
-  # Calculate study power
-  trt_pwr <- treatment_power(N = N, sigma2 = sigma2, delta_tau = delta_tau,
-                             alpha = alpha, theta = theta, xi = xi,
-                             nstrata = nstrata)
-  pref_pwr <- preference_power(N = N, phi = phi, sigma2 = sigma2,
-                               delta_pi = delta_pi, delta_nu = delta_nu,
-                               alpha = alpha, theta = theta, xi = xi,
-                               nstrata = nstrata)
-  sel_pwr <- selection_power(N = N, phi = phi, sigma2 = sigma2, 
-                             delta_pi = delta_pi, delta_nu = delta_nu,
-                             alpha = alpha, theta = theta, xi = xi,
-                             nstrata = nstrata)
+  trt_pwr <- pnorm( 
+    sqrt( ((1-theta)*delta_tau^2*N) / (4*sum(treat_strata_terms)) ) - zalpha )
+
+  #Calculate study power for preference effect
+  pref_strata_terms <- vapply(seq_len(nstrata),
+    function(x) {
+      ( xi[x] / (phi[x]^2*(1-phi[x])^2) ) *
+        ( sigma2[x] + phi[x]*(1-phi[x])*
+        ( (2*phi[x]-1)*delta_pi+delta_nu )^2 +
+        2 * (theta / (1-theta)) *sigma2[x] * ( phi[x]^2+(1-phi[x])^2 ) )
+                         }, 0.0)
+
+  pref_sum_total <- sum(pref_strata_terms)
+
+  pref_pwr <- pnorm( sqrt( (4*theta*delta_pi^2*N) / pref_sum_total ) - zalpha )
+
+  #Calcualte study power for preference effect
+  sel_strata_terms <- vapply(seq_len(nstrata),
+    function(x) {
+      ( xi[x] / (phi[x]^2 *(1 - phi[x])^2) ) *
+        ( sigma2[x] + phi[x] *(1 - phi[x]) *
+        ( (2 * phi[x] - 1) * delta_nu + delta_pi )^2 +
+        2 * (theta / (1-theta) ) * sigma2[x] * (phi[x]^2 + (1-phi[x])^2) )
+    }, 0.0)
+
+  sel_sum_total <- sum(strata_terms)
+
+  sel_pwr <- pnorm( sqrt( (4*theta*delta_nu^2*N)/(sel_sum_total) ) - zalpha)
 
   data.frame(treatment = trt_pwr, selection = sel_pwr, preference = pref_pwr)
+    
 }
 
 ##########################
@@ -653,7 +421,7 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
 #' @export
 analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
                                  y1var, n1, y2mean, y2var, n2, xi=1, 
-                                 nstrata=1) {
+                                 nstrata=1, alpha=0.05) {
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
      !is.numeric(x2mean) | !is.numeric(x2var) |
@@ -683,40 +451,86 @@ analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
   if(nstrata <= 0 || !is.numeric(nstrata) || length(nstrata)!=1) {
     stop('Number of strata must be numeric greater than 0')
   }
-  
-  # Compute unstratified test statistics
-  unstrat_stats <- vapply(seq_len(nstrata), 
-    function(i) {
-      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
-                                   x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
-                                   y2mean[i], y2var[i], n2[i])
-    }, data.frame(pref_test = NA, pref_pval = NA, sel_test = NA , 
-                  sel_pval = NA, treat_test = NA, treat_pval = NA))
-  # Compute stratified test statistics and p-values
-  pref_test <- sum(
-    vapply(seq_len(nstrata), 
-           function(i) xi[i] * unlist(unstrat_stats[1, i]), 0.0))
-  
-  sel_test <- sum(
-    vapply(seq_len(nstrata), 
-           function(i) xi[i] * unlist(unstrat_stats[3, i]), 0.0))
 
-  treat_test <- sum(
+    # Compute unstratified test statistics
+  unstrat_stats <- vapply(seq_len(nstrata),
+    function(i) {
+      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i],
+                                   x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
+                                   y2mean[i], y2var[i], n2[i], alpha)
+    }, 
+    data.frame(pref_effect=NA, pref_SE=NA, pref_test=NA, pref_pval=NA, 
+               pref_LB=NA, pref_UB=NA, sel_effect=NA, sel_SE=NA, 
+               sel_test = NA , sel_pval = NA, sel_LB=NA, sel_UB=NA,
+               treat_effect=NA, treat_SE=NA, treat_test = NA, 
+               treat_pval = NA, treat_LB=NA, treat_UB=NA))
+
+  #Calculate the overall effect estimate
+  overall_pref_effect <- sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i] * unlist(unstrat_stats[5, i]), 0.0))
-  
+           function(i) xi[i] * unlist(unstrat_stats[1, i]), 0.0))
+
+  overall_sel_effect <- sum(
+    vapply(seq_len(nstrata),
+           function(i) xi[i] * unlist(unstrat_stats[7, i]), 0.0))
+
+  overall_treat_effect <- sum(
+    vapply(seq_len(nstrata),
+           function(i) xi[i] * unlist(unstrat_stats[13, i]), 0.0))
+
+  #Calculate the overall SE
+  overall_pref_SE <- sqrt(sum(
+    vapply(seq_len(nstrata),
+           function(i) xi[i]^2 * unlist(unstrat_stats[2, i])^2, 0.0)))
+
+  overall_sel_SE <- sqrt(sum(
+    vapply(seq_len(nstrata),
+           function(i) xi[i]^2 * unlist(unstrat_stats[8, i])^2, 0.0)))
+
+  overall_treat_SE <- sqrt(sum(
+    vapply(seq_len(nstrata),
+           function(i) xi[i]^2 * unlist(unstrat_stats[14, i])^2, 0.0)))
+  #Calculate overall test statistic
+  overall_pref_test <- overall_pref_effect/overall_pref_SE
+
+  overall_sel_test <- overall_sel_effect/overall_sel_SE
+
+  overall_treat_test <- overall_treat_effect/overall_treat_SE
+
   # Compute p-values (Assume test stats approximately normally distributed)
 
   # preference effect
-  pref_pval <- 2 * pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)
+  overall_pref_pval <- 2 * pnorm(abs(overall_pref_test), lower.tail = FALSE)
 
   # selection effect
-  sel_pval <- 2 * pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE) 
-    
+  overall_sel_pval <- 2 * pnorm(abs(overall_sel_test), lower.tail = FALSE)
+
   # treatment effect
-  treat_pval <- 2 * pnorm(abs(treat_test/sum(xi^2)), lower.tail = FALSE)
+  overall_treat_pval <- 2 * pnorm(abs(overall_treat_test), lower.tail = FALSE)
+
+  #Compute the upper and lower bounds of the confidence interval.
+
+  zalpha <- qnorm(1-(alpha/2))
+  overall_pref_LB <- overall_pref_effect - zalpha*overall_pref_SE
+  overall_pref_UB <- overall_pref_effect + zalpha*overall_pref_SE
+  overall_sel_LB <- overall_sel_effect - zalpha*overall_sel_SE
+  overall_sel_UB <- overall_sel_effect + zalpha*overall_sel_SE
+  overall_treat_LB <- overall_treat_effect - zalpha*overall_treat_SE
+  overall_treat_UB <- overall_treat_effect + zalpha*overall_treat_SE
+
+  overall_stats <- data.frame(overall_pref_effect=overall_pref_effect, 
+    overall_pref_SE=overall_pref_SE, overall_pref_test=overall_pref_test,
+    overall_pref_pval=overall_pref_pval, overall_pref_LB=overall_pref_LB, 
+    overall_pref_UB=overall_pref_UB, overall_sel_effect=overall_sel_effect, 
+    overall_sel_SE=overall_sel_SE, overall_sel_test=overall_sel_test,
+    overall_sel_pval=overall_sel_pval, overall_sel_LB=overall_sel_LB, 
+    overall_sel_UB=overall_sel_UB, overall_treat_effect=overall_treat_effect, 
+    overall_treat_SE=overall_treat_SE, overall_treat_test=overall_treat_test,
+    overall_treat_pval=overall_treat_pval, overall_treat_LB=overall_treat_LB, 
+    overall_treat_UB=overall_treat_UB)
+
+  list(unstratified_statistics=unstrat_stats, overall_statistics=overall_stats)
   
-  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
 ######################
