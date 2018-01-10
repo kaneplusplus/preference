@@ -10,7 +10,7 @@ test_that("The preference.trial object has been created correctly.", {
   expect_is(trials, "preference.trial")
   expect_is(trials, "data.frame")
   expect_equal(nrow(trials), 4)
-  expect_equal(ncol(trials), 11)
+  expect_equal(ncol(trials), 14)
 })
 
 test_that("The sample_size() function works", {
@@ -20,8 +20,13 @@ test_that("The sample_size() function works", {
 })
 
 test_that("The power() function works.", {
-  df <- data.frame(treatment = rep(0.5, 4), selection = rep(0.5, 4), 
-                   preference = rep(0.5, 4))
+  df <- data.frame(
+    pref_power=c(0.058038176448985, 0.635088621141532, 0.986677026981223, 
+                 0.99997319829281),
+    selection_power=c(0.983594286314466, 0.977746447078046, 0.964008448148433, 
+                      0.93849799965735),
+    treatment_power=c(0.9999843475669, 0.9999843475669, 0.9999843475669, 
+                      0.9999843475669))
   expect_equal(power(trials), df)
 })
 
