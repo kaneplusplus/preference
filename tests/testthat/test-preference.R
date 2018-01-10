@@ -6,29 +6,6 @@ context('preference function calls')
 
 # Private functions
 
-test_that("selection_sample_size function works", {
-  resp <- selection_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1,1), 
-    delta_pi=1, delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
-  expect_equal(resp, 566)
-  expect_is(resp, 'numeric')
-})
-
-
-test_that("preference_sample_size function works", {
-  resp <- preference_sample_size(power=0.8, phi=c(0.5, 0.5), sigma2=c(1, 1), 
-    delta_pi=1, delta_nu=0.5,xi=c(0.3,0.7),nstrata=2)
-  expect_equal(resp, 130)
-  expect_is(resp, 'numeric')
-})
-
-
-test_that("treatment_sample_size function works", {
-  resp <- treatment_sample_size(power=0.8, sigma2=c(1, 1), delta_tau=1.5, 
-    xi=c(0.3,0.7),nstrata=2)
-  expect_equal(resp, 28)
-  expect_is(resp, 'numeric')
-})
-
 test_that("overall_sample_size function works", {
   resp <- overall_sample_size(power=0.8, phi=c(0.5,0.4), sigma2=c(1, 1), 
     delta_pi=1, delta_nu=0.5, delta_tau=1.5, xi=c(0.3,0.7),nstrata=2)
@@ -212,27 +189,6 @@ test_that("pt_from_ss fail", {
 #######################
 ### Power Functions ###
 #######################
-
-test_that("selection_power function works", {
-  resp <- selection_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
-    delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
-  expect_equal(round(resp,6), 0.508326)
-  expect_is(resp, 'numeric')
-})
-
-test_that("preference_power function works", {
-  resp <- preference_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 
-    delta_nu=0.5, xi=c(0.5,0.5), nstrata=2)
-  expect_equal(round(resp,6), 0.984880)
-  expect_is(resp, 'numeric')
-})
-
-test_that("treatment_power function works", {
-  resp <- treatment_power(N=300, sigma2=c(1,1), delta_tau=0.5, xi=c(0.5,0.5), 
-    nstrata=2)
-  expect_equal(round(resp,6), 0.864747)
-  expect_is(resp, 'numeric')
-})
 
 test_that("overall_power function works", {
   resp <- overall_power(N=300, phi=c(0.6,0.5), sigma2=c(1,1), delta_pi=1, 

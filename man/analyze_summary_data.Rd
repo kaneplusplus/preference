@@ -62,6 +62,8 @@ sum of vector should be 1. All vector elements should be numeric
 values between 0 and 1. Default is 1 (i.e. unstratified design).}
 
 \item{nstrata}{number of strata. Default is 1 (i.e. unstratified design).}
+
+\item{alpha}{desired type I error rate.}
 }
 \description{
 Computes the test statistic and p-value for the preference, selection, and 

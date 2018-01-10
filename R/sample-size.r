@@ -24,6 +24,8 @@
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
+#' @param k TODO WHAT IS THIS?
+#' @importFrom stats qnorm
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -99,8 +101,8 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
-                      alpha=0.05, theta=0.5, xi=1, nstrata=1) {
+overall_power <- function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
+                         alpha=0.05, theta=0.5, xi=1, nstrata=1) {
 
   zalpha <- qnorm(1-(alpha/2))
 
@@ -133,7 +135,7 @@ overall_power<-function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
         2 * (theta / (1-theta) ) * sigma2[x] * (phi[x]^2 + (1-phi[x])^2) )
     }, 0.0)
 
-  sel_sum_total <- sum(strata_terms)
+  sel_sum_total <- sum(sel_strata_terms)
 
   sel_pwr <- pnorm( sqrt( (4*theta*delta_nu^2*N)/(sel_sum_total) ) - zalpha)
 
@@ -395,6 +397,7 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
+#' @param alpha desired type I error rate.
 #' @examples
 #' x1mean <- 5
 #' x1var <- 1
@@ -452,84 +455,40 @@ analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
     stop('Number of strata must be numeric greater than 0')
   }
 
-    # Compute unstratified test statistics
+  # Compute unstratified test statistics
   unstrat_stats <- vapply(seq_len(nstrata),
     function(i) {
       unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i],
                                    x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
-                                   y2mean[i], y2var[i], n2[i], alpha)
-    }, 
-    data.frame(pref_effect=NA, pref_SE=NA, pref_test=NA, pref_pval=NA, 
-               pref_LB=NA, pref_UB=NA, sel_effect=NA, sel_SE=NA, 
-               sel_test = NA , sel_pval = NA, sel_LB=NA, sel_UB=NA,
-               treat_effect=NA, treat_SE=NA, treat_test = NA, 
-               treat_pval = NA, treat_LB=NA, treat_UB=NA))
-
-  #Calculate the overall effect estimate
-  overall_pref_effect <- sum(
+                                   y2mean[i], y2var[i], n2[i])
+    }, data.frame(pref_test = NA, pref_pval = NA, sel_test = NA ,
+                  sel_pval = NA, treat_test = NA, treat_pval = NA))
+  # Compute stratified test statistics and p-values
+  pref_test <- sum(
     vapply(seq_len(nstrata),
            function(i) xi[i] * unlist(unstrat_stats[1, i]), 0.0))
 
-  overall_sel_effect <- sum(
+  sel_test <- sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i] * unlist(unstrat_stats[7, i]), 0.0))
+           function(i) xi[i] * unlist(unstrat_stats[3, i]), 0.0))
 
-  overall_treat_effect <- sum(
+  treat_test <- sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i] * unlist(unstrat_stats[13, i]), 0.0))
-
-  #Calculate the overall SE
-  overall_pref_SE <- sqrt(sum(
-    vapply(seq_len(nstrata),
-           function(i) xi[i]^2 * unlist(unstrat_stats[2, i])^2, 0.0)))
-
-  overall_sel_SE <- sqrt(sum(
-    vapply(seq_len(nstrata),
-           function(i) xi[i]^2 * unlist(unstrat_stats[8, i])^2, 0.0)))
-
-  overall_treat_SE <- sqrt(sum(
-    vapply(seq_len(nstrata),
-           function(i) xi[i]^2 * unlist(unstrat_stats[14, i])^2, 0.0)))
-  #Calculate overall test statistic
-  overall_pref_test <- overall_pref_effect/overall_pref_SE
-
-  overall_sel_test <- overall_sel_effect/overall_sel_SE
-
-  overall_treat_test <- overall_treat_effect/overall_treat_SE
+           function(i) xi[i] * unlist(unstrat_stats[5, i]), 0.0))
 
   # Compute p-values (Assume test stats approximately normally distributed)
 
   # preference effect
-  overall_pref_pval <- 2 * pnorm(abs(overall_pref_test), lower.tail = FALSE)
+  pref_pval <- 2 * pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)
 
   # selection effect
-  overall_sel_pval <- 2 * pnorm(abs(overall_sel_test), lower.tail = FALSE)
+  sel_pval <- 2 * pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE)
 
   # treatment effect
-  overall_treat_pval <- 2 * pnorm(abs(overall_treat_test), lower.tail = FALSE)
+  treat_pval <- 2 * pnorm(abs(treat_test/sum(xi^2)), lower.tail = FALSE)
 
-  #Compute the upper and lower bounds of the confidence interval.
+  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 
-  zalpha <- qnorm(1-(alpha/2))
-  overall_pref_LB <- overall_pref_effect - zalpha*overall_pref_SE
-  overall_pref_UB <- overall_pref_effect + zalpha*overall_pref_SE
-  overall_sel_LB <- overall_sel_effect - zalpha*overall_sel_SE
-  overall_sel_UB <- overall_sel_effect + zalpha*overall_sel_SE
-  overall_treat_LB <- overall_treat_effect - zalpha*overall_treat_SE
-  overall_treat_UB <- overall_treat_effect + zalpha*overall_treat_SE
-
-  overall_stats <- data.frame(overall_pref_effect=overall_pref_effect, 
-    overall_pref_SE=overall_pref_SE, overall_pref_test=overall_pref_test,
-    overall_pref_pval=overall_pref_pval, overall_pref_LB=overall_pref_LB, 
-    overall_pref_UB=overall_pref_UB, overall_sel_effect=overall_sel_effect, 
-    overall_sel_SE=overall_sel_SE, overall_sel_test=overall_sel_test,
-    overall_sel_pval=overall_sel_pval, overall_sel_LB=overall_sel_LB, 
-    overall_sel_UB=overall_sel_UB, overall_treat_effect=overall_treat_effect, 
-    overall_treat_SE=overall_treat_SE, overall_treat_test=overall_treat_test,
-    overall_treat_pval=overall_treat_pval, overall_treat_LB=overall_treat_LB, 
-    overall_treat_UB=overall_treat_UB)
-
-  list(unstratified_statistics=unstrat_stats, overall_statistics=overall_stats)
   
 }
 
@@ -833,7 +792,8 @@ unstrat_analyze_raw_data <- function(x1,x2,y1,y2) {
 
 ### Analysis Function (Summary Data)
 unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, 
-                                         y1mean, y1var,n1, y2mean, y2var, n2) {
+                                         y1mean, y1var,n1, y2mean, y2var, n2,
+                                         alpha) {
   # Error messages
   if(!is.numeric(x1mean) | !is.numeric(x1var) | 
      !is.numeric(x2mean) | !is.numeric(x2var) |
