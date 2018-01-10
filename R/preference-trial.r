@@ -66,6 +66,27 @@ check_alpha <- function(alpha) {
   }
 }
 
+power_preference_trial_internal <- function(x) {
+  ret <- data.frame(treatment_power=numeric(), selection_power=numeric(),
+    pref_power=numeric())
+  for (i in seq_len(nrow(x))) {
+    pows <- overall_power(
+      sum(as.vector(x[,c("pref_ss", "selection_ss", "treatment_ss")])),
+      unlist(x$pref_prop[[i]]),
+      x$sigma2[[i]],
+      x$pref_effect[[i]],
+      x$selection_effect[[i]],
+      x$treatment_effect[[i]],
+      x$alpha,
+      x$choice_prop[[i]],
+      x$stratum_prop[[i]],
+      length(x$stratum_prop[[i]]))
+    ret <- rbind(ret, pows)
+  }
+  class(ret) <- setdiff(class(ret), "preference.trial")
+  ret
+}
+
 # Internal function for creating a single preference trial object.
 preference.trial.single <- function(pref_ss, pref_effect, selection_ss, 
   selection_effect, treatment_ss, treatment_effect, sigma2, 
@@ -89,6 +110,10 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
   ret$choice_prop <- choice_prop
   ret$stratum_prop <- stratum_prop
   ret$sigma2 <- sigma2
+  pows <- power_preference_trial_internal(ret)
+  ret$treatment_power <- pows$treatment
+  ret$selection_power <- pows$selection
+  ret$pref_power <- pows$preference
   class(ret) <- c("preference.trial", class(ret))
   ret
 }
@@ -135,13 +160,13 @@ cind <- function(i, vec_len) {
 #' 
 #' # Multiple trials unstratified.
 #' preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5), 
-#'   selection_ss=100, selection_effect=1, treatment_ss=100, treatment_effect=1,
-#'   sigma2=1, pref_prop=0.6)
+#'   selection_ss=100, selection_effect=1, treatment_ss=100, 
+#'   treatment_effect=1, sigma2=1, pref_prop=0.6)
 #' 
 #' # Multiple, stratified trials.
 #' preference.trial(pref_ss=100, pref_effect=seq(0.1, 2, by=0.5), 
-#'   selection_ss=100, selection_effect=1, treatment_ss=100, treatment_effect=1,
-#'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)), 
+#'   selection_ss=100, selection_effect=1, treatment_ss=100, 
+#'   treatment_effect=1, sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)), 
 #'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
 #' 
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
@@ -157,19 +182,22 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
   pref_prop, choice_prop=0.5, stratum_prop=1, alpha=0.05) {
 
   # Evaluate the arguments once from the match.call return.
-  args <- lapply(as.list(match.call())[-1], eval)
+  args <- as.list(match.call())[-1]
+
+  args$pref_ss <- pref_ss
+  args$pref_effect <- pref_effect
+  args$selection_ss <- selection_ss
+  args$selection_effect  <- selection_effect 
+  args$treatment_ss <- treatment_ss
+  args$treatment_effect <- treatment_effect
+  args$sigma2 <- sigma2
+  args$pref_prop <- pref_prop
 
   # Default arguments are not included in match.call. Fill them in
   # manually.
-  if ( !("alpha" %in% names(args)) ) {
-    args$alpha <- alpha
-  } 
-  if ( !("stratum_prop" %in% names(args)) ) {
-    args$stratum_prop <- stratum_prop
-  }
-  if ( !("choice_prop" %in% names(args)) ) {
-    args$choice_prop <- choice_prop
-  }
+  args$alpha <- alpha
+  args$stratum_prop <- stratum_prop
+  args$choice_prop <- choice_prop
 
   # Get the lengths of the arguments.
   arg_lens <- vapply(args, length, 0L)
@@ -263,13 +291,19 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 
   # Use preference.trial to create the data frame. Use power as a
   # place holder. Fill it in after the object is created.
-  args <- lapply(as.list(match.call())[-1], eval)
+  args <- as.list(match.call())[-1]
+  args$power <- power
+  args$pref_effect <- pref_effect
+  args$selection_effect <- selection_effect
+  args$treatment_effect <- treatment_effect
+  args$sigma2 <- sigma2
+  args$pref_prop <- pref_prop
+  args$choice_prop <- choice_prop
+  args$stratum_prop <- stratum_prop
+  args$alpha <- alpha
+
   args$pref_ss <- args$selection_ss <- args$treatment_ss <- rep(1,length(power))
   
-  if (missing(choice_prop)) args$choice_prop <- choice_prop
-  if (missing(stratum_prop)) args$stratum_prop <- stratum_prop
-  if (missing(alpha)) args$alpha <- alpha  
-
   # Make the strata vectors lists.
   if (!is.list(args$sigma2)) {
     args$sigma2 <- list(args$sigma2)
@@ -307,7 +341,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 #' @description Create a set of preference trials where the maximum 
 #' sample size for an arm is specified.
 #'
-#' @param sample_size the maxiumum size of any of the three arms.
+#' @param ss the maxiumum size of any of the three arms.
 #' @param pref_effect the effect size of the preference arm (delta_pi). 
 #' @param selection_effect the effect size of selection arm (delta_nu).
 #' @param treatment_effect the sample size of the treatment arm (delta_tau)
@@ -328,84 +362,50 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 #' @examples
 #' 
 #' # Unstratified trials with power constraints.
-#' pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1, 
+#' pt_from_ss(ss=seq(100, 1000, by=100), pref_effect=1, 
 #'   selection_effect=1, treatment_effect=1, sigma2=1, pref_prop=0.6)
 #'
 #' # Stratified trials with power constraints. Note that the proportion
 #' # of patients in the choice arm (choice prop) is fixed for all strata.
-#' pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1, 
+#' pt_from_ss(ss=seq(100, 1000, by=100), pref_effect=1, 
 #'   selection_effect=1, treatment_effect=1,
 #'   sigma2=list(c(1, 0.8)), pref_prop=list(c(0.6, 0.3)),
 #'   choice_prop=0.5, stratum_prop=list(c(0.3, 0.7)))
 #' 
 #' # or...
 #' 
-#' pt_from_ss(sample_size=seq(100, 1000, by=100), pref_effect=1, 
+#' pt_from_ss(ss=seq(100, 1000, by=100), pref_effect=1, 
 #'   selection_effect=1, treatment_effect=1,
 #'   sigma2=c(1, 0.8), pref_prop=c(0.6, 0.3),
 #'   choice_prop=0.5, stratum_prop=c(0.3, 0.7))
 #' 
 #' @export
-pt_from_ss <- function(sample_size, pref_effect, selection_effect, 
+pt_from_ss <- function(ss, pref_effect, selection_effect, 
   treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop=1,
   alpha=0.05) {
 
-  # Check the power parameter. Other parameters will be checked later.
-  if(!is.numeric(sample_size) || sample_size < 1) {
-    stop('Sample size must be one or greater.')
+  if (!is.list(sigma2)) {
+    sigma2 <- list(sigma2)
+  } 
+  if (!is.list(pref_prop)) {
+    pref_prop <- list(pref_prop)
+  }
+  if (!is.list(stratum_prop)) {
+    stratum_prop <- list(stratum_prop)
   }
 
-  # Use preference.trial to create the data frame. Use power as a
-  # place holder. Fill it in after the object is created.
-  args <- lapply(as.list(match.call())[-1], eval)
-  args$pref_ss <- args$selection_ss <- args$treatment_ss <- rep(1,length(power))
-  
-  if (missing(choice_prop)) args$choice_prop <- choice_prop
-  if (missing(stratum_prop)) args$stratum_prop <- stratum_prop
-  if (missing(alpha)) args$alpha <- alpha  
-
-  # Make the strata vectors lists.
-  if (!is.list(args$sigma2)) {
-    args$sigma2 <- list(args$sigma2)
-  }
-  if (!is.list(args$pref_prop)) {
-    args$pref_prop <- list(args$pref_prop)
-  }
-  if (!is.list(args$stratum_prop)) {
-    args$stratum_prop <- list(args$stratum_prop)
-  }
-
-  args <- args[names(args) != "sample_size"]
-  ret <- do.call(preference.trial, args)
-  for (i in seq_len(nrow(ret))) {
-    # First get the power for each of the three arms.
-    pwr <- overall_power(sample_size[cind(i, length(sample_size))], 
-      ret$pref_prop[[cind(i, length(ret$pref_prop))]],
-      ret$sigma2[[cind(i, length(ret$sigma2))]], 
-      ret$pref_effect[cind(i,length(ret$pref_effect))],
-      ret$selection_effect[cind(i, length(ret$selection_effect))], 
-      ret$treatment_effect[cind(i, length(ret$treatment_effect))],
-      ret$alpha[cind(i, length(ret$alpha))],
-      ret$choice_prop[cind(i, length(ret$choice_prop))],
-      ret$stratum_prop[[cind(i, length(ret$stratum_prop))]],
-      length(ret$stratum_prop[[i]]))
-    # Then get the sample sizes.
-    sss <- overall_sample_size(
-      min(pwr),
-      ret$pref_prop[[cind(i, length(ret$pref_prop))]],
-      ret$sigma2[[cind(i, length(ret$sigma2))]], 
-      ret$pref_effect[cind(i,length(ret$pref_effect))],
-      ret$selection_effect[cind(i, length(ret$selection_effect))], 
-      ret$treatment_effect[cind(i, length(ret$treatment_effect))],
-      ret$alpha[cind(i, length(ret$alpha))],
-      ret$choice_prop[cind(i, length(ret$choice_prop))],
-      ret$stratum_prop[[cind(i, length(ret$stratum_prop))]],
-      length(ret$stratum_prop[[i]]))
-    ret$treatment_ss[i] <- sss$treatment[1]
-    ret$pref_ss[i] <- sss$preference[1]
-    ret$selection_ss[i] <- sss$selection[1]
-  }
-  ret
+  preference.trial(
+    pref_ss=ss,
+    pref_effect=force(pref_effect), 
+    selection_ss=ss,
+    selection_effect=selection_effect, 
+    treatment_ss=ss, 
+    treatment_effect=treatment_effect,
+    sigma2=sigma2, 
+    pref_prop=pref_prop,
+    choice_prop=choice_prop,
+    stratum_prop=stratum_prop,
+    alpha=alpha)
 }
 
 # TODO:

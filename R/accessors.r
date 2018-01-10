@@ -64,20 +64,7 @@ power <- function(x) {
 #' @rdname pt-accessors
 #' @export
 power.preference.trial <- function(x) {
-  ret <- data.frame(treatment_power=numeric(), selection_power=numeric(),
-    preference_power=numeric())
-  for (i in seq_len(nrow(x))) {
-    pows <- overall_power(
-      sum(as.vector(x[,c("pref_ss", "selection_ss", "treatment_ss")])),
-      unlist(x$pref_prop[[i]]),
-      x$sigma2[[i]],
-      x$pref_effect[[i]],
-      x$selection_effect[[i]],
-      x$treatment_effect[[i]],
-      x$stratum_prop[[i]],
-      length(x$stratum_prop[[i]]))
-    ret <- rbind(ret, pows)
-  }
+  ret <- x[,c("pref_power", "selection_power", "treatment_power")]
   class(ret) <- setdiff(class(ret), "preference.trial")
   ret
 }
