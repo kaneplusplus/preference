@@ -127,10 +127,10 @@ data parameter and should have the following characteristics.
 #Unstratified
 
 outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-             8, 9, 10, 7, 8,11)
-random <- c(rep("preference", 13), rep("random", 12))
+             8, 9, 10, 7, 8, 11)
+arm <- c(rep("preference", 13), rep("random", 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
-d <- data.frame(outcome=outcome, treatment=treatment, random=random)
+d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 preference(outcome ~ treatment:arm, d)
 }
 \references{

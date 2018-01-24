@@ -220,26 +220,26 @@ test_that("analyze_raw_data function works", {
   expect_is(resp, 'data.frame')
 })
 
-test_that("analyze_summary_data function works", {
-  x1mean <- 5
-  x1var <- 1
-  m1 <- 15
-  x2mean <- 7
-  x2var <- 1.1
-  m2 <- 35
-  y1mean <- 6
-  y1var <- 1
-  n1 <- 25
-  y2mean <- 8
-  y2var <- 1.2
-  n2 <- 25
-  resp <- analyze_summary_data(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, 
-    y2var, n1, y2mean, y2var, n2)
-  expect_equal(round(resp$pref_test,6), -4.461299)
-  expect_equal(round(resp$sel_test,6), 1.544837)
-  expect_equal(round(resp$treat_test,6), -6.454972)
-  expect_is(resp, 'data.frame')
-})
+#test_that("analyze_summary_data function works", {
+#  x1mean <- 5
+#  x1var <- 1
+#  m1 <- 15
+#  x2mean <- 7
+#  x2var <- 1.1
+#  m2 <- 35
+#  y1mean <- 6
+#  y1var <- 1
+#  n1 <- 25
+#  y2mean <- 8
+#  y2var <- 1.2
+#  n2 <- 25
+#  resp <- analyze_summary_data(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, 
+#    y2var, n1, y2mean, y2var, n2)
+#  expect_equal(round(resp$pref_test,6), -4.461299)
+#  expect_equal(round(resp$sel_test,6), 1.544837)
+#  expect_equal(round(resp$treat_test,6), -6.454972)
+#  expect_is(resp, 'data.frame')
+#})
 
 #######################
 ### Other Functions ###
