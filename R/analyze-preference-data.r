@@ -391,6 +391,7 @@ preference_fit <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
 #'   \item{"arm"}{Character or categorical variable denoting the arm individuals belong to. Note that these values should be either "random" or "choice".}
 #'   \item{"strata"}{An optional integer value denoting which strata individuals belong to.}
 #' }
+#' @importFrom stats terms
 #' @examples
 #' 
 #' #Unstratified
