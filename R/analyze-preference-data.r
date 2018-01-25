@@ -6,7 +6,7 @@
 #' 
 #' Computes the test statistic and p-value for the preference, selection, and 
 #' treatment effects for the two-stage randomized trial using
-#' provided raw data
+#' provided raw data.
 #' 
 #' @param x1 vector of responses for patients choosing treatment 1
 #' @param x2 vector of responses for patients choosing treatment 2
@@ -148,7 +148,9 @@ analyze_raw_data <- function(x1, x2, y1, y2, s11=1, s22=1, s1=1, s2=1, xi=1,
 }
 
 #' Fit the preference data collected from a clinical trial
-#' 
+#'
+#' TODO fill this in.
+#'
 #' @param outcome (numeric) individual trial outcomes.
 #' @param random (logical) was this individual part of the random arm?
 #' @param treatment (character, factor, or integer) which treatment an 
@@ -156,11 +158,11 @@ analyze_raw_data <- function(x1, x2, y1, y2, s11=1, s22=1, s1=1, s2=1, xi=1,
 #' @param strata (optional integer) which strata the individual belongs to.
 #' @examples
 #' ##Unstratified
-#' #outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-#' #             8, 9, 10, 7, 8,11)
-#' #random <- c(rep(FALSE, 13), rep(TRUE, 12))
-#' #treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
-#' #fit_preference_data(outcome, random, treatment)
+#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
+#'              8, 9, 10, 7, 8,11)
+#' random <- c(rep(FALSE, 13), rep(TRUE, 12))
+#' treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
+#' fit_preference(outcome, random, treatment)
 #' 
 #' ##Stratified
 #' #x1 <- c(10,8,6,10,5)
@@ -173,7 +175,8 @@ analyze_raw_data <- function(x1, x2, y1, y2, s11=1, s22=1, s1=1, s2=1, xi=1,
 #' #s2 <- c(1,1,1,2,2,2)
 #' #analyze_raw_data(x1, x2, y1, y2, s11=s11, s22=s22, s1=s1, s2=s2,
 #' #                 xi=c(0.5,0.5), nstrata=2)
-fit_preference_data <- function(outcome, random, treatment, strata) {
+#' @export
+fit_preference <- function(outcome, random, treatment, strata) {
   if (missing(strata)) {
     strata <- rep(1, length(outcome))
   }
@@ -228,54 +231,143 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
   data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
 }
 
-#' Fit a prefrence model from summary data 
+### T-test from summary data (null hypothesis of no difference, no assumption 
+# of equal variances)
+# m1,m1: sample means
+# s1,s2: sample variances
+# n1, n2: sample sizes
+
+#' @importFrom stats pt
+t.test2 <- function(m1,m2,s1,s2,n1,n2)
+{
+  se <- sqrt( (s1/n1) + (s2/n2) )
+  
+  # Welch-satterthwaite df
+  df <- ( (s1/n1 + s2/n2)^2 )/( (s1/n1)^2/(n1-1) + (s2/n2)^2/(n2-1) )
+  
+  t <- (m1 - m2)/se 
+  
+  dat <- data.frame(m1-m2, se, t, 2*pt(-abs(t),df))    
+  
+  names(dat) <- c("Mean.Diff", "Std.Err", "t", "p.value")
+  
+  dat
+}
+
+
+
+### Analysis Function (Summary Data)
+#' @importFrom stats qnorm
+unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, 
+                                         y1mean, y1var, n1, y2mean, y2var, n2, 
+                                         alpha) {
+  # Define sample sizes
+  m <- m1 + m2
+  n <- n1 + n2
+  N <- m + n
+  
+  # Calculate z values as defined by Rucker
+  z1 <- m1*x1mean - m1*y1mean
+  z2 <- m2*x2mean - m2*y2mean
+  
+  # Calculate variance components (formulas from Rucker paper)
+  var1 <- m1 * x1var + 
+    (1 + ((m - 1)/m)*m1)*m1*(y1var/n1) + (m1*m2/m)*(x1mean - y1mean)^2
+
+  var2 <- m2 * x2var + 
+    (1 + ((m - 1)/m)*m2)*m2*(y2var/n2) + (m1*m2/m)*(x2mean - y2mean)^2
+  
+  cov <- -(m1*m2/m)*(x1mean - y1mean)*(x2mean - y2mean)
+  
+  #Call the test2 function
+  treat_out <- t.test2(y1mean, y2mean, y1var, y2var, n1, n2)
+  
+  # Compute effect estimates 
+  pref_effect <- 0.5*(m/(m1*m2))*(z1+z2)
+  sel_effect <- 0.5*(m/(m1*m2))*(z1-z2)
+  treat_effect <- treat_out$Mean.Diff
+  
+  #Compute SE estimates 
+  pref_SE <- sqrt(var1 + var2 + 2*cov)*0.5*(m/(m1*m2))
+  sel_SE <- sqrt(var1 + var2 - 2*cov)*0.5*(m/(m1*m2))
+  treat_SE <- treat_out$Std.Err
+  
+  # Compute test statistics 
+  pref_test <- pref_effect/pref_SE 
+  sel_test <- sel_effect/sel_SE 
+  treat_test <- treat_out$t
+  
+  # Compute p-values (Assume test stats approximately normally distributed)
+  pref_pval <- pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
+  sel_pval <- pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
+  treat_pval <- treat_out$p.value
+  
+  #Compute approximate (1-alpha)% confidence intervals
+  zalpha <- qnorm(1 - (alpha/2))
+  pref_LB <- pref_effect - zalpha*pref_SE
+  pref_UB <- pref_effect + zalpha*pref_SE
+  sel_LB <- sel_effect - zalpha*sel_SE
+  sel_UB <- sel_effect + zalpha*sel_SE
+  treat_LB <- treat_effect - zalpha*treat_SE
+  treat_UB <- treat_effect + zalpha*treat_SE
+  
+
+  data.frame(pref_effect, pref_SE, pref_test, pref_pval,pref_LB, pref_UB,
+             sel_effect, sel_SE, sel_test, sel_pval, sel_LB, sel_UB,
+             treat_effect, treat_SE,  treat_test, treat_pval, treat_LB, 
+             treat_UB)
+}
+
+
+#' Fit Preference Model from Summary Data
 #' 
-#' Computes the test statistic and p-value for the preference, selection, and 
-#' treatment effects for the two-stage randomized trial using provided summary 
-#' data
+#' Computes the test statistic and p-value for the preference, 
+#' selection, and treatment effects for the two-stage randomized trial using 
+#' provided summary data.
 #' 
 #' @param x1mean mean of responses for patients choosing treatment 1. If study
-#'               is stratified, should be vector with length equal to the
-#'               number of strata.
+#'   is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param x1var variance of responses for patients choosing treatment 1. If 
-#'              study is stratified, should be vector with length equal to the
-#'              number of strata.
+#'   study is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param m1 number of patients choosing treatment 1. If study
-#'               is stratified, should be vector with length equal to the
-#'               number of strata.
+#'   is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param x2mean mean of responses for patients choosing treatment 2. If study
-#'               is stratified, should be vector with length equal to the
-#'               number of strata.
+#'   is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param x2var variance of responses for patients choosing treatment 2. If 
-#'              study is stratified, should be vector with length equal to the
-#'              number of strata.
+#'   study is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param m2 number of patients choosing treatment 2. If study
-#'               is stratified, should be vector with length equal to the
-#'               number of strata.
+#'   is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param y1mean mean of responses for patients randomized to treatment 1. If 
-#'               study is stratified, should be vector with length equal to the
-#'               number of strata.
+#'   study is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param y1var variance of responses for patients randomized to treatment 1. 
-#'              If study is stratified, should be vector with length equal to 
-#'              the number of strata.
+#'   If study is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param n1 number of patients randomized to treatment 1. If study is 
-#'           stratified, should be vector with length equal to the number of 
-#'           strata.
+#'   stratified, should be vector with length equal to the number of 
+#'   strata.
 #' @param y2mean mean of responses for patients randomized to treatment 2. If 
-#'               study is stratified, should be vector with length equal to the
-#'               number of strata.
+#'   study is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param y2var variance of responses for patients randomized to treatment 2. 
-#'              If study is stratified, should be vector with length equal to 
-#'              the number of strata.
+#'   If study is stratified, should be vector with length equal to the
+#'   number of strata.
 #' @param n2 number of patients randomized to treatment 2. If study is 
-#'           stratified, should be vector with length equal to the number of 
-#'           strata.
+#'   stratified, should be vector with length equal to the number of 
+#'   strata.
 #' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
+#'   Length of vector should equal the number of strata in the study and 
+#'   sum of vector should be 1. All vector elements should be numeric 
+#'   values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @param alpha desired type I error rate.
+#' @param alpha Type I error rate, used to determine confidence interval level 
+#'   for the effect estimates. Default is 0.05 (i.e. 95\% confidence interval)
 #' @examples
 #' x1mean <- 5
 #' x1var <- 1
@@ -289,7 +381,7 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
 #' y2mean <- 8
 #' y2var <- 1.2
 #' n2 <- 25
-#' preference_fit(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y2var,
+#' fit_preference_summary(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y2var,
 #'                n1, y2mean, y2var, n2)
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment,
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
@@ -300,97 +392,124 @@ fit_preference_data <- function(outcome, random, treatment, strata) {
 #' \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 #' @export
-preference_fit <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
-                           y1var, n1, y2mean, y2var, n2, xi=1, 
-                           nstrata=1, alpha=0.05) {
-  # Error messages
-  if(!is.numeric(x1mean) | !is.numeric(x1var) | 
-     !is.numeric(x2mean) | !is.numeric(x2var) |
-     !is.numeric(y1mean) | !is.numeric(y1var) |
-     !is.numeric(y2mean) | !is.numeric(y2var) |
-     !is.numeric(m1) | !is.numeric(m2) | !is.numeric(n1) | !is.numeric(n2)) {
-    stop("Arguments must be numeric vectors")
-  }
-
-  if(length(x1mean)!=nstrata | length(x1var)!=nstrata | length(m1)!=nstrata) {
-    stop("Length of vector must match number of strata")
-  }
-
-  if(length(x2mean)!=nstrata | length(x2var)!=nstrata | length(m2)!=nstrata) {
-    stop("Length of vector must match number of strata")
-  }
-
-  if(length(y1mean)!=nstrata | length(y1var)!=nstrata | length(n1)!=nstrata) {
-    stop("Length of vector must match number of strata")
-  }
-
-  if(length(y2mean)!=nstrata | length(y2var)!=nstrata | length(n2)!=nstrata) {
-    stop("Length of vector must match number of strata")
-  }
-
-  if (length(xi)!=nstrata) {
-    stop('Length of vector does not match number of strata')
-  }
-
-  if (sum(xi)!=1) {
-    stop('Stratum proportions do not sum to 1')
-  }
-
-  if(nstrata <= 0 || !is.numeric(nstrata) || length(nstrata)!=1) {
-    stop('Number of strata must be numeric greater than 0')
-  }
-
+fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
+                                   y1var, n1, y2mean, y2var, n2, xi=1, 
+                                   nstrata=1, alpha=0.05) {
+  
   # Compute unstratified test statistics
-  unstrat_stats <- vapply(seq_len(nstrata),
+  unstrat_stats <- vapply(seq_len(nstrata), 
     function(i) {
-      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i],
+      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
                                    x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
-                                   y2mean[i], y2var[i], n2[i])
-    }, data.frame(pref_test = NA, pref_pval = NA, sel_test = NA ,
-                  sel_pval = NA, treat_test = NA, treat_pval = NA))
-
-  # Compute stratified test statistics and p-values
-  pref_test <- sum(
-    vapply(seq_len(nstrata),
+                                   y2mean[i], y2var[i], n2[i], alpha)
+    }, data.frame(pref_effect=NA, pref_SE=NA, pref_test = NA, pref_pval = NA, 
+                  pref_LB=NA, pref_UB=NA, sel_effect=NA, sel_SE=NA, 
+                  sel_test = NA , sel_pval = NA, sel_LB=NA, sel_UB=NA, 
+                  treat_effect=NA, treat_SE=NA, treat_test = NA, 
+                  treat_pval = NA, treat_LB=NA, treat_UB=NA))
+  
+  #Calculate the overall effect estimate
+  overall_pref_effect <- sum(
+    vapply(seq_len(nstrata), 
            function(i) xi[i] * unlist(unstrat_stats[1, i]), 0.0))
-
-  sel_test <- sum(
+  
+  overall_sel_effect <- sum(
+    vapply(seq_len(nstrata), 
+           function(i) xi[i] * unlist(unstrat_stats[7, i]), 0.0))
+  
+  overall_treat_effect <- sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i] * unlist(unstrat_stats[3, i]), 0.0))
-
-  treat_test <- sum(
+           function(i) xi[i] * unlist(unstrat_stats[13, i]), 0.0))
+  
+  #Calculate the overall SE
+  overall_pref_SE <- sqrt(sum(
+    vapply(seq_len(nstrata), 
+           function(i) xi[i]^2 * unlist(unstrat_stats[2, i])^2, 0.0)))
+  
+  overall_sel_SE <- sqrt(sum(
+    vapply(seq_len(nstrata), 
+           function(i) xi[i]^2 * unlist(unstrat_stats[8, i])^2, 0.0)))
+  
+  overall_treat_SE <- sqrt(sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i] * unlist(unstrat_stats[5, i]), 0.0))
-
+           function(i) xi[i]^2 * unlist(unstrat_stats[14, i])^2, 0.0)))
+  
+  #Calculate overall test statistic
+  overall_pref_test <- overall_pref_effect/overall_pref_SE
+  
+  overall_sel_test <- overall_sel_effect/overall_sel_SE
+  
+  overall_treat_test <- overall_treat_effect/overall_treat_SE
+  
   # Compute p-values (Assume test stats approximately normally distributed)
-
+  
   # preference effect
-  pref_pval <- 2 * pnorm(abs(pref_test/sum(xi^2)), lower.tail = FALSE)
-
+  overall_pref_pval <- 2 * pnorm(abs(overall_pref_test), lower.tail = FALSE)
+  
   # selection effect
-  sel_pval <- 2 * pnorm(abs(sel_test/sum(xi^2)), lower.tail = FALSE)
-
+  overall_sel_pval <- 2 * pnorm(abs(overall_sel_test), lower.tail = FALSE) 
+  
   # treatment effect
-  treat_pval <- 2 * pnorm(abs(treat_test/sum(xi^2)), lower.tail = FALSE)
+  overall_treat_pval <- 2 * pnorm(abs(overall_treat_test), lower.tail = FALSE)
+  
+  #Compute the upper and lower bounds of the confidence interval
 
-  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
+  zalpha <- qnorm(1-(alpha/2))
+  
+  overall_pref_LB <- overall_pref_effect - zalpha*overall_pref_SE
+  
+  overall_pref_UB <- overall_pref_effect + zalpha*overall_pref_SE
+  
+  overall_sel_LB <- overall_sel_effect - zalpha*overall_sel_SE
+  
+  overall_sel_UB <- overall_sel_effect + zalpha*overall_sel_SE
+  
+  overall_treat_LB <- overall_treat_effect - zalpha*overall_treat_SE
+  
+  overall_treat_UB <- overall_treat_effect + zalpha*overall_treat_SE
+
+  overall_stats<-data.frame(
+    overall_pref_effect = overall_pref_effect, 
+    overall_pref_SE = overall_pref_SE, 
+    overall_pref_test = overall_pref_test,
+    overall_pref_pval = overall_pref_pval, 
+    overall_pref_LB = overall_pref_LB, 
+    overall_pref_UB = overall_pref_UB,
+    overall_sel_effect = overall_sel_effect, 
+    overall_sel_SE = overall_sel_SE, 
+    overall_sel_test = overall_sel_test,
+    overall_sel_pval = overall_sel_pval,  
+    overall_sel_LB = overall_sel_LB, 
+    overall_sel_UB = overall_sel_UB,
+    overall_treat_effect = overall_treat_effect, 
+    overall_treat_SE = overall_treat_SE, 
+    overall_treat_test = overall_treat_test,
+    overall_treat_pval = overall_treat_pval, 
+    overall_treat_LB = overall_treat_LB, 
+    overall_treat_UB = overall_treat_UB)
+  
+  list(unstratified_statistics=unstrat_stats, overall_statistics=overall_stats) 
 }
+
 
 #' @title Fit preference data collected from a clinical trial
 #'
-#' @description TODO: write this.
-#'
-#' @param form a formula of the form outcome ~ treatment:arm {| strata}. See
-#' Details for more explanation.
-#' @param data a data.frame containing variables specified in the formula
-#' @details The variables in the formula should reference columns in the
+#' @description The variables in the formula should reference columns in the
 #' data parameter and should have the following characteristics.
 #' \itemize{
-#'   \item{"outcome"}{Numeric values giving the outcome of interest.}
-#'   \item{"treatment"}{Character, categorical, or integer values denoting the treatment received by an individual.}
-#'   \item{"arm"}{Character or categorical variable denoting the arm individuals belong to. Note that these values should be either "random" or "choice".}
-#'   \item{"strata"}{An optional integer value denoting which strata individuals belong to.}
+#'   \item{outcome: }{Numeric values giving the outcome of interest.}
+#'   \item{treatment: }{Character, categorical, or integer values denoting the 
+#'                      treatment received by an individual.}
+#'   \item{arm: }{Character or categorical variable denoting the arm 
+#'                individuals belong to. Note that these values should be 
+#'                either "random" or "choice".}
+#'   \item{strata: }{An optional integer value denoting which strata 
+#'         individuals belong to.}
 #' }
+#'
+#' @param form a formula of the form outcome ~ treatment:arm \{| strata\}. See
+#' Details for more explanation.
+#' @param data a data.frame containing variables specified in the formula
 #' @importFrom stats terms
 #' @examples
 #' 
@@ -421,12 +540,12 @@ preference <- function(form, data) {
                 "arm {|strata}."))
   }
   if (is.null(arm_var)) {
-    fit_preference_data(data[, outcome_var], 
+    fit_preference(data[, outcome_var], 
                         data[, arm_var] == "random",
                         data[, treatment_var],
                         data[, arm_var])
   } else {
-    fit_preference_data(data[, outcome_var], 
+    fit_preference(data[, outcome_var], 
                         data[, arm_var] == "random",
                         data[, treatment_var])
   }

@@ -46,7 +46,7 @@ values between 0 and 1. Default is 1 (i.e. unstratified design).}
 \description{
 Computes the test statistic and p-value for the preference, selection, and 
 treatment effects for the two-stage randomized trial using
-provided raw data
+provided raw data.
 }
 \examples{
 

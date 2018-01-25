@@ -37,7 +37,9 @@ values between 0 and 1. Default is 1 (i.e. unstratified design).}
 
 \item{nstrata}{number of strata. Default is 1 (i.e. unstratified design).}
 
-\item{k}{TODO WHAT IS THIS?}
+\item{k}{the ratio of treatment A to treatment B in the random arm. 
+(default 1, i.e. equal distribution to the two treatments in the 
+random arm)}
 }
 \description{
 Calculates the sample size required to detect a given set of effects 

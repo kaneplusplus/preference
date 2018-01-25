@@ -10,13 +10,24 @@
 preference(form, data)
 }
 \arguments{
-\item{form}{a formula of the form outcome ~ treatment:arm {| strata}. See
+\item{form}{a formula of the form outcome ~ treatment:arm \{| strata\}. See
 Details for more explanation.}
 
 \item{data}{a data.frame containing variables specified in the formula}
 }
 \description{
-TODO: write this.
+The variables in the formula should reference columns in the
+data parameter and should have the following characteristics.
+\itemize{
+  \item{outcome: }{Numeric values giving the outcome of interest.}
+  \item{treatment: }{Character, categorical, or integer values denoting the 
+                     treatment received by an individual.}
+  \item{arm: }{Character or categorical variable denoting the arm 
+               individuals belong to. Note that these values should be 
+               either "random" or "choice".}
+  \item{strata: }{An optional integer value denoting which strata 
+        individuals belong to.}
+}
 
 The \pkg{preference} package is used for the design and analysis of
 two-stage randomized trials with a continuous outcome measure. In this study,
@@ -112,23 +123,13 @@ conclusions, are solely those of the authors and do not necessarily
 represent the views of the Patient-Centered Outcomes Research Institute 
 (PCORI), its Board of Governors or Methodology Committee.
 }
-\details{
-The variables in the formula should reference columns in the
-data parameter and should have the following characteristics.
-\itemize{
-  \item{"outcome"}{Numeric values giving the outcome of interest.}
-  \item{"treatment"}{Character, categorical, or integer values denoting the treatment received by an individual.}
-  \item{"arm"}{Character or categorical variable denoting the arm individuals belong to. Note that these values should be either "random" or "choice".}
-  \item{"strata"}{An optional integer value denoting which strata individuals belong to.}
-}
-}
 \examples{
 
 #Unstratified
 
 outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
              8, 9, 10, 7, 8, 11)
-arm <- c(rep("preference", 13), rep("random", 12))
+arm <- c(rep("choice", 13), rep("random", 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 preference(outcome ~ treatment:arm, d)

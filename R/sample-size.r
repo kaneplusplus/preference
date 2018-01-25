@@ -17,15 +17,16 @@
 #' @param delta_tau overall study treatment effect.
 #' @param alpha desired type I error rate.
 #' @param theta proportion of patients assigned to choice arm in the initial
-#'              randomization. Should be numeric value between
-#'              0 and 1 (default=0.5).
+#'        randomization. Should be numeric value between
+#'        0 and 1 (default=0.5).
 #' @param xi a numeric vector of the proportion of patients in each stratum. 
-#'          Length of vector should equal the number of strata in the study and 
-#'          sum of vector should be 1. All vector elements should be numeric 
-#'          values between 0 and 1. Default is 1 (i.e. unstratified design).
+#'        Length of vector should equal the number of strata in the study and 
+#'        sum of vector should be 1. All vector elements should be numeric 
+#'        values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
-#' @param k TODO WHAT IS THIS?
-#' @importFrom stats qnorm
+#' @param k the ratio of treatment A to treatment B in the random arm. 
+#'        (default 1, i.e. equal distribution to the two treatments in the 
+#'        random arm)
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -36,38 +37,38 @@
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
   delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1) {
-
+  
   zbeta <- qnorm(power)
   zalpha <- qnorm(1-(alpha/2))
-
-  # selection sample size
-  sel_terms <- vapply(seq_len(nstrata),
+  
+  # selection sample size  
+  sel_terms <- vapply(seq_len(nstrata), 
     function(x) {
-      (xi[x] / ( phi[x]^2*(1-phi[x])^2 )) *
-        (sigma2[x] + phi[x]*(1-phi[x])*( (2*phi[x]-1)*delta_nu + delta_pi )^2 +
-        2*( theta / (1-theta) )*sigma2[x]*(phi[x]^2 + (1-phi[x])^2))
+      (xi[x]/(phi[x]^2*(1-phi[x])^2)) *
+      (sigma2[x]+phi[x]*(1-phi[x])*((2*phi[x]-1)*delta_nu+delta_pi)^2 +
+      2*(theta/(1-theta))*sigma2[x]*(phi[x]^2+(1-phi[x])^2))
     }, 0.0)
   sel_sum_total <- sum(sel_terms)
   sel_N <- ceiling((zalpha+zbeta)^2/(4*theta*delta_nu^2)*sel_sum_total)
-
+  
   #preference sample size
-  pref_terms <- vapply(seq_len(nstrata),
+  pref_terms <- vapply(seq_len(nstrata), 
     function(x) {
       (xi[x] / (phi[x]^2 * (1-phi[x])^2)) *
-        (sigma2[x] + phi[x] * (1-phi[x])*( (2*phi[x]-1)*delta_pi+delta_nu )^2 +
-        2*( theta/(1-theta) ) * sigma2[x]*( phi[x]^2+(1-phi[x])^2 ))
+        (sigma2[x] + phi[x] * (1-phi[x]) * ((2*phi[x]-1)*delta_pi+delta_nu)^2 +
+        2*(theta/(1-theta)) * sigma2[x]*(phi[x]^2+(1-phi[x])^2))
     }, 0.0)
   pref_sum_total <- sum(pref_terms)
-  pref_N <- ceiling( (zalpha+zbeta)^2 / (4*theta*delta_pi^2) * pref_sum_total )
+  pref_N <- ceiling((zalpha+zbeta)^2 / (4*theta*delta_pi^2) * pref_sum_total)
 
   #Treatment sample size
-
+  
   treat_terms <- vapply(seq_len(nstrata), function(x) xi[x]*sigma2[x], 0.0)
   treat_sum_total <- sum(treat_terms)
-  treat_N <- ceiling( ( (k+1)^2 / (4*k) ) * 4 * 
-    ( zalpha+zbeta )^2 / ( (1-theta)*delta_tau^2 ) * treat_sum_total)
-
-  data.frame(treatment=treat_N, selection=sel_N, preference=pref_N)
+  treat_N <- ceiling(((k+1)^2 / (4*k)) * 4 * (zalpha+zbeta)^2 / 
+    ((1-theta)*delta_tau^2) * treat_sum_total)
+  
+  data.frame(treatment=treat_N, selection=sel_N, preference=pref_N) 
 }
 
 #' Power Calculation from Sample Size
@@ -99,50 +100,48 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." 
-#' \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 overall_power <- function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
-                         alpha=0.05, theta=0.5, xi=1, nstrata=1) {
-
-  zalpha <- qnorm(1-(alpha/2))
-
-  # Calculate study power for treatment efect
-  treat_strata_terms <- vapply(seq_len(nstrata),
-    function(i) xi[i] * sigma2[i], 0.0)
+                          alpha=0.05, theta=0.5, xi=1, nstrata=1) {
   
-  trt_pwr <- pnorm( 
-    sqrt( ((1-theta)*delta_tau^2*N) / (4*sum(treat_strata_terms)) ) - zalpha )
-
+  zalpha <- qnorm(1-(alpha/2))
+  # Calculate study power for treatment effect
+  
+  treat_strata_terms <- vapply(seq_len(nstrata),
+                         function(i) xi[i] * sigma2[i],
+                         0.0)
+  trt_pwr <- pnorm( sqrt( ((1-theta)*delta_tau^2*N) / 
+    (4*sum(treat_strata_terms)) ) - zalpha )
+  
   #Calculate study power for preference effect
-  pref_strata_terms <- vapply(seq_len(nstrata),
+  pref_strata_terms <- vapply(seq_len(nstrata), 
     function(x) {
-      ( xi[x] / (phi[x]^2*(1-phi[x])^2) ) *
+      ( xi[x] / (phi[x]^2*(1-phi[x])^2) ) * 
         ( sigma2[x] + phi[x]*(1-phi[x])*
         ( (2*phi[x]-1)*delta_pi+delta_nu )^2 +
-        2 * (theta / (1-theta)) *sigma2[x] * ( phi[x]^2+(1-phi[x])^2 ) )
-                         }, 0.0)
+        2* (theta / (1-theta)) *sigma2[x] * ( phi[x]^2+(1-phi[x])^2 ) )
+    }, 0.0)
 
   pref_sum_total <- sum(pref_strata_terms)
 
   pref_pwr <- pnorm( sqrt( (4*theta*delta_pi^2*N) / pref_sum_total ) - zalpha )
-
+  
   #Calcualte study power for preference effect
-  sel_strata_terms <- vapply(seq_len(nstrata),
+  sel_strata_terms <- vapply(seq_len(nstrata), 
     function(x) {
       ( xi[x] / (phi[x]^2 *(1 - phi[x])^2) ) *
-        ( sigma2[x] + phi[x] *(1 - phi[x]) *
+        ( sigma2[x] + phi[x] *(1 - phi[x]) * 
         ( (2 * phi[x] - 1) * delta_nu + delta_pi )^2 +
         2 * (theta / (1-theta) ) * sigma2[x] * (phi[x]^2 + (1-phi[x])^2) )
     }, 0.0)
-
   sel_sum_total <- sum(sel_strata_terms)
-
-  sel_pwr <- pnorm( sqrt( (4*theta*delta_nu^2*N)/(sel_sum_total) ) - zalpha)
-
+  sel_pwr <- pnorm(sqrt((4*theta*delta_nu^2*N)/(sel_sum_total))-zalpha)
+  
   data.frame(treatment = trt_pwr, selection = sel_pwr, preference = pref_pwr)
-    
 }
+
+
 
 ######################
 ### MISC FUNCTIONS ###
@@ -170,6 +169,7 @@ overall_power <- function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
 #' @examples
 #' treatment_effect_size(N=300, power=0.9, sigma2=c(1,0.8), xi=c(0.3,0.7), 
 #'                       nstrata=2)
+#' @importFrom stats qnorm
 #' @export
 treatment_effect_size <- function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
                                   nstrata=1) {
@@ -458,69 +458,5 @@ unstrat_analyze_raw_data <- function(x1,x2,y1,y2) {
   treat_pval <- t.test(y1,y2)$p.value
   
   data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
-}
-
-
-### Analysis Function (Summary Data)
-unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2, 
-                                         y1mean, y1var,n1, y2mean, y2var, n2,
-                                         alpha) {
-  # Error messages
-  if(!is.numeric(x1mean) | !is.numeric(x1var) | 
-     !is.numeric(x2mean) | !is.numeric(x2var) |
-     !is.numeric(y1mean) | !is.numeric(y1var) |
-     !is.numeric(y2mean) | !is.numeric(y2var) |
-     !is.numeric(m1) | !is.numeric(m2) | !is.numeric(n1) | !is.numeric(n2))
-    stop("Arguments must be numeric vectors")
-  
-  # Define sample sizes
-  m <- m1+m2
-  n <- n1+n2
-  N <- m+n
-  
-  # Calculate z statistic
-  z1 <- m1*x1mean-m1*y1mean
-  z2 <- m2*x2mean-m2*y2mean
-  
-  # Calculate variances (formulas from Rucker paper)
-  var1 <- m1*x1var+(1+((m-1)/m)*m1)*m1*(y1var/n1)+
-    (m1*m2/m)*(x1mean-y1mean)^2
-  var2 <- m2*x2var+(1+((m-1)/m)*m2)*m2*(y2var/n2)+
-    (m1*m2/m)*(x2mean-y2mean)^2
-  cov <- -(m1*m2/m)*(x1mean-y1mean)*(x2mean-y2mean)
-  
-  # Compute test statistics (from Rucker paper)
-  pref_test <- (z1+z2)/sqrt(var1+var2+2*cov) # Preference effect
-  sel_test <- (z1-z2)/sqrt(var1+var2-2*cov) # Selection effect
-  
-  # Compute p-values (Assume test stats approximately normally distributed)
-  pref_pval <- pnorm(abs(pref_test), lower.tail = FALSE)*2 # Preference effect
-  sel_pval <- pnorm(abs(sel_test), lower.tail = FALSE)*2 # Selection effect
-  
-  # Compute treatment effect t-test from random arm
-  treat_test <- t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$t
-  treat_pval <- t.test2(y1mean,y2mean,y1var,y2var,n1,n2)$p.value
-  
-  data.frame(pref_test, pref_pval, sel_test, sel_pval, treat_test, treat_pval)
-}
-
-
-### T-test from summary data (null hypothesis of no difference, no assumption 
-# of equal variances)
-# m1,m1: sample means
-# s1,s2: sample variances
-# n1, n2: sample sizes
-
-#' @importFrom stats pt
-t.test2 <- function(m1,m2,s1,s2,n1,n2)
-{
-  se <- sqrt( (s1/n1) + (s2/n2) )
-  # Welch-satterthwaite df
-  df <- ( (s1/n1 + s2/n2)^2 )/( (s1/n1)^2/(n1-1) + (s2/n2)^2/(n2-1) )
-  
-  t <- (m1-m2)/se 
-  dat <- data.frame(m1-m2, se, t, 2*pt(-abs(t),df))    
-  names(dat) <- c("Mean.Diff", "Std.Err", "t", "p.value")
-  dat
 }
 

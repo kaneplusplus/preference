@@ -1,7 +1,7 @@
 Package: preference
 Type: Package
 Title: 2-Stage Preference Trial Design and Analysis
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(person(given="Briana", family="Cameron", email="briana.cameron@yale.edu", role=c("aut", "cph")), person(given="Denise", family="Esserman", email="denise.esserman@yale.edu", role="ctb"), person(given="Michael",family="Kane",email="michael.kane@yale.edu",role=c("cre", "ctb")))
 URL: https://github.com/kaneplusplus/preference
 BugReports: https://github.com/kaneplusplus/preference/issues
