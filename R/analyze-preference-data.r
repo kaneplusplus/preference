@@ -398,7 +398,7 @@ preference_fit <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
 #' 
 #' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
 #'              8, 9, 10, 7, 8, 11)
-#' arm <- c(rep("preference", 13), rep("random", 12))
+#' arm <- c(rep("choice", 13), rep("random", 12))
 #' treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 #' d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 #' preference(outcome ~ treatment:arm, d)
