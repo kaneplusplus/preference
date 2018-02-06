@@ -364,7 +364,7 @@ fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
 }
 
 #' @export
-summary.preference.fit <- function(pf) {
+summary.preference.fit <- function(object, ...) {
   ret <- list(alpha=pf$alpha)
   pf <- pf$overall_statistics
   retm <- matrix(c(
