@@ -203,23 +203,6 @@ test_that("overall_power function works", {
 ### Analysis Functions ###
 ##########################
 
-test_that("analyze_raw_data function works", {
-  x1 <- c(10,8,6,10,5)
-  s11 <- c(1,1,2,2,2)
-  x2 <- c(8,7,6,10,12,11,6,8)
-  s22 <- c(1,1,1,1,2,2,2,2)
-  y1 <- c(10,5,7,9,12,6)
-  s1 <- c(1,1,1,2,2,2)
-  y2 <- c(8,9,10,7,8,11)
-  s2 <- c(1,1,1,2,2,2)
-  resp <- analyze_raw_data(x1, x2, y1, y2, s11=s11, s22=s22, s1=s1, s2=s2, 
-    xi=c(0.5,0.5), nstrata=2)
-  expect_equal(round(resp$pref_test,6), -0.292573)
-  expect_equal(round(resp$sel_test,6), 0.333207)
-  expect_equal(round(resp$treat_test,6), -0.453945)
-  expect_is(resp, 'data.frame')
-})
-
 #test_that("analyze_summary_data function works", {
 #  x1mean <- 5
 #  x1var <- 1
@@ -267,3 +250,19 @@ test_that("effects_from_means function works", {
   expect_is(resp, 'list')
 })
 
+test_that("preference stratified and unstratified aren't the same", {
+  outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
+  8, 9, 10, 7, 8, 11)
+  arm <- c(rep("choice", 13), rep("random", 12))
+  treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
+  d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
+  unstrat_pref <- preference(outcome ~ treatment:arm, d)
+
+  strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
+  d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, strata=strata)
+  strat_pref <- preference(outcome ~ treatment:arm|strata, d, alpha=0.1)
+
+  expect_false(
+    all(strat_pref$overall_statistics == unstrat_pref$overall_statistics))
+
+})

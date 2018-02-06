@@ -7,13 +7,15 @@
 \alias{preference-package}
 \title{Fit preference data collected from a clinical trial}
 \usage{
-preference(form, data)
+preference(form, data, alpha = 0.05)
 }
 \arguments{
 \item{form}{a formula of the form outcome ~ treatment:arm \{| strata\}. See
 Details for more explanation.}
 
 \item{data}{a data.frame containing variables specified in the formula}
+
+\item{alpha}{(optional numeric) Level of significance (default 0.05)}
 }
 \description{
 The variables in the formula should reference columns in the
@@ -133,6 +135,17 @@ arm <- c(rep("choice", 13), rep("random", 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 preference(outcome ~ treatment:arm, d)
+
+#' #Stratified
+outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
+             8, 9, 10, 7, 8,11)
+random <- c(rep(FALSE, 13), rep(TRUE, 12))
+treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
+strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
+d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, strata=strata)
+preference(outcome ~ treatment:arm|strata, d, alpha=0.1)
+
+
 }
 \references{
 Rucker G (1989). "A two-stage trial design for testing treatment,

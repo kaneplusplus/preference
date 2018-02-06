@@ -67,11 +67,13 @@ values between 0 and 1. Default is 1 (i.e. unstratified design).}
 for the effect estimates. Default is 0.05 (i.e. 95\% confidence interval)}
 }
 \description{
-Computes the test statistic and p-value for the preference, 
-selection, and treatment effects for the two-stage randomized trial using 
-provided summary data.
+Computes the test statistics and p-values for the preference, 
+selection, and treatment effects in a two-stage randomized trial using 
+summary data.
 }
 \examples{
+# Unstratified
+
 x1mean <- 5
 x1var <- 1
 m1 <- 15
@@ -84,8 +86,25 @@ n1 <- 25
 y2mean <- 8
 y2var <- 1.2
 n2 <- 25
-fit_preference_summary(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y2var,
+fit_preference_summary(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y1var,
                n1, y2mean, y2var, n2)
+
+# Stratified
+
+x1mean <- c(5, 3)
+x1var <- c(1, 1)
+m1 <- c(15, 30)
+x2mean <- c(7, 7)
+x2var <- c(1.1, 3.1)
+m2 <- c(35, 40)
+y1mean <- c(6, 4)
+y1var <- c(1, 2)
+n1 <- c(25, 35)
+y2mean <- c(8, 12)
+y2var <- c(1.2, 1)
+n2 <- c(25, 20)
+fit_preference_summary(x1mean, x2var, m1, x2mean, x2var, m2, y1mean, y1var,
+                       n1, y2mean, y2var, n2, alpha=0.1)
 }
 \references{
 Rucker G (1989). "A two-stage trial design for testing treatment,

@@ -2,9 +2,9 @@
 % Please edit documentation in R/analyze-preference-data.r
 \name{fit_preference}
 \alias{fit_preference}
-\title{Fit the preference data collected from a clinical trial}
+\title{Fit the Preference Data Collected from a Two-stage Clinical Trial}
 \usage{
-fit_preference(outcome, random, treatment, strata)
+fit_preference(outcome, random, treatment, strata, alpha = 0.05)
 }
 \arguments{
 \item{outcome}{(numeric) individual trial outcomes.}
@@ -15,27 +15,25 @@ fit_preference(outcome, random, treatment, strata)
 individual received}
 
 \item{strata}{(optional integer) which strata the individual belongs to.}
+
+\item{alpha}{(optional numeric) Level of significance (default=0.05)}
 }
 \description{
-TODO fill this in.
+Computes the test statistics and p-values for the preference, 
+selection, and treatment effects for the two-stage randomized trial using 
+collected outcome, random, treatment, and strata values for specified
+significance level.
 }
 \examples{
-##Unstratified
+# Unstratified
 outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
              8, 9, 10, 7, 8,11)
 random <- c(rep(FALSE, 13), rep(TRUE, 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 fit_preference(outcome, random, treatment)
 
-##Stratified
-#x1 <- c(10,8,6,10,5)
-#s11 <- c(1,1,2,2,2)
-#x2 <- c(8,7,6,10,12,11,6,8)
-#s22 <- c(1,1,1,1,2,2,2,2)
-#y1 <- c(10,5,7,9,12,6)
-#s1 <- c(1,1,1,2,2,2)
-#y2 <- c(8,9,10,7,8,11)
-#s2 <- c(1,1,1,2,2,2)
-#analyze_raw_data(x1, x2, y1, y2, s11=s11, s22=s22, s1=s1, s2=s2,
-#                 xi=c(0.5,0.5), nstrata=2)
+# Stratified
+# Same data plus strata information.
+strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
+fit_preference(outcome, random, treatment, strata, alpha=0.1)
 }

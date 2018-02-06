@@ -408,9 +408,3 @@ pt_from_ss <- function(ss, pref_effect, selection_effect,
     alpha=alpha)
 }
 
-# TODO:
-#
-# pt_optimize_choice_prop
-# website forwarding
-# pt_from_group_means (not high priority)
-
