@@ -388,38 +388,38 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
 }
 
 ######################################
-### Extra (non-exported) functions ###
+### Extra (non-exported) functions... CAN THESE BE REMOVED?
 ######################################
 
-### Find sigma^2 for unstratified case
-sigma2_mixtures <- function(sigma2,means,prop){
-  # Overall mixture
-  prop[1]*sigma2[1]+prop[2]*sigma2[2]+(prop[1]*means[1]^2+
-    prop[2]*means[2]^2-(prop[1]*means[1]+prop[2]*means[2])^2)
-}
+#### Find sigma^2 for unstratified case
+#sigma2_mixtures <- function(sigma2,means,prop){
+#  # Overall mixture
+#  prop[1]*sigma2[1]+prop[2]*sigma2[2]+(prop[1]*means[1]^2+
+#    prop[2]*means[2]^2-(prop[1]*means[1]+prop[2]*means[2])^2)
+#}
 
-### Find sigma^2 for each stratum based on means
-sigma2_stratum <- function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
-  mean_choice <- vapply(1:22, function(x) mu[x]+tau[x]+nu[x]+pi[x], 0.0)
-  mean_random <- vapply(1:2, function(x) mu[x]+tau[x], 0.0)
-  # Compute mean, variance for each stratum
-  means <- vapply(1:2, function(x) theta[x]*mean_choice[x] +
-                 (1-theta[x])*mean_random[x], 0.0)
-  vapply(1:2, 
-         function(x) {
-           theta[x] * sigma[x] + (1-theta[x]) * sigma[x] +
-             (theta[x] * mean_choice[x]^2 + (1-theta[x]) * mean_random[x]^2 -
-               (theta[x]*mean_choice[x] + (1-theta[x])*mean_random[x])^2)
-         }, 0.0)
-}
+#### Find sigma^2 for each stratum based on means
+#sigma2_stratum <- function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
+#  mean_choice <- vapply(1:22, function(x) mu[x]+tau[x]+nu[x]+pi[x], 0.0)
+#  mean_random <- vapply(1:2, function(x) mu[x]+tau[x], 0.0)
+#  # Compute mean, variance for each stratum
+#  means <- vapply(1:2, function(x) theta[x]*mean_choice[x] +
+#                 (1-theta[x])*mean_random[x], 0.0)
+#  vapply(1:2, 
+#         function(x) {
+#           theta[x] * sigma[x] + (1-theta[x]) * sigma[x] +
+#             (theta[x] * mean_choice[x]^2 + (1-theta[x]) * mean_random[x]^2 -
+#               (theta[x]*mean_choice[x] + (1-theta[x])*mean_random[x])^2)
+#         }, 0.0)
+#}
 
 ### Find means from effects
-means_stratum<-function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
-  mean_choice <- vapply(1:2, function(x) mu[x]+tau[x]+nu[x]+pi[x], 0.0)
-  mean_random <- vapply(1:2, function(x) mu[x]+tau[x], 0.0)
-  # Compute mean value for each stratum
-  vapply(1:2, 
-         function(x) theta[x] * mean_choice[x] + (1-theta[x]) * mean_random[x],
-         0.0)
-}
+#means_stratum<-function(sigma,mu,tau,nu,pi,prop,theta=c(0.5,0.5)){
+#  mean_choice <- vapply(1:2, function(x) mu[x]+tau[x]+nu[x]+pi[x], 0.0)
+#  mean_random <- vapply(1:2, function(x) mu[x]+tau[x], 0.0)
+#  # Compute mean value for each stratum
+#  vapply(1:2, 
+#         function(x) theta[x] * mean_choice[x] + (1-theta[x]) * mean_random[x],
+#         0.0)
+#}
 
