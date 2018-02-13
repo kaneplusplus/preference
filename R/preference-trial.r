@@ -90,7 +90,7 @@ power_preference_trial_internal <- function(x) {
 # Internal function for creating a single preference trial object.
 preference.trial.single <- function(pref_ss, pref_effect, selection_ss, 
   selection_effect, treatment_ss, treatment_effect, sigma2, 
-  pref_prop, choice_prop=0.05, stratum_prop=1, alpha=0.05) {
+  pref_prop, choice_prop=0.05, stratum_prop=1, alpha=0.05, k=1) {
 
   check_ss(pref_ss, selection_ss, treatment_ss)
   check_effect(pref_effect, selection_effect, treatment_effect)
@@ -105,7 +105,7 @@ preference.trial.single <- function(pref_ss, pref_effect, selection_ss,
   ret <- data.frame(pref_ss=pref_ss, pref_effect=pref_effect, 
     selection_ss=selection_ss, selection_effect=selection_effect, 
     treatment_ss=treatment_ss, treatment_effect=treatment_effect, 
-    alpha=alpha)
+    alpha=alpha, k=k)
   ret$pref_prop <- pref_prop
   ret$choice_prop <- choice_prop
   ret$stratum_prop <- stratum_prop
@@ -144,7 +144,9 @@ cind <- function(i, vec_len) {
 #' each stratum. Length of vector should equal the number of strata in the 
 #' study and sum of vector should be 1. All vector elements should be numeric
 #' values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).
-#' @param alpha the desired type I error rate.
+#' @param alpha the desired type I error rate (defaut 0.05).
+#' @param k the ratio of treatment A to treatment B in the random arm
+#' (default 1)..
 #' @examples
 #'
 #' # Unstratified single trial.
@@ -179,7 +181,7 @@ cind <- function(i, vec_len) {
 #' @export
 preference.trial <- function(pref_ss, pref_effect, selection_ss, 
   selection_effect, treatment_ss, treatment_effect, sigma2, 
-  pref_prop, choice_prop=0.5, stratum_prop=1, alpha=0.05) {
+  pref_prop, choice_prop=0.5, stratum_prop=1, alpha=0.05, k=1) {
 
   # Evaluate the arguments once from the match.call return.
   args <- as.list(match.call())[-1]
@@ -198,14 +200,14 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
   args$alpha <- alpha
   args$stratum_prop <- stratum_prop
   args$choice_prop <- choice_prop
+  args$k <- k
 
   # Get the lengths of the arguments.
   arg_lens <- vapply(args, length, 0L)
-
   if (all(arg_lens == 1)) {
     preference.trial.single(pref_ss, pref_effect, selection_ss,
       selection_effect, treatment_ss, treatment_effect, sigma2,
-      pref_prop, choice_prop, stratum_prop, alpha)
+      pref_prop, choice_prop, stratum_prop, alpha, k)
   } else {
     # Use circular to create multiple trials.
     max_arg_len <- max(arg_lens)
@@ -229,7 +231,7 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
                                 x$selection_ss[i], x$selection_effect[i], 
                                 x$treatment_ss[i], x$treatment_effect[i], 
                                 x$sigma2[i], x$pref_prop[i], x$choice_prop[i], 
-                                x$stratum_prop[i], x$alpha[i]))
+                                x$stratum_prop[i], x$alpha[i], x$k[i]))
     }
     ret
   }
@@ -258,7 +260,9 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
 #' each stratum. Length of vector should equal the number of strata in the 
 #' study and sum of vector should be 1. All vector elements should be numeric
 #' values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).
-#' @param alpha the desired type I error rate.
+#' @param alpha the desired type I error rate (default 0.05).
+#' @param k the ratio of treatment A to treatment B in the random arm
+#' (default 1)..
 #' @examples
 #' 
 #' # Unstratified trials with power constraints.
@@ -282,7 +286,7 @@ preference.trial <- function(pref_ss, pref_effect, selection_ss,
 #' @export
 pt_from_power <- function(power, pref_effect, selection_effect, 
   treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop=1,
-  alpha=0.05) {
+  alpha=0.05, k=1) {
 
   # Check the power parameter. Other parameters will be checked later.
   if(!is.numeric(power) || power <= 0 || power >= 1) {
@@ -301,7 +305,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   args$choice_prop <- choice_prop
   args$stratum_prop <- stratum_prop
   args$alpha <- alpha
-
+  args$k <- k
   args$pref_ss <- args$selection_ss <- args$treatment_ss <- rep(1,length(power))
   
   # Make the strata vectors lists.
@@ -328,7 +332,8 @@ pt_from_power <- function(power, pref_effect, selection_effect,
       ret$alpha[cind(i, length(ret$alpha))], 
       ret$choice_prop[cind(i, length(ret$choice_prop))],
       ret$stratum_prop[[cind(i, length(ret$stratum_prop))]],
-      length(ret$stratum_prop[[cind(i, length(ret$stratum))]]))
+      length(ret$stratum_prop[[cind(i, length(ret$stratum))]]),
+      ret$k[cind(i, length(ret$k))])
     ret$treatment_ss[i] <- sss$treatment[1]
     ret$pref_ss[i] <- sss$preference[1]
     ret$selection_ss[i] <- sss$selection[1]
@@ -358,7 +363,9 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 #' each stratum. Length of vector should equal the number of strata in the 
 #' study and sum of vector should be 1. All vector elements should be numeric
 #' values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).
-#' @param alpha the desired type I error rate.
+#' @param alpha the desired type I error rate (default 0.05)..
+#' @param k the ratio of treatment A to treatment B in the random arm
+#' (default 1).
 #' @examples
 #' 
 #' # Unstratified trials with power constraints.
@@ -382,7 +389,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 #' @export
 pt_from_ss <- function(ss, pref_effect, selection_effect, 
   treatment_effect, sigma2, pref_prop, choice_prop=0.5, stratum_prop=1,
-  alpha=0.05) {
+  alpha=0.05, k=1) {
 
   if (!is.list(sigma2)) {
     sigma2 <- list(sigma2)
@@ -405,6 +412,7 @@ pt_from_ss <- function(ss, pref_effect, selection_effect,
     pref_prop=pref_prop,
     choice_prop=choice_prop,
     stratum_prop=stratum_prop,
-    alpha=alpha)
+    alpha=alpha,
+    k=k)
 }
 

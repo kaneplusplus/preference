@@ -5,7 +5,7 @@
 \title{Power Calculation from Sample Size}
 \usage{
 overall_power(N, phi, sigma2, delta_pi, delta_nu, delta_tau, alpha = 0.05,
-  theta = 0.5, xi = 1, nstrata = 1)
+  theta = 0.5, xi = 1, nstrata = 1, k = 1)
 }
 \arguments{
 \item{N}{overall study sample size.}
@@ -36,6 +36,9 @@ sum of vector should be 1. All vector elements should be numeric
 values between 0 and 1. Default is 1 (i.e. unstratified design).}
 
 \item{nstrata}{number of strata. Default is 1 (i.e. unstratified design).}
+
+\item{k}{the ratio of treatment A to treatment B in the random arm
+(default 1).}
 }
 \description{
 Calculates the study power to detect a set of effects given a particular 
@@ -48,6 +51,6 @@ Turner RM, et al. (2014). "Sample Size and Power When Designing
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 
 Cameron B, Esserman D (2016). "Sample Size and Power for a 
-Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}.
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }

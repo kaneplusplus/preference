@@ -6,7 +6,7 @@
 \usage{
 preference.trial(pref_ss, pref_effect, selection_ss, selection_effect,
   treatment_ss, treatment_effect, sigma2, pref_prop, choice_prop = 0.5,
-  stratum_prop = 1, alpha = 0.05)
+  stratum_prop = 1, alpha = 0.05, k = 1)
 }
 \arguments{
 \item{pref_ss}{the sample size of the preference arm.}
@@ -38,7 +38,10 @@ each stratum. Length of vector should equal the number of strata in the
 study and sum of vector should be 1. All vector elements should be numeric
 values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).}
 
-\item{alpha}{the desired type I error rate.}
+\item{alpha}{the desired type I error rate (defaut 0.05).}
+
+\item{k}{the ratio of treatment A to treatment B in the random arm
+(default 1)..}
 }
 \description{
 Create a Preference Trial

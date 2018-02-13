@@ -5,7 +5,7 @@
 \alias{preference}
 \alias{preference}
 \alias{preference-package}
-\title{Fit preference data collected from a clinical trial}
+\title{Fit Preference Data Collected from a Two-stage Clinical Trial}
 \usage{
 preference(form, data, alpha = 0.05)
 }

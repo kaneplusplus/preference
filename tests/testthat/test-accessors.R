@@ -10,7 +10,7 @@ test_that("The preference.trial object has been created correctly.", {
   expect_is(trials, "preference.trial")
   expect_is(trials, "data.frame")
   expect_equal(nrow(trials), 4)
-  expect_equal(ncol(trials), 14)
+  expect_equal(ncol(trials), 15)
 })
 
 test_that("The sample_size() function works", {

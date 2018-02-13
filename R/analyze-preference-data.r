@@ -28,6 +28,7 @@
 #' # Same data plus strata information.
 #' strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
 #' fit_preference(outcome, random, treatment, strata, alpha=0.1)
+#' @importFrom stats var
 #' @export
 fit_preference <- function(outcome, random, treatment, strata, alpha=0.05) {
   if (missing(strata)) {
@@ -260,6 +261,7 @@ unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2,
 #' Stratified Doubly Randomized Preference Design." 
 #' \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
+#' @importFrom stats pnorm
 #' @export
 fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
                                    y1var, n1, y2mean, y2var, n2, xi=1, 

@@ -5,7 +5,7 @@
 \title{Design Preference Trials with Power Constraint(s)}
 \usage{
 pt_from_power(power, pref_effect, selection_effect, treatment_effect, sigma2,
-  pref_prop, choice_prop = 0.5, stratum_prop = 1, alpha = 0.05)
+  pref_prop, choice_prop = 0.5, stratum_prop = 1, alpha = 0.05, k = 1)
 }
 \arguments{
 \item{power}{the desired power(s) for the trial(s)}
@@ -33,7 +33,10 @@ each stratum. Length of vector should equal the number of strata in the
 study and sum of vector should be 1. All vector elements should be numeric
 values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).}
 
-\item{alpha}{the desired type I error rate.}
+\item{alpha}{the desired type I error rate (default 0.05).}
+
+\item{k}{the ratio of treatment A to treatment B in the random arm
+(default 1)..}
 }
 \description{
 Create a set of preference trials with specified power.

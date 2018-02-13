@@ -95,15 +95,18 @@ overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu,
 #'          sum of vector should be 1. All vector elements should be numeric 
 #'          values between 0 and 1. Default is 1 (i.e. unstratified design).
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
+#' @param k the ratio of treatment A to treatment B in the random arm
+#' (default 1).
+#' @importFrom stats pnorm
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 overall_power <- function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
-                          alpha=0.05, theta=0.5, xi=1, nstrata=1) {
+                          alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1) {
   
   zalpha <- qnorm(1-(alpha/2))
   # Calculate study power for treatment effect
@@ -111,7 +114,9 @@ overall_power <- function(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
   treat_strata_terms <- vapply(seq_len(nstrata),
                          function(i) xi[i] * sigma2[i],
                          0.0)
-  trt_pwr <- pnorm( sqrt( ((1-theta)*delta_tau^2*N) / 
+  N_k <- (N*4*k)/(k+1)^2
+
+  trt_pwr <- pnorm( sqrt( ((1-theta)*delta_tau^2*N_k) / 
     (4*sum(treat_strata_terms)) ) - zalpha )
   
   #Calculate study power for preference effect
@@ -332,18 +337,20 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   if (nstrata > 1 & is.null(xi)) {
     stop('Must define xi for stratified design')
   }
-  if (length(phi) != nstrata || length(mu1) != nstrata || 
-      length(mu2) != nstrata || length(mu11) != nstrata || 
+
+  if (length(phi) != nstrata || length(mu1) != nstrata ||
+      length(mu2) != nstrata || length(mu11) != nstrata ||
       length(mu22) != nstrata) {
     stop('Length vector does not match number of strata')
   }
   if(any(phi < 0) || any(phi > 1) || any(!is.numeric(phi))) {
     stop('Preference rate must be numeric value in [0,1]')
   }
-  if(!is.numeric(mu1) || !is.numeric(mu2) || !is.numeric(mu11) || 
+  if(!is.numeric(mu1) || !is.numeric(mu2) || !is.numeric(mu11) ||
      !is.numeric(mu22)) {
     stop('Mean must be numeric value')
   }
+
   if((any(xi < 0) || any(xi > 1) || any(!is.numeric(xi))) & !is.null(xi)) {
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   }
@@ -353,31 +360,30 @@ effects_from_means<-function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
   if (sum(xi) != 1 && !any(is.null(xi))) {
     stop('Stratum proportions do not sum to 1')
   }
-  
+
   # Calculate unobserved means
   mu12 <- (mu1 - phi * mu11) / (1-phi)
   mu21 <- (mu2 - (1-phi) * mu22) / phi
-  
+
   # Calculate effect sizes
   delta_tau <- mu1 - mu2
   delta_nu <- (mu11 + mu21 -mu12 - mu22) / 2
   delta_pi <- (mu11 - mu21 -mu12 + mu22) / 2
-  
-  if (nstrata == 1) { 
+
+  if (nstrata == 1) {
     # Unstratified case
     effects <- list(treatment = delta_tau, selection = delta_nu,
                     preference = delta_pi)
   } else {
     # Stratified case
     effects <- list(
-      treatment = sum(vapply(seq_len(nstrata), 
-                             function(x) phi[x]*delta_tau[x], 0.0)),
-      selection = sum(vapply(seq_len(nstrata), 
-                             function(x) phi[x]*delta_nu[x], 0.0)),
+      treatment = sum(vapply(seq_len(nstrata),
+                             function(x) xi[x]*delta_tau[x], 0.0)),
+      selection = sum(vapply(seq_len(nstrata),
+                             function(x) xi[x]*delta_nu[x], 0.0)),
       preference = sum(vapply(seq_len(nstrata),
-                              function(x) phi[x]*delta_pi[x], 0.0)))
+                              function(x) xi[x]*delta_pi[x], 0.0)))
   }
-
   effects
 }
 
