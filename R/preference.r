@@ -1,9 +1,10 @@
 #' @title Design and Analysis of Two-stage Randomized Clinical Trials
 #' @name preference
 #' @docType package
-#' @description The \pkg{preference} package is used for the design and analysis of
-#' two-stage randomized trials with a continuous outcome measure. In this study,
-#' patients are first randomized to either a random or choice arm. Patients 
+#' @description The \pkg{preference} package is used for the design and 
+#' analysis of two-stage randomized trials with a continuous outcome 
+#' measure. In this study, patients are first randomized to either a 
+#' random or choice arm. Patients 
 #' initially randomized to the choice arm are allowed to select their preferred
 #' treatment from the available treatment options; patients initially randomized
 #' to the random arm undergo a second randomization procedure to one of the 
@@ -122,51 +123,31 @@
 NULL
 
 
-#' Summary data for the IMAP study
+#' Data from the the IMAP study
 #'
 #' @name imap
+#' @aliases imap_stratified_summary imap_summary
 #' @docType data
-#' @description Data set is from the Improving Management of Abnormal Pap Smears
-#' study, which used a two-stage randomized preference trial design to evaluate 
-#' psychosocial outcomes in women found to have atypical cells in a Pap Smear. 
+#' @description 
+#' The ``Improving Management of Abnormal Pap Smears'' study used a 
+#' two-stage randomized preference trial design to evaluate psychosocial
+#' outcomes in women found to have atypical cells in a Pap Smear.
 #' Two systems for managing the atypical cells were tested (repeated Pap smears 
 #' or HCV triage) and a doubly randomized design was used to evaluate the role 
 #' of patient preference. The data set provides mean, standard deviation and 
 #' sample sizes of the SF36 outcome for each treatment in both the choice and 
 #' random arms.
-#' @references McCaffery et al. (2010) "Psychosocial outcomes of three triage 
-#' methods for the management of borderline abnormal cervical smears: an open 
-#' randomised trial." \emph{BMJ}, \strong{340}:b4491.
-#' (\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
-#' @references McCaffery et al. (2011) "Determining the Impact of Informed 
-#' Choice: Separating Treatment Effects from the Effects of Choice and Selection
-#' in Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
-#' @keywords data
-NULL
-
-
-#' Stratified summary data for the IMAP study
 #'
-#' @name imap_strat
-#' @docType data
-#' @description Data set is from the Improving Management of Abnormal Pap Smears
-#' study, which used a two-stage randomized preference trial design to evaluate 
-#' psychosocial outcomes in women found to have atypical cells in a Pap Smear. 
-#' Two systems for managing the atypical cells were tested (repeated Pap smears
-#' or HCV triage) and a doubly randomized design was used to evaluate the role 
-#' of patient preference. 
-#' 
-#' In this data set, patients are stratified according to their baseline score
-#' on the six-item abbreviated Spielberger State-Trait Anxiety Inventory (STAI).
-#' This assessment is used to assess the level of anxiety experienced by 
-#' patients. Stratum 1 includes patients with low STAI scores (<=10 on STAI 
-#' averaged across whole study), which indicates low levels of anxiety. 
-#' Stratum 2 includes patients with high STAI  scores (>10), indicating higher
-#' levels of anxiety. The data set provides mean, standard deviation and 
-#' sample sizes of the SF36 outcome for each treatment in both the choice and 
-#' random arms for both strata.
-#' 
+#' Three data sets are provided with the preference package based on the
+#' IMAP study. The first, \code{imap_summary} provides summary statistics
+#' of the entire trial. The second \code{imap_summary_stratified}, summary
+#' statistics of the study per strata. The third \code{imap} is a resampled
+#' version of the individual level data including stratification. Each
+#' of these data sets are compatible with the analysis functions 
+#' \code{fit_preference_summary}, \code{fit_preference}, and 
+#' \code{preference}, provided in this package. The examples sections
+#' in the documentation illustrate their use.
+#
 #' @references McCaffery et al. (2010) "Psychosocial outcomes of three triage 
 #' methods for the management of borderline abnormal cervical smears: an open 
 #' randomised trial." \emph{BMJ}, \strong{340}:b4491.
@@ -175,9 +156,7 @@ NULL
 #' Choice: Separating Treatment Effects from the Effects of Choice and Selection
 #' in Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
-#' @references Marteau TM, Bekker H. (1992) "The development of a six-item 
-#' short-form of the state scale of the Spielberger State-Trait Anxiety 
-#' Inventory (STAI)." \emph{Br J Clin Psychol}, \strong{31}:301-306.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/1393159#}{PubMed})
 #' @keywords data
 NULL
+
+

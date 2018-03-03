@@ -412,7 +412,7 @@ print.preference.fit.summary <- function(x, ...) {
 #' @importFrom stats terms
 #' @examples
 #' 
-#' #Unstratified
+#' # Unstratified
 #' 
 #' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
 #'              8, 9, 10, 7, 8, 11)
@@ -421,7 +421,7 @@ print.preference.fit.summary <- function(x, ...) {
 #' d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 #' preference(outcome ~ treatment:arm, d)
 #' 
-#' #' #Stratified
+#' # Stratified
 #' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
 #'              8, 9, 10, 7, 8,11)
 #' random <- c(rep(FALSE, 13), rep(TRUE, 12))
