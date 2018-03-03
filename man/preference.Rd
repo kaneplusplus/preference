@@ -31,9 +31,10 @@ data parameter and should have the following characteristics.
         individuals belong to.}
 }
 
-The \pkg{preference} package is used for the design and analysis of
-two-stage randomized trials with a continuous outcome measure. In this study,
-patients are first randomized to either a random or choice arm. Patients 
+The \pkg{preference} package is used for the design and 
+analysis of two-stage randomized trials with a continuous outcome 
+measure. In this study, patients are first randomized to either a 
+random or choice arm. Patients 
 initially randomized to the choice arm are allowed to select their preferred
 treatment from the available treatment options; patients initially randomized
 to the random arm undergo a second randomization procedure to one of the 
@@ -127,7 +128,7 @@ represent the views of the Patient-Centered Outcomes Research Institute
 }
 \examples{
 
-#Unstratified
+# Unstratified
 
 outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
              8, 9, 10, 7, 8, 11)
@@ -136,7 +137,7 @@ treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 preference(outcome ~ treatment:arm, d)
 
-#' #Stratified
+# Stratified
 outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
              8, 9, 10, 7, 8,11)
 random <- c(rep(FALSE, 13), rep(TRUE, 12))

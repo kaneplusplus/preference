@@ -122,12 +122,20 @@
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 NULL
 
+#' @name imap_stratified_summary
+#' @rdname imap
+NULL
+
+#' @name imap_summary
+#' @rdname imap
+NULL
 
 #' Data from the the IMAP study
 #'
-#' @name imap
+#' @name imap 
 #' @aliases imap_stratified_summary imap_summary
 #' @docType data
+#' @rdname imap
 #' @description 
 #' The ``Improving Management of Abnormal Pap Smears'' study used a 
 #' two-stage randomized preference trial design to evaluate psychosocial
