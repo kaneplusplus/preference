@@ -71,7 +71,8 @@ power_preference_trial_internal <- function(x) {
     pref_power=numeric())
   for (i in seq_len(nrow(x))) {
     pows <- overall_power(
-      sum(as.vector(x[,c("pref_ss", "selection_ss", "treatment_ss")])),
+      #sum(as.vector(x[,c("pref_ss", "selection_ss", "treatment_ss")])),
+      x[,"pref_ss"],
       unlist(x$pref_prop[[i]]),
       x$sigma2[[i]],
       x$pref_effect[[i]],
