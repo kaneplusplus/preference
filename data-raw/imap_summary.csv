@@ -1,0 +1,5 @@
+"","mean","sd","n","treatment","arm"
+"choice_HPV","47.451","9.172","49","HPV","FALSE"
+"random_HPV","47.696","9.736","74","HPV","TRUE"
+"choice_Pap","51.489","4.321","21","Pap","FALSE"
+"random_Pap","45.781","10.029","64","Pap","TRUE"

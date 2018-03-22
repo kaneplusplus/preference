@@ -318,7 +318,6 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   if (!is.list(args$stratum_prop)) {
     args$stratum_prop <- list(args$stratum_prop)
   }
-
   args <- args[names(args) != "power"]
   ret <- do.call(preference.trial, args)
   for (i in seq_len(nrow(ret))) {
@@ -337,6 +336,9 @@ pt_from_power <- function(power, pref_effect, selection_effect,
     ret$treatment_ss[i] <- sss$treatment[1]
     ret$pref_ss[i] <- sss$preference[1]
     ret$selection_ss[i] <- sss$selection[1]
+    ret$treatment_power[i] <- power[cind(i, length(power))] 
+    ret$pref_power[i] <- power[cind(i, length(power))]
+    ret$selection_power[i] <- power[cind(i, length(power))]
   }
   ret
 }
