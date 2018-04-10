@@ -48,6 +48,7 @@
 #'  
 #' 
 #' @importFrom ggplot2 ggplot aes_string geom_line ylab xlab aes
+#' @importFrom tidyr gather
 #' @export
 pt_plot <- function(pt) {
   if (!inherits(pt, "preference.trial")) {
@@ -58,27 +59,53 @@ pt_plot <- function(pt) {
   selection_effect <- NULL
   sample_size <- NULL
   ret <- NULL
-  pt$sample_size <- pt$selection_ss + pt$treatment_ss + pt$pref_ss
+  pt$sample_size <- 
+    apply(pt$selection_ss + pt$treatment_ss + pt$pref_ss, 1, max)
   if (length(unique(pt[, "pref_effect"])) > 1 && 
       length(unique(pt[, "selection_effect"])) == 1) {
     ret <- ggplot(data=pt, 
       aes_string(x="pref_effect", y="sample_size")) +
       geom_line() + xlab("Preference Effect") + 
       ylab("Sample Size")
-  }
-  else if (length(unique(pt[, "pref_effect"])) == 1 &&
+  } else if (length(unique(pt[, "pref_effect"])) == 1 &&
            length(unique(pt[, "selection_effect"])) > 1) {
     ret <- ggplot(data=pt, 
       aes_string(x="selection_effect", y="sample_size")) +
       geom_line() + xlab("Selection Effect") + 
       ylab("Sample Size")
-  }
-  else if (length(unique(pt[, 'pref_effect'])) > 1 &&
+  } else if (length(unique(pt[, 'pref_effect'])) > 1 &&
            length(unique(pt[, 'selection_effect'])) > 1) {
     pt$`Preference Effect` <- factor(pt[, "pref_effect"])
     ret <- ggplot(data=pt, aes(x=selection_effect, y=sample_size, 
       group=`Preference Effect`, color=`Preference Effect`)) + 
       geom_line() + xlab("Selection Effect") + ylab("Sample Size")
+  } else if ( all(pt$treatment_power == pt$selection_power) &&
+              all(pt$treatment_power == pt$pref_power) &&
+              all(pt$selection_power == pt$pref_power) &&
+              length(unique(pt$pref_ss)) > 1 &&
+              length(unique(pt$selection_ss)) > 1 &&
+              length(unique(pt$treatment_ss)) > 1 ) {
+    x <- pt[,c("treatment_power", "pref_ss", "selection_ss", "treatment_ss")]
+    names(x) <- c("Power", "Preference", "Selection", "Treatment")
+    x <- gather(x, key="Type", value=`Sample Size`, 2:4)
+    ret <- ggplot(data=x, 
+      aes(x=Power, y=`Sample Size`, group=Type, col=Type)) + 
+        geom_line()
+  } else if ( all(pt$pref_ss == pt$selection_ss) &&
+              all(pt$pref_ss== pt$treatment_ss) &&
+              all(pt$selection_ss== pt$treatment_ss) &&
+              (length(unique(pt$pref_power)) > 1 || 
+              length(unique(pt$selection_power)) > 1 ||
+              length(unique(pt$treatment_power)) > 1 )) {
+    x <- pt[,c("pref_ss", "pref_power", "selection_power", "treatment_power")]
+    names(x) <- c("Sample Size", "Preference", "Selection", "Treatment")
+    x <- gather(x, key="Type", value=`Power`, 2:4)
+    ret <- ggplot(data=x, 
+      aes(x=Power, y=`Sample Size`, group=Type, col=Type)) + 
+        geom_line()
+  } else {
+    stop(paste0("Don't know how to visualize the set of trials.  ",
+                "Consider building the visualization yourself."))
   }
   ret
 }
