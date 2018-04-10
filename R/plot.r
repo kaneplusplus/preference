@@ -101,7 +101,7 @@ pt_plot <- function(pt) {
     names(x) <- c("Sample Size", "Preference", "Selection", "Treatment")
     x <- gather(x, key="Type", value=`Power`, 2:4)
     ret <- ggplot(data=x, 
-      aes(x=Power, y=`Sample Size`, group=Type, col=Type)) + 
+      aes(x=`Sample Size`, y=Power, group=Type, col=Type)) + 
         geom_line()
   } else {
     stop(paste0("Don't know how to visualize the set of trials.  ",
@@ -109,4 +109,4 @@ pt_plot <- function(pt) {
   }
   ret
 }
-
+Size
