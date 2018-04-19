@@ -109,4 +109,3 @@ pt_plot <- function(pt) {
   }
   ret
 }
-Size
