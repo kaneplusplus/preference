@@ -59,10 +59,14 @@ pt_plot <- function(pt) {
   selection_effect <- NULL
   sample_size <- NULL
   ret <- NULL
-  pt$sample_size <- 
-    apply(pt$selection_ss + pt$treatment_ss + pt$pref_ss, 1, max)
+#  pt$sample_size <- 
+#    apply(pt$selection_ss + pt$treatment_ss + pt$pref_ss, 1, max)
   if (length(unique(pt[, "pref_effect"])) > 1 && 
       length(unique(pt[, "selection_effect"])) == 1) {
+    pt$sample_size <- apply(pt, 1, 
+      function(x) {
+        max(as.data.frame(x)[,c("pref_ss", "selection_ss", "treatment_ss")])
+      })
     ret <- ggplot(data=pt, 
       aes_string(x="pref_effect", y="sample_size")) +
       geom_line() + xlab("Preference Effect") + 
