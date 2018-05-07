@@ -21,13 +21,16 @@ test_that("The sample_size() function works", {
 
 test_that("The power() function works.", {
   df <- data.frame(
-    pref_power=c(0.058038176448985, 0.635088621141532, 0.986677026981223, 
-                 0.99997319829281),
-    selection_power=c(0.983594286314466, 0.977746447078046, 0.964008448148433, 
-                      0.93849799965735),
-    treatment_power=c(0.9999843475669, 0.9999843475669, 0.9999843475669, 
-                      0.9999843475669))
-  expect_equal(power(trials), df)
+    pref_power=c(0.0413120, 0.2646798, 0.6741545, 0.9336748
+                 ),
+    selection_power=c(0.6568600, 0.6299353, 0.5833241, 
+                      0.5247430),
+    treatment_power=c(0.9424375, 0.9424375, 0.9424375, 
+                      0.9424375))
+    pt <- power(trials)
+  expect_true(max(c(abs(pt$pref_power - df$pref_power), 
+                     abs(pt$selection_power - df$selection_power),
+                     abs(pt$treatment_power - df$treatment_power))) < 1e-7)
 })
 
 test_that("The effect_size() function works.", {

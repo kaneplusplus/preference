@@ -55,7 +55,7 @@ pt_plot <- function(pt) {
     stop(paste0("pt_plot doesn't know how to plot an object of type ",
                 class(pt), "."))
   }
-  `Preference Effect` <- NULL
+  `Preference Effect` <- `Sample Size` <- Power <- Type <- NULL
   selection_effect <- NULL
   sample_size <- NULL
   ret <- NULL

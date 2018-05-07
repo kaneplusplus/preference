@@ -430,7 +430,6 @@ print.preference.fit.summary <- function(x, ...) {
 #' d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, strata=strata)
 #' preference(outcome ~ treatment:arm|strata, d, alpha=0.1)
 #' 
-#' 
 #' @export
 preference <- function(form, data, alpha=0.05) {
   outcome_var <- as.character(terms(form)[[2]])

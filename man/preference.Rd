@@ -48,5 +48,4 @@ strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
 d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, strata=strata)
 preference(outcome ~ treatment:arm|strata, d, alpha=0.1)
 
-
 }

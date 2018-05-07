@@ -13,7 +13,7 @@ Description: Design and analyze two-stage randomized trials with a continuous
     provided to test each effect using either summary data (i.e. means, 
     variances) or raw study data.
 License: LGPL-2
-Imports: ggplot2
+Imports: ggplot2, tidyr
 Suggests: knitr, testthat,
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
