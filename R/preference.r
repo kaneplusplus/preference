@@ -1,6 +1,9 @@
+
 #' @title Design and Analysis of Two-stage Randomized Clinical Trials
-#' @name preference
+#' @name preference-package
 #' @docType package
+#' @rdname preference-package
+#' @aliases preference-package
 #' @description The \pkg{preference} package is used for the design and 
 #' analysis of two-stage randomized trials with a continuous outcome 
 #' measure. In this study, patients are first randomized to either a 
@@ -118,7 +121,8 @@
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
-#' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}. 
+#' Stratified Doubly Randomized Preference Design." 
+#' \emph{Stat Methods Med Res}.  
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 NULL
 
