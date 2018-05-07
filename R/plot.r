@@ -57,10 +57,11 @@ pt_plot <- function(pt) {
   }
   `Preference Effect` <- `Sample Size` <- Power <- Type <- NULL
   selection_effect <- NULL
-  sample_size <- NULL
   ret <- NULL
-#  pt$sample_size <- 
-#    apply(pt$selection_ss + pt$treatment_ss + pt$pref_ss, 1, max)
+  pt$sample_size <- apply(pt, 1, 
+    function(x) {
+      max(as.data.frame(x)[,c("pref_ss", "selection_ss", "treatment_ss")])
+    })
   if (length(unique(pt[, "pref_effect"])) > 1 && 
       length(unique(pt[, "selection_effect"])) == 1) {
     pt$sample_size <- apply(pt, 1, 
@@ -74,7 +75,7 @@ pt_plot <- function(pt) {
   } else if (length(unique(pt[, "pref_effect"])) == 1 &&
            length(unique(pt[, "selection_effect"])) > 1) {
     ret <- ggplot(data=pt, 
-      aes(x=selection_effect, y=selection_ss)) +
+      aes_string(x="selection_effect", y="sample_size")) +
       geom_line() + xlab("Selection Effect") + 
       ylab("Selection Sample Size")
   } else if (length(unique(pt[, 'pref_effect'])) > 1 &&
