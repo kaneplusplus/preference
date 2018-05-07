@@ -74,9 +74,9 @@ pt_plot <- function(pt) {
   } else if (length(unique(pt[, "pref_effect"])) == 1 &&
            length(unique(pt[, "selection_effect"])) > 1) {
     ret <- ggplot(data=pt, 
-      aes_string(x="selection_effect", y="sample_size")) +
+      aes(x=selection_effect, y=selection_ss)) +
       geom_line() + xlab("Selection Effect") + 
-      ylab("Sample Size")
+      ylab("Selection Sample Size")
   } else if (length(unique(pt[, 'pref_effect'])) > 1 &&
            length(unique(pt[, 'selection_effect'])) > 1) {
     pt$`Preference Effect` <- factor(pt[, "pref_effect"])
