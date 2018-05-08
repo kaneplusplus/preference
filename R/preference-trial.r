@@ -145,7 +145,7 @@ cind <- function(i, vec_len) {
 #' each stratum. Length of vector should equal the number of strata in the 
 #' study and sum of vector should be 1. All vector elements should be numeric
 #' values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).
-#' @param alpha the desired type I error rate (defaut 0.05).
+#' @param alpha the desired type I error rate (default 0.05).
 #' @param k the ratio of treatment A to treatment B in the random arm
 #' (default 1)..
 #' @examples
@@ -349,7 +349,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
 #' @description Create a set of preference trials where the maximum 
 #' sample size for an arm is specified.
 #'
-#' @param ss the maxiumum size of any of the three arms.
+#' @param ss the maximum size of any of the three arms.
 #' @param pref_effect the effect size of the preference arm (delta_pi). 
 #' @param selection_effect the effect size of selection arm (delta_nu).
 #' @param treatment_effect the sample size of the treatment arm (delta_tau)
