@@ -38,7 +38,7 @@ each stratum. Length of vector should equal the number of strata in the
 study and sum of vector should be 1. All vector elements should be numeric
 values between 0 and 1. Default is 1 (i.e. unstratified design) (xi).}
 
-\item{alpha}{the desired type I error rate (defaut 0.05).}
+\item{alpha}{the desired type I error rate (default 0.05).}
 
 \item{k}{the ratio of treatment A to treatment B in the random arm
 (default 1)..}
