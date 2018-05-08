@@ -21,9 +21,8 @@ data parameter and should have the following characteristics.
   \item{outcome: }{Numeric values giving the outcome of interest.}
   \item{treatment: }{Character, categorical, or integer values denoting the 
                      treatment received by an individual.}
-  \item{arm: }{Character or categorical variable denoting the arm 
-               individuals belong to. Note that these values should be 
-               either "random" or "choice".}
+  \item{arm: }{Logical value indicating whether the sample was from the
+               random arm (TRUE) or choice (FALSE).}
   \item{strata: }{An optional integer value denoting which strata 
         individuals belong to.}
 }
