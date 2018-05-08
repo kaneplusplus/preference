@@ -14,7 +14,6 @@ Description: Design and analyze two-stage randomized trials with a continuous
     variances) or raw study data.
 License: LGPL-2
 Imports: ggplot2, tidyr
-Suggests: knitr, testthat,
-VignetteBuilder: knitr
+Suggests: testthat
 RoxygenNote: 6.0.1
 LazyData: true
