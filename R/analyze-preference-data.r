@@ -61,27 +61,40 @@ fit_preference <- function(outcome, random, treatment, strata, alpha=0.05) {
   
   for (ss in strat_split) { 
     pds <- pd[ss , ]
-    x1mean <- c(x1mean, mean(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]]))
-    x1var <- c(x1var, var(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]])) 
-    m1 <- c(m1, length(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]]))
-    x2mean <- c(x2mean,  mean(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
-    x2var <- c(x2var, var(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
-    m2 <- c(m2, length(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
-    y1mean <- c(y1mean, mean(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
-    y1var <- c(y1var, var(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
-    n1 <- c(n1, length(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
-    y2mean <- c(y2mean, mean(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
-    y2var <- c(y2var, var(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
-    n2 <- c(n2, length(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+    x1mean <- c(x1mean, 
+      mean(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]]))
+    x1var <- c(x1var, 
+      var(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]])) 
+    m1 <- c(m1, 
+      length(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]]))
+    x2mean <- c(x2mean,  
+      mean(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
+    x2var <- c(x2var, 
+      var(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
+    m2 <- c(m2, 
+      length(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
+    y1mean <- c(y1mean, 
+      mean(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
+    y1var <- c(y1var, 
+      var(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
+    n1 <- c(n1, 
+      length(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
+    y2mean <- c(y2mean, 
+      mean(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+    y2var <- c(y2var, 
+      var(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+    n2 <- c(n2, 
+      length(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
   }
   
   #calculate xi
   xi <- table(strata) / length(outcome)
   nstrata <- length(unique(strata))
   
-  results <- fit_preference_summary(x1mean=x1mean, x1var=x1var, m1=m1, x2mean=x2mean, x2var=x2var, m2=m2,
-                                    y1mean=y1mean, y1var=y1var, n1=n1, y2mean=y2mean, y2var=y2var, n2=n2,
-                                    xi=xi, nstrata=nstrata, alpha=alpha)
+  results <- fit_preference_summary(x1mean = x1mean, x1var = x1var, m1 = m1, 
+    x2mean = x2mean, x2var = x2var, m2 = m2, y1mean = y1mean, y1var = y1var, 
+    n1 = n1, y2mean = y2mean, y2var = y2var, n2 = n2, xi = xi, 
+    nstrata = nstrata, alpha = alpha)
   return(results)
 }
 
@@ -92,8 +105,7 @@ fit_preference <- function(outcome, random, treatment, strata, alpha=0.05) {
 # n1, n2: sample sizes
 
 #' @importFrom stats pt
-t.test2 <- function(m1,m2,s1,s2,n1,n2)
-{
+t.test2 <- function(m1, m2, s1, s2, n1, n2) {
   se <- sqrt( (s1/n1) + (s2/n2) )
   
   # Welch-satterthwaite df
@@ -269,48 +281,55 @@ fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
   
   # Compute unstratified test statistics
   unstrat_stats <- vapply(seq_len(nstrata), 
-                          function(i) {
-                            unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
-                                                         x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
-                                                         y2mean[i], y2var[i], n2[i], alpha)
-                          }, data.frame(pref_effect=NA, pref_SE=NA, pref_test = NA, pref_pval = NA, 
-                                        pref_LB=NA, pref_UB=NA, sel_effect=NA, sel_SE=NA, 
-                                        sel_test = NA , sel_pval = NA, sel_LB=NA, sel_UB=NA, 
-                                        treat_effect=NA, treat_SE=NA, treat_test = NA, 
-                                        treat_pval = NA, treat_LB=NA, treat_UB=NA))
+    function(i) {
+      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
+                                   x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
+                                   y2mean[i], y2var[i], n2[i], alpha)
+    }, 
+    data.frame(pref_effect = NA, pref_SE = NA, pref_test = NA, pref_pval = NA, 
+               pref_LB = NA, pref_UB = NA, sel_effect = NA, sel_SE = NA, 
+               sel_test = NA , sel_pval = NA, sel_LB = NA, sel_UB = NA, 
+               treat_effect = NA, treat_SE = NA, treat_test = NA, 
+               treat_pval = NA, treat_LB = NA, treat_UB = NA))
   
   #Calculate the overall effect estimate
   overall_pref_effect <- sum(
     vapply(seq_len(nstrata), 
-           function(i) xi[i] * unlist(unstrat_stats[1, i]), 0.0))
+           function(i) xi[i] * unlist(unstrat_stats[1, i]), 
+           0.0))
   
   overall_sel_effect <- sum(
     vapply(seq_len(nstrata), 
-           function(i) xi[i] * unlist(unstrat_stats[7, i]), 0.0))
+           function(i) xi[i] * unlist(unstrat_stats[7, i]), 
+           0.0))
   
   overall_treat_effect <- sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i] * unlist(unstrat_stats[13, i]), 0.0))
+           function(i) xi[i] * unlist(unstrat_stats[13, i]), 
+           0.0))
   
   #Calculate the overall SE
   overall_pref_SE <- sqrt(sum(
     vapply(seq_len(nstrata), 
-           function(i) xi[i]^2 * unlist(unstrat_stats[2, i])^2, 0.0)))
+           function(i) xi[i]^2 * unlist(unstrat_stats[2, i])^2, 
+           0.0)))
   
   overall_sel_SE <- sqrt(sum(
     vapply(seq_len(nstrata), 
-           function(i) xi[i]^2 * unlist(unstrat_stats[8, i])^2, 0.0)))
+           function(i) xi[i]^2 * unlist(unstrat_stats[8, i])^2, 
+           0.0)))
   
   overall_treat_SE <- sqrt(sum(
     vapply(seq_len(nstrata),
-           function(i) xi[i]^2 * unlist(unstrat_stats[14, i])^2, 0.0)))
+           function(i) xi[i]^2 * unlist(unstrat_stats[14, i])^2, 
+           0.0)))
   
   #Calculate overall test statistic
-  overall_pref_test <- overall_pref_effect/overall_pref_SE
+  overall_pref_test <- overall_pref_effect / overall_pref_SE
   
-  overall_sel_test <- overall_sel_effect/overall_sel_SE
+  overall_sel_test <- overall_sel_effect / overall_sel_SE
   
-  overall_treat_test <- overall_treat_effect/overall_treat_SE
+  overall_treat_test <- overall_treat_effect / overall_treat_SE
   
   # Compute p-values (Assume test stats approximately normally distributed)
   
@@ -327,17 +346,17 @@ fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
   
   zalpha <- qnorm(1-(alpha/2))
   
-  overall_pref_LB <- overall_pref_effect - zalpha*overall_pref_SE
+  overall_pref_LB <- overall_pref_effect - zalpha * overall_pref_SE
   
-  overall_pref_UB <- overall_pref_effect + zalpha*overall_pref_SE
+  overall_pref_UB <- overall_pref_effect + zalpha * overall_pref_SE
   
-  overall_sel_LB <- overall_sel_effect - zalpha*overall_sel_SE
+  overall_sel_LB <- overall_sel_effect - zalpha * overall_sel_SE
   
-  overall_sel_UB <- overall_sel_effect + zalpha*overall_sel_SE
+  overall_sel_UB <- overall_sel_effect + zalpha * overall_sel_SE
   
-  overall_treat_LB <- overall_treat_effect - zalpha*overall_treat_SE
+  overall_treat_LB <- overall_treat_effect - zalpha * overall_treat_SE
   
-  overall_treat_UB <- overall_treat_effect + zalpha*overall_treat_SE
+  overall_treat_UB <- overall_treat_effect + zalpha * overall_treat_SE
   
   overall_stats<-data.frame(
     overall_pref_effect = overall_pref_effect, 
@@ -359,8 +378,8 @@ fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
     overall_treat_LB = overall_treat_LB, 
     overall_treat_UB = overall_treat_UB)
   
-  ret <- list(alpha=alpha, unstratified_statistics=unstrat_stats, 
-       overall_statistics=overall_stats) 
+  ret <- list(alpha = alpha, unstratified_statistics = unstrat_stats, 
+              overall_statistics = overall_stats) 
   class(ret) <- c(class(ret), "preference.fit")
   ret
 }

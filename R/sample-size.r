@@ -257,19 +257,25 @@ treatment_effect_size <- function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' @export
 optimal_proportion <- function(w_sel, w_pref, w_treat, sigma2, phi, delta_pi,
                              delta_nu) {
-  if(w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
-     any(!is.numeric(c(w_sel,w_pref,w_treat))) | length(w_sel)!=1 | 
-     length(w_pref)!=1 | length(w_treat)!=1)
+  if (w_sel<0 | w_sel>1 | w_pref<0 | w_pref>1 | w_treat<0 | w_treat>1 | 
+      any(!is.numeric(c(w_sel,w_pref,w_treat))) | length(w_sel)!=1 | 
+      length(w_pref)!=1 | length(w_treat)!=1) {
+
     stop('Weights must be single numeric value in [0,1]')
-  if (w_sel+w_pref+w_treat!=1) 
+  }
+  if (w_sel + w_pref + w_treat != 1) {
     stop('weights do not sum to 1')
-  if(sigma2<=0 | any(!is.numeric(sigma2)))
+  }
+  if(sigma2<=0 | any(!is.numeric(sigma2))) {
     stop('Variance estimate must be numeric value greater than 0')
-  if(phi<0 | phi>1 | !is.numeric(phi)) 
+  }
+  if(phi<0 | phi>1 | !is.numeric(phi)) {
     stop('Preference rate must be numeric value in [0,1]')
+  }
   if(!is.numeric(delta_pi) | !is.numeric(delta_nu) ||
-     length(delta_pi)!=1 || length(delta_nu)!=1)
+     length(delta_pi)!=1 || length(delta_nu)!=1) {
     stop('Effect size must be single numeric value')
+  }
   # Based on Equation 16 in Walter paper
   num <- w_sel + w_pref + 
     phi * (1-phi) * 
@@ -330,6 +336,7 @@ f <- function(theta,value) {
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 #' @export
 effects_from_means <- function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
+
   # Error messages
   if(nstrata <= 0 | !is.numeric(nstrata) || length(nstrata) != 1) {
     stop('Number of strata must be numeric greater than 0')
