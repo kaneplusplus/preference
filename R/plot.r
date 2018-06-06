@@ -92,9 +92,14 @@ pt_plot <- function(pt) {
               length(unique(pt$treatment_ss)) > 1 ) {
     x <- pt[,c("treatment_power", "pref_ss", "selection_ss", "treatment_ss")]
     names(x) <- c("Power", "Preference", "Selection", "Treatment")
+    if (all(x$Preference == x$Selection)) {
+      x$Preference <- jitter(x$Preference)
+      x$Selection <- jitter(x$Selection)
+    }
     x <- gather(x, key="Type", value=`Sample Size`, 2:4)
+    x$Type <- as.factor(x$Type)
     ret <- ggplot(data=x, 
-      aes(x=Power, y=`Sample Size`, group=Type, col=Type)) + 
+      aes(x=Power, y=`Sample Size`, group=Type, color=Type)) + 
         geom_line()
   } else if ( all(pt$pref_ss == pt$selection_ss) &&
               all(pt$pref_ss== pt$treatment_ss) &&
