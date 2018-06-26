@@ -44,21 +44,21 @@ test_that("Treatment sample size checking works", {
 })
 
 test_that("Preference effect size checking works", {
-  expect_error(preference.trial(pref_ss=100, pref_effect=-1, selection_ss=100,
+  preference.trial(pref_ss=100, pref_effect=-1, selection_ss=100,
     selection_effect=1, treatment_ss=100, treatment_effect=1,
-    sigma2=1, pref_prop=0.6))
+    sigma2=1, pref_prop=0.6)
 })
 
 test_that("Treatment effect size checking works", {
-  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+  preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
     selection_effect=1, treatment_ss=100, treatment_effect=-1,
-    sigma2=1, pref_prop=0.6))
+    sigma2=1, pref_prop=0.6)
 })
 
 test_that("Selection effect size checking works", {
-  expect_error(preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
+  preference.trial(pref_ss=100, pref_effect=1, selection_ss=100,
     selection_effect=-1, treatment_ss=100, treatment_effect=1,
-    sigma2=1, pref_prop=0.6))
+    sigma2=1, pref_prop=0.6)
 })
 
 test_that("Alpha checking works", {
