@@ -13,16 +13,13 @@ check_ss <- function(pref_ss, selection_ss, treatment_ss) {
 }
 
 check_effect <- function(pref_effect, selection_effect, treatment_effect) {
-  if (!is.numeric(pref_effect) || length(pref_effect) != 1 || 
-      pref_effect <=0 ) {
+  if (!is.numeric(pref_effect) || length(pref_effect) != 1) {
     stop("The pref_effect parameter should be a single numeric value.")
   }
-  if (!is.numeric(selection_effect) || length(selection_effect) != 1 ||
-      selection_effect <= 0) {
+  if (!is.numeric(selection_effect) || length(selection_effect) != 1) {
     stop("The selection_effect parameter should be a single numeric value.")
   }
-  if (!is.numeric(treatment_effect) || length(treatment_effect) != 1 ||
-      treatment_effect <= 0) {
+  if (!is.numeric(treatment_effect) || length(treatment_effect) != 1 ) {
     stop("The treatment_effect parameter should be a single numeric value.")
   }
   invisible(TRUE)
@@ -36,11 +33,12 @@ check_props_and_sigma2 <- function(stratum_prop, choice_prop, pref_prop,
                "must have the same length."))
   }
   if (sum(stratum_prop[[1]]) != 1) {
-    stop("Elements of the stratum_prop parameter must sum to 1.")
+    stop(paste("Elements of the stratum_prop parameter must sum to 1.",
+               "Got a value of", sum(stratum_prop[[1]])))
   }
   if (any(!is.numeric(stratum_prop[[1]])) || any(stratum_prop[[1]] < 0) ||
       any(stratum_prop[[1]] > 1)) {
-    stop("The stratum_prop parameter must be a list numeric values in [0, 1]")
+    stop("The stratum_prop parameter must be a list of numeric values in [0, 1]")
   }
   if (any(!is.numeric(choice_prop[[1]])) || any(choice_prop[[1]] < 0) ||
       any(choice_prop[[1]] > 1)) {
