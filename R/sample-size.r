@@ -35,7 +35,18 @@
 #' Stratified Doubly Randomized Preference Design." 
 #' \emph{Stat Methods Med Res}. 
 #' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
-overall_sample_size <- function(power, phi, sigma2, delta_pi, delta_nu, 
+overall_sample_size <- function(power, phi, delta_pi, delta_nu, 
+  delta_tau, sigma2, alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1, dist="norm") {
+  ## Write this
+  if (dist == "norm") {
+    overall_sample_size_norm(power, phi, sigma2, delta_pi, delta_nu,
+                             delta_tau, alpha, theta, xi, nstrata, k)
+  } else {
+    stop('Unsupported "dist" argument.')
+  }
+}
+
+overall_sample_size_norm <- function(power, phi, sigma2, delta_pi, delta_nu, 
   delta_tau, alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1) {
   
   zbeta <- qnorm(power)

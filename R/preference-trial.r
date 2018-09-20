@@ -320,7 +320,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   args <- args[names(args) != "power"]
   ret <- do.call(preference.trial, args)
   for (i in seq_len(nrow(ret))) {
-    sss <- overall_sample_size(
+    sss <- overall_sample_size_norm(
       power[cind(i, length(power))], 
       ret$pref_prop[[cind(i, length(ret$pref_prop))]],
       ret$sigma2[[cind(i, length(ret$sigma2))]], 
