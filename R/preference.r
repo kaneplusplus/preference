@@ -134,7 +134,7 @@ NULL
 #' @rdname imap
 NULL
 
-#' Data from the the IMAP study
+#' Data from the IMAP study
 #'
 #' @name imap 
 #' @aliases imap_stratified_summary imap_summary
