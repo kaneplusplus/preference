@@ -4,8 +4,8 @@
 \alias{fit_preference_summary}
 \title{Fit Preference Model from Summary Data}
 \usage{
-fit_preference_summary(x1mean, x1var, m1, x2mean, x2var, m2, y1mean, y1var, n1,
-  y2mean, y2var, n2, xi = 1, nstrata = 1, alpha = 0.05)
+fit_preference_summary(x1mean, x1var, m1, x2mean, x2var, m2, y1mean, y1var,
+  n1, y2mean, y2var, n2, xi = 1, nstrata = 1, alpha = 0.05)
 }
 \arguments{
 \item{x1mean}{mean of responses for patients choosing treatment 1. If study

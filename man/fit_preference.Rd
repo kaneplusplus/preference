@@ -4,12 +4,13 @@
 \alias{fit_preference}
 \title{Fit the Preference Data Collected from a Two-stage Clinical Trial}
 \usage{
-fit_preference(outcome, random, treatment, strata, alpha = 0.05)
+fit_preference(outcome, arm, treatment, strata, alpha = 0.05)
 }
 \arguments{
 \item{outcome}{(numeric) individual trial outcomes.}
 
-\item{random}{(logical) was this individual part of the random arm?}
+\item{arm}{(character or factor) a vector of "choice" and "random" character
+or factor values indicating the arm of the sample?}
 
 \item{treatment}{(character, factor, or integer) which treatment an 
 individual received}
@@ -26,14 +27,14 @@ significance level.
 }
 \examples{
 # Unstratified
-outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-             8, 9, 10, 7, 8,11)
-random <- c(rep(FALSE, 13), rep(TRUE, 12))
+outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 
+             12, 6, 8, 9, 10, 7, 8,11)
+arm <- c(rep("choice", 13), rep("random", 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
-fit_preference(outcome, random, treatment)
+fit_preference(outcome, arm, treatment)
 
 # Stratified
 # Same data plus strata information.
 strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
-fit_preference(outcome, random, treatment, strata, alpha=0.1)
+fit_preference(outcome, arm, treatment, strata, alpha=0.1)
 }

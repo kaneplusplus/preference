@@ -4,8 +4,9 @@
 \alias{overall_sample_size}
 \title{Overall Sample Size}
 \usage{
-overall_sample_size(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
-  alpha = 0.05, theta = 0.5, xi = 1, nstrata = 1, k = 1)
+overall_sample_size(power, phi, delta_pi, delta_nu, delta_tau, sigma2,
+  alpha = 0.05, theta = 0.5, xi = 1, nstrata = 1, k = 1,
+  dist = "norm")
 }
 \arguments{
 \item{power}{desired study power. Should be numeric value between 0 and 1.}
@@ -14,15 +15,15 @@ overall_sample_size(power, phi, sigma2, delta_pi, delta_nu, delta_tau,
 numeric value between 0 and 1. If study is stratified, should be
 vector with length equal to the number of strata in the study.}
 
-\item{sigma2}{variance estimate. Should be positive numeric values. If study
-is stratified, should be vector of within-stratum variances 
-with length equal to the number of strata in the study.}
-
 \item{delta_pi}{overall study preference effect.}
 
 \item{delta_nu}{overall study selection effect.}
 
 \item{delta_tau}{overall study treatment effect.}
+
+\item{sigma2}{variance estimate. Should be positive numeric values. If study
+is stratified, should be vector of within-stratum variances 
+with length equal to the number of strata in the study.}
 
 \item{alpha}{desired type I error rate.}
 
@@ -58,3 +59,4 @@ Stratified Doubly Randomized Preference Design."
 \emph{Stat Methods Med Res}. 
 (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 }
+\keyword{internal}

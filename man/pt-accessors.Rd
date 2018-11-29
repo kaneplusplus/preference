@@ -4,7 +4,6 @@
 \name{sample_size}
 \alias{sample_size}
 \alias{sample_size.preference.trial}
-\alias{sample_size.preference.trial}
 \alias{power}
 \alias{power.preference.trial}
 \alias{effect_size}

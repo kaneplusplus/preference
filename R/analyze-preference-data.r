@@ -11,26 +11,27 @@
 #' significance level.
 #'
 #' @param outcome (numeric) individual trial outcomes.
-#' @param random (logical) was this individual part of the random arm?
+#' @param arm (character or factor) a vector of "choice" and "random" character
+#' or factor values indicating the arm of the sample?
 #' @param treatment (character, factor, or integer) which treatment an 
 #' individual received
 #' @param strata (optional integer) which strata the individual belongs to.
 #' @param alpha (optional numeric) Level of significance (default=0.05)
 #' @examples
 #' # Unstratified
-#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-#'              8, 9, 10, 7, 8,11)
-#' random <- c(rep(FALSE, 13), rep(TRUE, 12))
+#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 
+#'              12, 6, 8, 9, 10, 7, 8,11)
+#' arm <- c(rep("choice", 13), rep("random", 12))
 #' treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
-#' fit_preference(outcome, random, treatment)
+#' fit_preference(outcome, arm, treatment)
 #' 
 #' # Stratified
 #' # Same data plus strata information.
 #' strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
-#' fit_preference(outcome, random, treatment, strata, alpha=0.1)
+#' fit_preference(outcome, arm, treatment, strata, alpha=0.1)
 #' @importFrom stats var
 #' @export
-fit_preference <- function(outcome, random, treatment, strata, alpha=0.05) {
+fit_preference <- function(outcome, arm, treatment, strata, alpha=0.05) {
   if (missing(strata)) {
     strata <- rep(1, length(outcome))
   }
@@ -39,9 +40,8 @@ fit_preference <- function(outcome, random, treatment, strata, alpha=0.05) {
     stop("You may only have two treatments.")
   }
   
-  pd <- data.frame(outcome=outcome, random=random, treatment=treatment,
+  pd <- data.frame(outcome=outcome, arm=arm, treatment=treatment,
                    strata=strata)
-  
   # Compute unstratified test statistics
   strat_split <- split(seq_len(length(strata)), strata)
   treatments <- sort(unique(treatment)) 
@@ -62,35 +62,35 @@ fit_preference <- function(outcome, random, treatment, strata, alpha=0.05) {
   for (ss in strat_split) { 
     pds <- pd[ss , ]
     x1mean <- c(x1mean, 
-      mean(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]]))
+      mean(pds$outcome[pds$arm == "choice" & pds$treatment == treatments[1]]))
     x1var <- c(x1var, 
-      var(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]])) 
+      var(pds$outcome[pds$arm == "choice" &pds$treatment == treatments[1]])) 
     m1 <- c(m1, 
-      length(pds$outcome[pds$random == FALSE & pds$treatment == treatments[1]]))
+      length(pds$outcome[pds$arm == "choice" & pds$treatment == treatments[1]]))
     x2mean <- c(x2mean,  
-      mean(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
+      mean(pds$outcome[pds$arm == "choice" & pds$treatment == treatments[2]]))
     x2var <- c(x2var, 
-      var(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
+      var(pds$outcome[pds$arm == "choice" & pds$treatment == treatments[2]]))
     m2 <- c(m2, 
-      length(pds$outcome[pds$random == FALSE & pds$treatment == treatments[2]]))
+      length(pds$outcome[pds$arm == "choice" & pds$treatment == treatments[2]]))
     y1mean <- c(y1mean, 
-      mean(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
+      mean(pds$outcome[pds$arm == "random" & pds$treatment == treatments[1]]))
     y1var <- c(y1var, 
-      var(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
+      var(pds$outcome[pds$arm == "random" & pds$treatment == treatments[1]]))
     n1 <- c(n1, 
-      length(pds$outcome[pds$random == TRUE & pds$treatment == treatments[1]]))
+      length(pds$outcome[pds$arm == "random" & pds$treatment == treatments[1]]))
     y2mean <- c(y2mean, 
-      mean(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+      mean(pds$outcome[pds$arm == "random" & pds$treatment == treatments[2]]))
     y2var <- c(y2var, 
-      var(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+      var(pds$outcome[pds$arm == "random" & pds$treatment == treatments[2]]))
     n2 <- c(n2, 
-      length(pds$outcome[pds$random == TRUE & pds$treatment == treatments[2]]))
+      length(pds$outcome[pds$arm == "random" & pds$treatment == treatments[2]]))
   }
   
   #calculate xi
   xi <- table(strata) / length(outcome)
   nstrata <- length(unique(strata))
-  
+
   results <- fit_preference_summary(x1mean = x1mean, x1var = x1var, m1 = m1, 
     x2mean = x2mean, x2var = x2var, m2 = m2, y1mean = y1mean, y1var = y1var, 
     n1 = n1, y2mean = y2mean, y2var = y2var, n2 = n2, xi = xi, 
@@ -423,33 +423,33 @@ print.preference.fit.summary <- function(x, ...) {
 #'         individuals belong to.}
 #' }
 #'
-#' @param form a formula of the form outcome ~ treatment:arm \{| strata\}. See
-#' Details for more explanation.
-#' @param data a data.frame containing variables specified in the formula
+#' @param form a formula of the form outcome ~ treatment:arm \{| strata\}.
+#' @param data a data.frame containing variables specified in the formula. It 
+#' should be noted that the arm values must be either "choice" or "random".
 #' @param alpha (optional numeric) Level of significance (default 0.05)
 #' @importFrom stats terms
 #' @examples
 #' 
 #' # Unstratified
 #' 
-#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-#'              8, 9, 10, 7, 8, 11)
+#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 
+#'              12, 6, 8, 9, 10, 7, 8, 11)
 #' arm <- c(rep("choice", 13), rep("random", 12))
 #' treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 #' d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 #' preference(outcome ~ treatment:arm, d)
 #' 
 #' # Stratified
-#' outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-#'              8, 9, 10, 7, 8,11)
 #' random <- c(rep(FALSE, 13), rep(TRUE, 12))
 #' treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 #' strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
-#' d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, strata=strata)
+#' d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, 
+#'                 strata=strata)
 #' preference(outcome ~ treatment:arm|strata, d, alpha=0.1)
 #' 
 #' @export
 preference <- function(form, data, alpha=0.05) {
+
   outcome_var <- as.character(terms(form)[[2]])
   rhs <- as.character(terms(form)[[3]])
   if (rhs[1] == "|") {

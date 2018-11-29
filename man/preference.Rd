@@ -7,10 +7,10 @@
 preference(form, data, alpha = 0.05)
 }
 \arguments{
-\item{form}{a formula of the form outcome ~ treatment:arm \{| strata\}. See
-Details for more explanation.}
+\item{form}{a formula of the form outcome ~ treatment:arm \{| strata\}.}
 
-\item{data}{a data.frame containing variables specified in the formula}
+\item{data}{a data.frame containing variables specified in the formula. It 
+should be noted that the arm values must be either "choice" or "random".}
 
 \item{alpha}{(optional numeric) Level of significance (default 0.05)}
 }
@@ -31,20 +31,19 @@ data parameter and should have the following characteristics.
 
 # Unstratified
 
-outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-             8, 9, 10, 7, 8, 11)
+outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 
+             12, 6, 8, 9, 10, 7, 8, 11)
 arm <- c(rep("choice", 13), rep("random", 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 d <- data.frame(outcome=outcome, treatment=treatment, arm=arm)
 preference(outcome ~ treatment:arm, d)
 
 # Stratified
-outcome <- c(10, 8, 6, 10, 5, 8, 7, 6, 10, 12, 11, 6, 8, 10, 5, 7, 9, 12, 6,
-             8, 9, 10, 7, 8,11)
 random <- c(rep(FALSE, 13), rep(TRUE, 12))
 treatment <- c(rep(1, 5), rep(2, 8), rep(1, 6), rep(2, 6))
 strata <- c(1,1,2,2,2,1,1,1,1,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2)
-d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, strata=strata)
+d <- data.frame(outcome=outcome, treatment=treatment, arm=arm, 
+                strata=strata)
 preference(outcome ~ treatment:arm|strata, d, alpha=0.1)
 
 }

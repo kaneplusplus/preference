@@ -27,6 +27,7 @@
 #' @param k the ratio of treatment A to treatment B in the random arm. 
 #'        (default 1, i.e. equal distribution to the two treatments in the 
 #'        random arm)
+#' @keywords internal
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
@@ -108,6 +109,7 @@ overall_sample_size_norm <- function(power, phi, sigma2, delta_pi, delta_nu,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @param k the ratio of treatment A to treatment B in the random arm
 #' (default 1).
+#' @keywords internal
 #' @importFrom stats pnorm
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 

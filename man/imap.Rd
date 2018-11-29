@@ -5,9 +5,7 @@
 \alias{imap_stratified_summary}
 \alias{imap_summary}
 \alias{imap}
-\alias{imap_stratified_summary}
-\alias{imap_summary}
-\title{Data from the the IMAP study}
+\title{Data from the IMAP study}
 \description{
 The ``Improving Management of Abnormal Pap Smears'' study used a 
 two-stage randomized preference trial design to evaluate psychosocial

@@ -36,38 +36,29 @@ proportion of patients randomized to the choice arm in the initial
 randomization. 
 
 To analyze the data from the two-stage randomized trial, two analysis
-functions are provided. The function \code{analyze_raw_data} computes the 
+functions are provided. The function \code{preference} computes the 
 test statistic and p-value for each effect given provided raw study data. 
-The function \code{analyze_summary_data} uses provided summary data (mean, 
+The function \code{fit_preference_summary} uses provided summary data (mean, 
 variance, and sample size) of each study group to compute the test statistic
-and p-value of each effect. 
+and p-value of each effect. The test statistics can be accessed from
+the models using the \code{summary()} function.
 
-Sample Size Function calls
+Preference Trial Function Calls:
 \itemize{
-\item{selection_sample_size: }{required sample size to detect a given 
-selection effect}
-\item{preference_sample_size: }{required sample size to detect a given 
-preference effect}
-\item{treatment_sample_size: }{required sample size to detect a given 
-treatment effect}
-\item{overall_sample_size: }{required sample size to detect a given set 
-of selection, preference, and treatment effects}
-}
-
-Power Function Calls
-\itemize{
-\item{selection_power: }{study power to detect a given selection effect}
-\item{preference_power: }{study power to detect a given preference effect}
-\item{treatment_power: }{study power to detect a given treatment effect}
-\item{overall_power: }{study power to detect a given set of selection, 
-preference, and treatment effects}
+   \item{preference.trial: }{construct a \code{preferene.trial} based
+   on effect and sample sizes.}
+   \item{pt_from_power: }{construct a \code{preference.trial} based on
+   power and  effect size.}
+   \item{pt_from_ss: }{construct a \code{preference.trial} based on
+   sample size}
 }
 
 Analysis Function Calls
 \itemize{
-\item{analyze_raw_data: }{computes test statistic and p-value for observed
-selection, preference, and treatment effects using provided raw data}
-\item{analyze_summary_data: }{computes test statistic and p-value for 
+\item{preference and fit_preference: }{computes test statistic and 
+p-value for observed #' selection, preference, and treatment effects 
+using provided raw data}
+\item{fit_preference_summary: }{computes test statistic and p-value for 
 observed selection, preference, and treatment effects using provided 
 summary data (mean, variance, sample size)}
 }

@@ -5,7 +5,8 @@
 \title{Design Preference Trials with Sample Size Constraint(s)}
 \usage{
 pt_from_ss(ss, pref_effect, selection_effect, treatment_effect, sigma2,
-  pref_prop, choice_prop = 0.5, stratum_prop = 1, alpha = 0.05, k = 1)
+  pref_prop, choice_prop = 0.5, stratum_prop = 1, alpha = 0.05,
+  k = 1)
 }
 \arguments{
 \item{ss}{the maximum size of any of the three arms.}
