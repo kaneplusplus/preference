@@ -26,10 +26,16 @@
 # save(imap_strat, file="../data/imap_strat.rda")
 
 imap <- read.csv("imap.csv")[,-1]
+imap$arm[imap$arm == FALSE] <- "choice"
+imap$arm[imap$arm == "TRUE"] <- "random"
 save(imap, file="../data/imap.rda")
 
 imap_summary <- read.csv("imap_summary.csv")[,-1]
+imap_summary$arm[imap_summary$arm == FALSE] <- "choice"
+imap_summary$arm[imap_summary$arm == "TRUE"] <- "random"
 save(imap_summary, file="../data/imap_summary.rda")
 
 imap_stratified_summary <- read.csv("imap_stratified_summary.csv")[,-1]
+imap_stratified_summary$arm[imap_stratified_summary$arm == FALSE] <- "choice"
+imap_stratified_summary$arm[imap_stratified_summary$arm == "TRUE"] <- "random"
 save(imap_stratified_summary, file="../data/imap_stratified_summary.rda")

@@ -32,6 +32,9 @@
 #' @importFrom stats var
 #' @export
 fit_preference <- function(outcome, arm, treatment, strata, alpha=0.05) {
+  if (!isTRUE(all(as.character(unique(arm)) %in% c("choice", "random")))) {
+    stop("arm parameter values must be either \"choice\" or \"random\".")
+  }
   if (missing(strata)) {
     strata <- rep(1, length(outcome))
   }
