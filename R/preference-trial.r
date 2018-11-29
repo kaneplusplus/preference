@@ -288,7 +288,7 @@ pt_from_power <- function(power, pref_effect, selection_effect,
   alpha=0.05, k=1) {
 
   # Check the power parameter. Other parameters will be checked later.
-  if(!is.numeric(power) || power <= 0 || power >= 1) {
+  if(!is.numeric(power) || any(power <= 0) || any(power >= 1)) {
     stop('Power must be numeric in [0,1]')
   }
 

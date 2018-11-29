@@ -1,3 +1,4 @@
+^CRAN-RELEASE$
 vignettes
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -9,5 +10,4 @@ vignettes
 ^cran-comments\.md$
 ^appveyor\.yml$
 ^codecov\.yml$
-^data-raw$
 ^vignettes$
