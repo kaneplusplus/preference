@@ -1,7 +1,7 @@
 Package: preference
 Type: Package
 Title: 2-Stage Preference Trial Design and Analysis
-Version: 1.0.3
+Version: 1.1.0
 Authors@R: c(
   person(given="Briana", 
          family="Cameron", 
