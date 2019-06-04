@@ -27,5 +27,6 @@ Description: Design and analyze two-stage randomized trials with a continuous
 License: LGPL-2
 Imports: ggplot2, tidyr
 Suggests: testthat
+Encoding: UTF-8
 RoxygenNote: 6.1.1
 LazyData: true
