@@ -260,7 +260,7 @@ overall_power_binom<-function(N, phi, p11, p22, p1, p2, alpha=0.05, theta=0.5, x
 ######################################
 
 # Calculate preference effect from response proportions
-calc_delta_pi<-function(phi,p11,p1,p22,p2){
+calc_delta_pi <- function(phi,p11,p1,p22,p2){
   pref_effect=(phi*(p11-p1)+(1-phi)*(p22-p2))/(2*(phi*(1-phi)))
   return(pref_effect)
 }
