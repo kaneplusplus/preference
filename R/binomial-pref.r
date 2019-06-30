@@ -38,10 +38,9 @@
 #' @param k the ratio of treatment A to treatment B in the random arm. 
 #'        (default 1, i.e. equal distribution to the two treatments in the 
 #'        random arm)
+#' @export
 #' @references 
 #'         
-
-
 overall_sample_size_bin <- function(power, phi, p11, p22, p1, p2, 
                                     alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1) {
 
@@ -168,7 +167,7 @@ overall_sample_size_bin <- function(power, phi, p11, p22, p1, p2,
 #' @param nstrata number of strata. Default is 1 (i.e. unstratified design).
 #' @param k the ratio of treatment A to treatment B in the random arm
 #'          (default 1).
-
+#' @export
 overall_power_binom<-function(N, phi, p11, p22, p1, p2, alpha=0.05, theta=0.5, xi=1, 
                               nstrata=1) {
   # Error messages
