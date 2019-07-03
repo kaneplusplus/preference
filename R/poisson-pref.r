@@ -315,10 +315,9 @@ pwr_overall_pois<-function(N, phi, lambda11, lambda22, lambda1, lambda2,
   
   #Preference
   
-#  delta_pi<-unlist(sapply(1:nstrata, function(i) calc_delta_pi_pois(phi[i],lambda11[i],
-#                                                                    lambda1[i],lambda22[i],lambda2[i])))
+  delta_pi<-unlist(sapply(1:nstrata, function(i) calc_delta_pi_pois(phi[i],lambda11[i],
+                                                                    lambda1[i],lambda22[i],lambda2[i])))
 
-  delta_pi 
   
   pref_terms<-unlist(sapply(1:nstrata, function (i) 
     phi[i]*lambda11[i]+(1-phi[i])*lambda22[i]+
