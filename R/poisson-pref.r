@@ -108,101 +108,101 @@ overall_sample_size_pois <- function(power, phi, lambda11, lambda22, lambda1,
  
   #Selection Sample Size
  
-  #delta_nu <-
-  #  unlist(sapply(
-  #    seq_len(nstrata), 
-  #    function(i) 
-  #    calc_delta_nu_pois(phi[i],lambda11[i], lambda1[i], lambda22[i],
-  #                       lambda2[i]))
-  #  )
+  delta_nu <-
+    unlist(sapply(
+      seq_len(nstrata), 
+      function(i) 
+      calc_delta_nu_pois(phi[i],lambda11[i], lambda1[i], lambda22[i],
+                         lambda2[i]))
+    )
   
-  delta_nu <- calc_delta_nu_pois(phi,lambda11, lambda1, lambda22, lambda2)
+  #delta_nu <- calc_delta_nu_pois(phi,lambda11, lambda1, lambda22, lambda2)
  
   
-#  sel_terms <- unlist(sapply(
-#    seq_len(nstrata), 
-#    function (i) {
-#        phi[i] * lambda11[i] + (1 - phi[i]) * lambda22[i] +
-#          (phi[i]^2 * d1[i] + (1-phi[i])^2 * d2[i])^2 / (phi[i]*(1 - phi[i])) +
-#          2*(theta / (1-theta)) * 
-#          (phi[i]^2*lambda1[i] + (1-phi[i])^2*lambda2[i])
-#    }))
+  sel_terms <- unlist(sapply(
+    seq_len(nstrata), 
+    function (i) {
+        phi[i] * lambda11[i] + (1 - phi[i]) * lambda22[i] +
+          (phi[i]^2 * d1[i] + (1-phi[i])^2 * d2[i])^2 / (phi[i]*(1 - phi[i])) +
+          2*(theta / (1-theta)) * 
+          (phi[i]^2*lambda1[i] + (1-phi[i])^2*lambda2[i])
+    }))
 
-  sel_terms <- phi * lambda11 + (1 - phi) * lambda22 +
-    (phi^2 * d1 + (1-phi)^2 * d2)^2 / (phi*(1 - phi)) +
-    2*(theta / (1-theta)) * (phi^2*lambda1 + (1-phi)^2*lambda2)
+#  sel_terms <- phi * lambda11 + (1 - phi) * lambda22 +
+#    (phi^2 * d1 + (1-phi)^2 * d2)^2 / (phi*(1 - phi)) +
+#    2*(theta / (1-theta)) * (phi^2*lambda1 + (1-phi)^2*lambda2)
   
-#  sel_terms_tot <- sapply(
-#    seq_len(nstrata), 
-#    function(i) {
-#      ( xi[i] / (phi[i]^2 * (1 -phi[i])^2) ) * sel_terms[i]
-#    })
+  sel_terms_tot <- sapply(
+    seq_len(nstrata), 
+    function(i) {
+      ( xi[i] / (phi[i]^2 * (1 -phi[i])^2) ) * sel_terms[i]
+    })
       
-  sel_terms_tot <- ( xi / (phi^2 * (1 -phi)^2) ) * sel_terms
+#  sel_terms_tot <- ( xi / (phi^2 * (1 -phi)^2) ) * sel_terms
 
-#  sel_avg <- sum(unlist(sapply(
-#    seq_len(nstrata), 
-#    function(i) {
-#      xi[i]*delta_nu[i]
-#    })))
+  sel_avg <- sum(unlist(sapply(
+    seq_len(nstrata), 
+    function(i) {
+      xi[i]*delta_nu[i]
+    })))
 
-  sel_avg <- sum(xi * delta_nu)
+#  sel_avg <- sum(xi * delta_nu)
   
   sel_N <- ceiling( (zalpha + zbeta)^2 / (4 * theta * sel_avg^2) * 
     sum(sel_terms_tot) )
   
   #Preference Sample size
   
-#  delta_pi <- unlist(sapply(seq_len(nstrata), 
-#    function(i) calc_delta_pi_pois(phi[i],lambda11[i], lambda1[i],
-#                                   lambda22[i],lambda2[i])))
+  delta_pi <- unlist(sapply(seq_len(nstrata), 
+    function(i) calc_delta_pi_pois(phi[i],lambda11[i], lambda1[i],
+                                   lambda22[i],lambda2[i])))
 
-  delta_pi <- calc_delta_pi_pois(phi, lambda11, lambda1, lambda22, lambda2)
+#  delta_pi <- calc_delta_pi_pois(phi, lambda11, lambda1, lambda22, lambda2)
   
-#  pref_terms <- unlist(sapply(1:nstrata, function (i) 
-#    phi[i]*lambda11[i]+(1-phi[i])*lambda22[i]+
-#      (phi[i]^2*d1[i]+(1-phi[i])^2*d2[i])^2/(phi[i]*(1-phi[i]))+
-#      2*(theta/(1-theta))*(phi[i]^2*lambda1[i]+
-#                             (1-phi[i])^2*lambda2[i])))
+  pref_terms <- unlist(sapply(1:nstrata, function (i) 
+    phi[i]*lambda11[i]+(1-phi[i])*lambda22[i]+
+      (phi[i]^2*d1[i]+(1-phi[i])^2*d2[i])^2/(phi[i]*(1-phi[i]))+
+      2*(theta/(1-theta))*(phi[i]^2*lambda1[i]+
+                             (1-phi[i])^2*lambda2[i])))
 
-  pref_terms <- phi * lambda11 + (1-phi) * lambda22 +
-      (phi^2 * d1 + (1-phi)^2 * d2)^2 / (phi * ( 1-phi )) +
-      2 * (theta / (1-theta)) * (phi^2 * lambda1 + (1-phi)^2 * lambda2)
+#  pref_terms <- phi * lambda11 + (1-phi) * lambda22 +
+#      (phi^2 * d1 + (1-phi)^2 * d2)^2 / (phi * ( 1-phi )) +
+#      2 * (theta / (1-theta)) * (phi^2 * lambda1 + (1-phi)^2 * lambda2)
 
   
-#  pref_terms_tot=sapply(1:nstrata, function(i) (xi[i]/(phi[i]^2*(1-phi[i])^2))*
-#                     pref_terms[i])
+  pref_terms_tot=sapply(1:nstrata, function(i) (xi[i]/(phi[i]^2*(1-phi[i])^2))*
+                     pref_terms[i])
 
-  pref_terms_tot <- (xi / (phi^2 * (1-phi)^2)) * pref_terms
+#  pref_terms_tot <- (xi / (phi^2 * (1-phi)^2)) * pref_terms
 
-#  pref_avg<-sum(unlist(sapply(1:nstrata, function(i) xi[i]*delta_pi[i])))
+  pref_avg<-sum(unlist(sapply(1:nstrata, function(i) xi[i]*delta_pi[i])))
 
-  pref_avg <- sum(xi * delta_pi)
+#  pref_avg <- sum(xi * delta_pi)
   
   pref_N <- ceiling( (zalpha + zbeta)^2 / (4 * theta * pref_avg^2) *
                     sum(pref_terms_tot))
   
   #Treatment Sample size
   
-#  delta_tau<-unlist(sapply(1:nstrata, function(i) lambda1[i]-lambda2[i]))
+  delta_tau<-unlist(sapply(1:nstrata, function(i) lambda1[i]-lambda2[i]))
 
-  delta_tau <- lambda1 - lambda2
+#  delta_tau <- lambda1 - lambda2
   
-#  treat_terms<-unlist(sapply(1:nstrata, function(i) lambda1[i]+lambda2[i]))
+  treat_terms<-unlist(sapply(1:nstrata, function(i) lambda1[i]+lambda2[i]))
 
-  treat_terms <- lambda1 + lambda2
+#  treat_terms <- lambda1 + lambda2
   
-#  treat_avg<-sum(unlist(sapply(1:nstrata, function(i) xi[i]*delta_tau[i])))
+  treat_avg<-sum(unlist(sapply(1:nstrata, function(i) xi[i]*delta_tau[i])))
 
-  treat_avg <- sum(xi * delta_tau)
+#  treat_avg <- sum(xi * delta_tau)
   
-#  treat_terms_tot=sapply(1:nstrata, function(i) (xi[i])*treat_terms[i])
+  treat_terms_tot=sapply(1:nstrata, function(i) (xi[i])*treat_terms[i])
 
-  treat_terms_tot <- xi * treat_terms
+#  treat_terms_tot <- xi * treat_terms
 
-#  delta_tau_avg<-sum(unlist(sapply(1:nstrata, function(i) xi[i]*delta_tau[i])))
+  delta_tau_avg<-sum(unlist(sapply(1:nstrata, function(i) xi[i]*delta_tau[i])))
 
-  delta_tau_avg <- sum(xi * delta_tau)
+#  delta_tau_avg <- sum(xi * delta_tau)
   
   treat_N <- ceiling( (zalpha+zbeta)^2 / ( (1-theta) * treat_avg^2 ) *
                      sum(treat_terms_tot))
@@ -306,12 +306,12 @@ pwr_overall_pois<-function(N, phi, lambda11, lambda22, lambda1, lambda2,
   }
   
   zalpha <- qnorm(1-(alpha/2))
-#  d1<-unlist(sapply(1:nstrata, function(i) lambda11[i]-lambda1[i]))
-#  d2<-unlist(sapply(1:nstrata, function(i) lambda22[i]-lambda2[i]))
+  d1<-unlist(sapply(1:nstrata, function(i) lambda11[i]-lambda1[i]))
+  d2<-unlist(sapply(1:nstrata, function(i) lambda22[i]-lambda2[i]))
 
-  d1 <- lambda11 - lambda1
+#  d1 <- lambda11 - lambda1
 
-  d2 <- lambda22 - lambda2
+#  d2 <- lambda22 - lambda2
   
   #Preference
   
