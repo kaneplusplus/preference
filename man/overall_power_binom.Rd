@@ -4,8 +4,18 @@
 \alias{overall_power_binom}
 \title{Power Calculation from Sample Size}
 \usage{
-overall_power_binom(N, phi, p11, p22, p1, p2, alpha = 0.05,
-  theta = 0.5, xi = 1, nstrata = 1)
+overall_power_binom(
+  N,
+  phi,
+  p11,
+  p22,
+  p1,
+  p2,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1
+)
 }
 \arguments{
 \item{N}{overall study sample size.}

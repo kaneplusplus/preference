@@ -212,11 +212,11 @@ treatment_effect_size <- function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
     stop('Type I error rate must be alpha numeric in [0,1]')
   }
 
-  if(theta < 0 | theta > 1 | !is.numeric(theta) || length(theta) != 1) {
+  if(length(theta) != 1 || theta < 0 | theta > 1 | !is.numeric(theta)) {
     stop('Theta must be single numeric in [0,1]')
   }
 
-  if(any(xi < 0) | any(xi > 1) | any(!is.numeric(xi))) {
+  if(any(!is.numeric(xi)) | any(xi < 0) | any(xi > 1)) {
     stop('Proportion of patients in strata must be numeric value in [0,1]')
   }
 

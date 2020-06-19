@@ -4,9 +4,18 @@
 \alias{pt_from_power}
 \title{Design Preference Trials with Power Constraint(s)}
 \usage{
-pt_from_power(power, pref_effect, selection_effect, treatment_effect,
-  sigma2, pref_prop, choice_prop = 0.5, stratum_prop = 1,
-  alpha = 0.05, k = 1)
+pt_from_power(
+  power,
+  pref_effect,
+  selection_effect,
+  treatment_effect,
+  sigma2,
+  pref_prop,
+  choice_prop = 0.5,
+  stratum_prop = 1,
+  alpha = 0.05,
+  k = 1
+)
 }
 \arguments{
 \item{power}{the desired power(s) for the trial(s)}

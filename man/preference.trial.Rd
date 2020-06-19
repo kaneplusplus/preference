@@ -4,9 +4,20 @@
 \alias{preference.trial}
 \title{Create a Preference Trial}
 \usage{
-preference.trial(pref_ss, pref_effect, selection_ss, selection_effect,
-  treatment_ss, treatment_effect, sigma2, pref_prop, choice_prop = 0.5,
-  stratum_prop = 1, alpha = 0.05, k = 1)
+preference.trial(
+  pref_ss,
+  pref_effect,
+  selection_ss,
+  selection_effect,
+  treatment_ss,
+  treatment_effect,
+  sigma2,
+  pref_prop,
+  choice_prop = 0.5,
+  stratum_prop = 1,
+  alpha = 0.05,
+  k = 1
+)
 }
 \arguments{
 \item{pref_ss}{the sample size of the preference arm.}

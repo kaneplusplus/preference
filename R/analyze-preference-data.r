@@ -136,7 +136,7 @@ unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2,
   # Calculate z values as defined by Rucker
   z1 <- m1*x1mean - m1*y1mean
   z2 <- m2*x2mean - m2*y2mean
-  
+
   # Calculate variance components (formulas from Rucker paper)
   var1 <- m1 * x1var + 
     (1 + ((m - 1)/m)*m1)*m1*(y1var/n1) + (m1*m2/m)*(x1mean - y1mean)^2
@@ -177,7 +177,6 @@ unstrat_analyze_summary_data <- function(x1mean, x1var, m1, x2mean, x2var, m2,
   sel_UB <- sel_effect + zalpha*sel_SE
   treat_LB <- treat_effect - zalpha*treat_SE
   treat_UB <- treat_effect + zalpha*treat_SE
-  
   data.frame(pref_effect, pref_SE, pref_test, pref_pval,pref_LB, pref_UB,
              sel_effect, sel_SE, sel_test, sel_pval, sel_LB, sel_UB,
              treat_effect, treat_SE,  treat_test, treat_pval, treat_LB, 
@@ -283,18 +282,16 @@ fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
                                    nstrata=1, alpha=0.05) {
   
   # Compute unstratified test statistics
-  unstrat_stats <- vapply(seq_len(nstrata), 
-    function(i) {
-      unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
-                                   x2var[i], m2[i], y1mean[i], y1var[i], n1[i],
-                                   y2mean[i], y2var[i], n2[i], alpha)
-    }, 
-    data.frame(pref_effect = NA, pref_SE = NA, pref_test = NA, pref_pval = NA, 
-               pref_LB = NA, pref_UB = NA, sel_effect = NA, sel_SE = NA, 
-               sel_test = NA , sel_pval = NA, sel_LB = NA, sel_UB = NA, 
-               treat_effect = NA, treat_SE = NA, treat_test = NA, 
-               treat_pval = NA, treat_LB = NA, treat_UB = NA))
-  
+  unstrat_stats <- Reduce(
+    cbind,
+    Map(
+      function(i) {
+        t(unstrat_analyze_summary_data(x1mean[i], x1var[i], m1[i], x2mean[i], 
+                                       x2var[i], m2[i], y1mean[i], y1var[i], 
+                                       n1[i], y2mean[i], y2var[i], n2[i], 
+                                       alpha))
+      }, seq_len(nstrata)))
+    
   #Calculate the overall effect estimate
   overall_pref_effect <- sum(
     vapply(seq_len(nstrata), 
@@ -383,7 +380,7 @@ fit_preference_summary <- function(x1mean, x1var, m1, x2mean, x2var, m2, y1mean,
   
   ret <- list(alpha = alpha, unstratified_statistics = unstrat_stats, 
               overall_statistics = overall_stats) 
-  class(ret) <- c(class(ret), "preference.fit")
+  class(ret) <- c("preference.fit")
   ret
 }
 

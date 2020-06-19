@@ -4,8 +4,18 @@
 \alias{pwr_overall_pois}
 \title{Power Calculation from Sample Size}
 \usage{
-pwr_overall_pois(N, phi, lambda11, lambda22, lambda1, lambda2,
-  alpha = 0.05, theta = 0.5, xi = 1, nstrata = 1)
+pwr_overall_pois(
+  N,
+  phi,
+  lambda11,
+  lambda22,
+  lambda1,
+  lambda2,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1
+)
 }
 \arguments{
 \item{N}{overall study sample size.}

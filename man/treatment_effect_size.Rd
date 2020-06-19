@@ -4,8 +4,15 @@
 \alias{treatment_effect_size}
 \title{Treatment Effect Back Calculation}
 \usage{
-treatment_effect_size(N, power, sigma2, alpha = 0.05, theta = 0.5,
-  xi = 1, nstrata = 1)
+treatment_effect_size(
+  N,
+  power,
+  sigma2,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1
+)
 }
 \arguments{
 \item{N}{overall study sample size.}

@@ -4,9 +4,20 @@
 \alias{overall_sample_size}
 \title{Overall Sample Size}
 \usage{
-overall_sample_size(power, phi, delta_pi, delta_nu, delta_tau, sigma2,
-  alpha = 0.05, theta = 0.5, xi = 1, nstrata = 1, k = 1,
-  dist = "norm")
+overall_sample_size(
+  power,
+  phi,
+  delta_pi,
+  delta_nu,
+  delta_tau,
+  sigma2,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1,
+  k = 1,
+  dist = "norm"
+)
 }
 \arguments{
 \item{power}{desired study power. Should be numeric value between 0 and 1.}

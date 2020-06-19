@@ -4,8 +4,18 @@
 \alias{overall_sample_size_pois}
 \title{Overall Sample Size Poisson Distribution}
 \usage{
-overall_sample_size_pois(power, phi, lambda11, lambda22, lambda1, lambda2,
-  alpha = 0.05, theta = 0.5, xi = 1, nstrata = 1)
+overall_sample_size_pois(
+  power,
+  phi,
+  lambda11,
+  lambda22,
+  lambda1,
+  lambda2,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1
+)
 }
 \arguments{
 \item{power}{desired study power. Should be numeric value between 0 and 1.}

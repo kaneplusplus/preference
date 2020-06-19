@@ -4,8 +4,19 @@
 \alias{overall_sample_size_bin}
 \title{Overall Sample Size Binomial}
 \usage{
-overall_sample_size_bin(power, phi, p11, p22, p1, p2, alpha = 0.05,
-  theta = 0.5, xi = 1, nstrata = 1, k = 1)
+overall_sample_size_bin(
+  power,
+  phi,
+  p11,
+  p22,
+  p1,
+  p2,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1,
+  k = 1
+)
 }
 \arguments{
 \item{power}{desired study power. Should be numeric value between 0 and 1.}

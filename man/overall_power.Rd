@@ -4,8 +4,19 @@
 \alias{overall_power}
 \title{Power Calculation from Sample Size}
 \usage{
-overall_power(N, phi, sigma2, delta_pi, delta_nu, delta_tau,
-  alpha = 0.05, theta = 0.5, xi = 1, nstrata = 1, k = 1)
+overall_power(
+  N,
+  phi,
+  sigma2,
+  delta_pi,
+  delta_nu,
+  delta_tau,
+  alpha = 0.05,
+  theta = 0.5,
+  xi = 1,
+  nstrata = 1,
+  k = 1
+)
 }
 \arguments{
 \item{N}{overall study sample size.}
