@@ -56,9 +56,6 @@ sum of vector should be 1. All vector elements should be numeric
 values between 0 and 1. Default is 1 (i.e. unstratified design).}
 
 \item{nstrata}{number of strata. Default is 1 (i.e. unstratified design).}
-
-\item{k}{the ratio of treatment A to treatment B in the random arm
-(default 1).}
 }
 \description{
 Calculates the study power to detect the preference effect given a particular 

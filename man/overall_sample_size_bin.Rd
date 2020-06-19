@@ -69,6 +69,3 @@ in a two-stage randomize clinical trial with a binary outcome.
 Returns the sample size for each of the three effects: preference,
 selection and treatment
 }
-\references{
-
-}
