@@ -1,7 +1,7 @@
 Package: preference
 Type: Package
 Title: 2-Stage Preference Trial Design and Analysis
-Version: 1.1.3
+Version: 1.1.4
 Authors@R: c(
   person(given="Briana", 
          family="Cameron", 
@@ -23,10 +23,10 @@ Description: Design and analyze two-stage randomized trials with a continuous
     effect; alternatively, the package contains functions that can report the 
     study power given a fixed sample size. Finally, analysis functions are 
     provided to test each effect using either summary data (i.e. means, 
-    variances) or raw study data. https://doi.org/10.1002/sim.7830
+    variances) or raw study data. <doi:10.18637/jss.v094.c02> <doi:10.1002/sim.7830>
 License: LGPL-2
 Imports: ggplot2, tidyr
 Suggests: testthat
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 LazyData: true
