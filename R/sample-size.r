@@ -31,11 +31,11 @@
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." 
 #' \emph{Stat Methods Med Res}. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 overall_sample_size <- function(power, phi, delta_pi, delta_nu, 
   delta_tau, sigma2, alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1, dist="norm") {
   ## Write this
@@ -114,10 +114,10 @@ overall_sample_size_norm <- function(power, phi, sigma2, delta_pi, delta_nu,
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." \emph{Stat Methods Med Res}.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 overall_power <- function(N, phi, sigma2, delta_pi, delta_nu, delta_tau, 
                           alpha=0.05, theta=0.5, xi=1, nstrata=1, k=1) {
   
@@ -265,7 +265,7 @@ treatment_effect_size <- function(N, power, sigma2, alpha=0.05, theta=0.5, xi=1,
 #' the estimation of selection, preference and treatment effects in the 
 #' two-stage randomised trial design." \emph{Stat Med}, 
 #' \strong{31}(13):1307-1322.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
 #' @importFrom stats uniroot
 #' @export
 optimal_proportion <- function(w_sel, w_pref, w_treat, sigma2, phi, delta_pi,
@@ -346,7 +346,7 @@ f <- function(theta,value) {
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment, 
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 #' @export
 effects_from_means <- function(mu1,mu2,mu11,mu22,phi,nstrata=1,xi=NULL) {
 

@@ -93,28 +93,28 @@
 #' @references Rucker G (1989). "A two-stage trial design for testing treatment,
 #' self-selection and treatment preference effects." \emph{Stat Med}, 
 #' \strong{8}(4):477-485. 
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/2727471}{PubMed})
 #' @references McCaffery et al. (2010) "Psychosocial outcomes of three triage 
 #' methods for the management of borderline abnormal cervical smears: an open 
 #' randomised trial." \emph{BMJ}, \strong{340}:b4491.
-#' (\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
 #' @references Walter et. al. (2011). "Optimal allocation of participants for
 #' the estimation of selection, preference and treatment effects in the 
 #' two-stage randomised trial design." \emph{Stat Med}, 
 #' \strong{31}(13):1307-1322.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/22362374}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/22362374/}{PubMed})
 #' @references McCaffery et al. (2011) "Determining the Impact of Informed 
 #' Choice: Separating Treatment Effects from the Effects of Choice and Selection
 #' in Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/21041538/}{PubMed})
 #' @references Turner RM, et al. (2014). "Sample Size and Power When Designing
 #'  a Randomized Trial for the Estimation of Treatment, Selection, and 
 #'  Preference Effects." \emph{Medical Decision Making}, \strong{34}:711-719.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/24695962}{PubMed})
 #' @references Cameron B, Esserman D (2016). "Sample Size and Power for a 
 #' Stratified Doubly Randomized Preference Design." 
 #' \emph{Stat Methods Med Res}.  
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/27872194}{PubMed})
 NULL
 
 #' @name imap_stratified_summary
@@ -154,11 +154,11 @@ NULL
 #' @references McCaffery et al. (2010) "Psychosocial outcomes of three triage 
 #' methods for the management of borderline abnormal cervical smears: an open 
 #' randomised trial." \emph{BMJ}, \strong{340}:b4491.
-#' (\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pmc/articles/PMC2827716/}{PubMed})
 #' @references McCaffery et al. (2011) "Determining the Impact of Informed 
 #' Choice: Separating Treatment Effects from the Effects of Choice and Selection
 #' in Randomized Trials." \emph{Med Decis Making}, \strong{31}(2):229-236.
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
+#' (\href{https://pubmed.ncbi.nlm.nih.gov/pubmed/21041538}{PubMed})
 #' @keywords data
 NULL
 
